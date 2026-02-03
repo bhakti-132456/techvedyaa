@@ -1,0 +1,10 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="node-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="25" cy="25" r="2" fill="#14b8a6" opacity="0.2"/>
+      <line x1="25" y1="25" x2="75" y2="25" stroke="#14b8a6" stroke-width="0.5" opacity="0.1"/>
+      <line x1="25" y1="25" x2="25" y2="75" stroke="#14b8a6" stroke-width="0.5" opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#node-pattern)"/>
+</svg>

@@ -1,0 +1,80 @@
+{
+    "generated": [
+        {
+            "file": "public/generated/services/business-automation-400x300.png",
+            "dimensions": "400x300",
+            "prompt": "Isometric gears and workflow nodes connecting to a CRM card, flat design, teal accents, white background, icon style. High resolution, 400x300 aspect ratio."
+        },
+        {
+            "file": "public/generated/services/business-automation.svg",
+            "dimensions": "400x300",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/services/ai-video-ads-400x300.png",
+            "dimensions": "400x300",
+            "prompt": "Stylized camera lens with play icon and particle trails, icon style, teal and dark grey colors, modern and tech-focused. High resolution, 400x300 aspect ratio."
+        },
+        {
+            "file": "public/generated/services/ai-video-ads.svg",
+            "dimensions": "400x300",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/services/consulting-400x300.png",
+            "dimensions": "400x300",
+            "prompt": "Two simplified figures standing over a strategy blueprint with node lines, flat vector illustration style, teal and gray palette. High resolution, 400x300 aspect ratio."
+        },
+        {
+            "file": "public/generated/services/consulting.svg",
+            "dimensions": "400x300",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/automation/automation-diagram-1600x900.png",
+            "dimensions": "1600x900",
+            "prompt": "A clean, modern, vector-style architecture diagram of an automation workflow, resembling a complex n8n workflow interface..."
+        },
+        {
+            "file": "public/generated/automation/automation-diagram-4096.png",
+            "dimensions": "4096x2304",
+            "prompt": "A clean, modern, vector-style architecture diagram of an automation workflow, resembling a complex n8n workflow interface..."
+        },
+        {
+            "file": "public/generated/testimonials/testimonials-bg-1600x400.png",
+            "dimensions": "1600x400",
+            "prompt": "A dark, seamless background tile suitable for a website testimonials section..."
+        },
+        {
+            "file": "public/generated/skeletons/hero-skeleton.svg",
+            "dimensions": "1600x600",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/skeletons/card-skeleton.svg",
+            "dimensions": "400x300",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/skeletons/avatar-skeleton.svg",
+            "dimensions": "400x400",
+            "prompt": "SVG code generated manually"
+        },
+        {
+            "file": "public/generated/patterns/pattern-nodes.svg",
+            "dimensions": "800x800",
+            "prompt": "SVG code generated manually"
+        }
+    ],
+    "failed": [
+        "case-hero-with-kpi-1600x600.png",
+        "case-hero-1600x600.png",
+        "team-collage-1200x600.png",
+        "portrait-01-400x400.png",
+        "portrait-02-400x400.png",
+        "portrait-03-400x400.png",
+        "contact-cta-1600x500.png",
+        "pattern-nodes-800x800.png"
+    ],
+    "reason": "Quota exceeded for image generation model."
+}
