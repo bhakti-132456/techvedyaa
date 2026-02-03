@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description"
+    content="TechVedyaa - Intelligent Automation & AI Marketing Solutions. Transform your business with cutting-edge technology.">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>TechVedyaa | Intelligent Automation & AI Marketing</title>
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="nav-logo">
+        <img src="assets/techvedyaa_logo_dark.png" alt="TechVedyaa">
+      </a>
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#automation" class="nav-link">Automation</a></li>
+        <li><a href="#approach" class="nav-link">Approach</a></li>
+        <li><a href="#process" class="nav-link">Process</a></li>
+        <li><a href="#contact" class="nav-cta">Book a Call</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Video Background -->
+  <section class="hero curtain-section" id="home">
+    <div class="hero-video-bg">
+      <video autoplay muted loop playsinline poster="assets/hero_cinematic.png">
+        <source src="assets/videos/video_ai_ads_hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-particles" aria-hidden="true">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-subtitle">Intelligent Automation & AI Marketing</p>
+        <h1 class="hero-title">
+          Transform Your Business with <span class="gradient-text">Future-Ready Solutions</span>
+        </h1>
+        <p class="hero-description">
+          We help businesses scale by automating complex workflows, creating high-impact AI marketing assets, and
+          delivering strategic consulting that drives measurable growth.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#contact" class="btn btn-primary">Book Strategy Call</a>
+          <a href="#services" class="btn btn-secondary">Explore Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section with Progress Bars -->
+  <section class="section curtain-section" id="about">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">Who We Are</p>
+        <h2 class="section-title">Your Partner in <span class="gradient-text">Digital Excellence</span></h2>
+        <p class="section-description">
+          TechVedyaa empowers businesses through intelligent automation, AI-driven marketing, and seamless digital
+          transformation.
+        </p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card animate-on-scroll stagger-1">
+          <div class="stat-number" data-count="8">0</div>
+          <div class="stat-label">Core Services</div>
+        </div>
+        <div class="stat-card animate-on-scroll stagger-2">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Automated Workflows</div>
+        </div>
+        <div class="stat-card animate-on-scroll stagger-3">
+          <div class="stat-number" data-count="100">0</div>
+          <div class="stat-label">Client Satisfaction %</div>
+        </div>
+        <div class="stat-card animate-on-scroll stagger-4">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Growth Potential</div>
+        </div>
+      </div>
+
+      <!-- Animated Progress Bars -->
+      <div class="progress-bars">
+        <div class="progress-item" data-progress="95">
+          <div class="progress-label">
+            <span>Workflow Automation</span>
+            <span class="progress-value">95%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+        <div class="progress-item" data-progress="90">
+          <div class="progress-label">
+            <span>AI Marketing Solutions</span>
+            <span class="progress-value">90%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+        <div class="progress-item" data-progress="88">
+          <div class="progress-label">
+            <span>Strategic Consulting</span>
+            <span class="progress-value">88%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+        <div class="progress-item" data-progress="92">
+          <div class="progress-label">
+            <span>Custom Development</span>
+            <span class="progress-value">92%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section section-dark curtain-section" id="services">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">What We Do</p>
+        <h2 class="section-title">Comprehensive <span class="gradient-text">Digital Solutions</span></h2>
+        <p class="section-description">
+          From workflow automation to AI-powered marketing, we provide end-to-end services to modernize and scale your
+          business.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card animate-on-scroll stagger-1">
+          <div class="service-icon">⚡</div>
+          <h3 class="service-title">Business Automation</h3>
+          <p class="service-description">Custom n8n workflows and AI agents that handle repetitive tasks 24/7.</p>
+          <ul class="service-features">
+            <li>Lead generation automation</li>
+            <li>Customer onboarding workflows</li>
+            <li>Invoice processing</li>
+            <li>CRM integration</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+
+        <div class="service-card animate-on-scroll stagger-2">
+          <div class="service-icon">🎬</div>
+          <h3 class="service-title">AI Video Production</h3>
+          <p class="service-description">Cinematic, high-converting video ads using cutting-edge generative AI.</p>
+          <ul class="service-features">
+            <li>AI-generated video content</li>
+            <li>Brand-aligned creative assets</li>
+            <li>Scalable production</li>
+            <li>Multi-platform optimization</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+
+        <div class="service-card animate-on-scroll stagger-3">
+          <div class="service-icon">🔄</div>
+          <h3 class="service-title">Marketing Automation</h3>
+          <p class="service-description">End-to-end marketing workflow automation and optimization.</p>
+          <ul class="service-features">
+            <li>Email drip campaigns</li>
+            <li>Lead nurturing & scoring</li>
+            <li>Customer journey automation</li>
+            <li>Multi-channel orchestration</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+
+        <div class="service-card animate-on-scroll stagger-4">
+          <div class="service-icon">♟️</div>
+          <h3 class="service-title">Strategic Consulting</h3>
+          <p class="service-description">Expert guidance on implementing AI and automation.</p>
+          <ul class="service-features">
+            <li>Digital transformation roadmaps</li>
+            <li>AI adoption strategy</li>
+            <li>Process optimization</li>
+            <li>Technology advisory</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+
+        <div class="service-card animate-on-scroll stagger-5">
+          <div class="service-icon">💻</div>
+          <h3 class="service-title">Custom Development</h3>
+          <p class="service-description">Full-stack web and app development tailored to your needs.</p>
+          <ul class="service-features">
+            <li>Web & mobile apps</li>
+            <li>API development</li>
+            <li>Cloud infrastructure</li>
+            <li>Scalable architecture</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+
+        <div class="service-card animate-on-scroll stagger-6">
+          <div class="service-icon">📊</div>
+          <h3 class="service-title">Data Analytics</h3>
+          <p class="service-description">Turn data into actionable insights with advanced analytics.</p>
+          <ul class="service-features">
+            <li>Real-time dashboards</li>
+            <li>Predictive analytics</li>
+            <li>BI reporting</li>
+            <li>KPI optimization</li>
+          </ul>
+          <a href="#contact" class="service-link">Learn More →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Automation Video Showcase -->
+  <section class="section curtain-section" id="automation">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">Our Specialty</p>
+        <h2 class="section-title">Seamless <span class="gradient-text">Workflow Automation</span></h2>
+        <p class="section-description">
+          Eliminate manual bottlenecks. We design and deploy intelligent workflows that integrate your favorite tools.
+        </p>
+      </div>
+
+      <!-- Video Showcase -->
+      <div class="video-showcase animate-on-scroll" id="automation-video">
+        <video muted loop playsinline poster="assets/automation_cinematic.png">
+          <source src="assets/videos/video_ai_ads_hero.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <div class="play-button"></div>
+        </div>
+      </div>
+
+      <div class="approach-grid" style="margin-top: 3rem;">
+        <div class="approach-item animate-on-scroll animate-left stagger-1">
+          <div class="approach-icon">🔗</div>
+          <h4 class="approach-title">Tool Integration</h4>
+          <p class="service-description">Connect your CRM, marketing platforms, and operations into a unified system.
+          </p>
+        </div>
+        <div class="approach-item animate-on-scroll animate-scale stagger-2">
+          <div class="approach-icon">🤖</div>
+          <h4 class="approach-title">AI Agents</h4>
+          <p class="service-description">Deploy intelligent agents for customer inquiries and data processing.</p>
+        </div>
+        <div class="approach-item animate-on-scroll animate-right stagger-3">
+          <div class="approach-icon">📈</div>
+          <h4 class="approach-title">Scale Effortlessly</h4>
+          <p class="service-description">Build systems that grow without proportional increases in costs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach Section -->
+  <section class="section section-dark curtain-section" id="approach">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">Our Methodology</p>
+        <h2 class="section-title">Data-Driven <span class="gradient-text">Approach</span></h2>
+        <p class="section-description">Our proven methodology ensures consistent results and sustainable growth.</p>
+      </div>
+
+      <div class="approach-grid">
+        <div class="approach-item animate-on-scroll stagger-1">
+          <div class="approach-icon">🎯</div>
+          <h4 class="approach-title">Strategic Alignment</h4>
+          <p class="service-description">Solutions aligned with your business objectives.</p>
+        </div>
+        <div class="approach-item animate-on-scroll stagger-2">
+          <div class="approach-icon">📊</div>
+          <h4 class="approach-title">Data-Driven Decisions</h4>
+          <p class="service-description">Every decision backed by analytics.</p>
+        </div>
+        <div class="approach-item animate-on-scroll stagger-3">
+          <div class="approach-icon">⚡</div>
+          <h4 class="approach-title">Automation First</h4>
+          <p class="service-description">Enhance efficiency through intelligent automation.</p>
+        </div>
+        <div class="approach-item animate-on-scroll stagger-4">
+          <div class="approach-icon">🔬</div>
+          <h4 class="approach-title">Continuous Optimization</h4>
+          <p class="service-description">Ongoing testing and refinement.</p>
+        </div>
+        <div class="approach-item animate-on-scroll stagger-5">
+          <div class="approach-icon">🔗</div>
+          <h4 class="approach-title">Seamless Integration</h4>
+          <p class="service-description">Unified integration across all channels.</p>
+        </div>
+        <div class="approach-item animate-on-scroll stagger-6">
+          <div class="approach-icon">📈</div>
+          <h4 class="approach-title">Scalable Solutions</h4>
+          <p class="service-description">Built to grow with your business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries Section -->
+  <section class="section curtain-section" id="industries">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">Industry Expertise</p>
+        <h2 class="section-title">Serving <span class="gradient-text">Diverse Industries</span></h2>
+      </div>
+
+      <div class="industries-grid">
+        <div class="industry-tag animate-on-scroll stagger-1">E-commerce & Retail</div>
+        <div class="industry-tag animate-on-scroll stagger-2">Technology & SaaS</div>
+        <div class="industry-tag animate-on-scroll stagger-3">Digital Marketing</div>
+        <div class="industry-tag animate-on-scroll stagger-4">Real Estate</div>
+        <div class="industry-tag animate-on-scroll stagger-5">Healthcare</div>
+        <div class="industry-tag animate-on-scroll stagger-6">Financial Services</div>
+        <div class="industry-tag animate-on-scroll stagger-1">Education</div>
+        <div class="industry-tag animate-on-scroll stagger-2">Manufacturing</div>
+        <div class="industry-tag animate-on-scroll stagger-3">Professional Services</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="section section-dark curtain-section" id="process">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <p class="section-label">Our Process</p>
+        <h2 class="section-title">Proven <span class="gradient-text">Delivery Framework</span></h2>
+      </div>
+
+      <div class="timeline-container">
+        <div class="process-item">
+          <div class="process-marker">1</div>
+          <div class="process-content">
+            <h4 class="approach-title">Discovery & Assessment</h4>
+            <p class="service-description">Understanding your goals and current systems through comprehensive analysis.
+            </p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-marker">2</div>
+          <div class="process-content">
+            <h4 class="approach-title">Strategy Development</h4>
+            <p class="service-description">Creating tailored strategies aligned with your vision.</p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-marker">3</div>
+          <div class="process-content">
+            <h4 class="approach-title">Implementation</h4>
+            <p class="service-description">Deploying solutions with precision and excellence.</p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-marker">4</div>
+          <div class="process-content">
+            <h4 class="approach-title">Optimization</h4>
+            <p class="service-description">Testing and improving through data-driven insights.</p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-marker">5</div>
+          <div class="process-content">
+            <h4 class="approach-title">Support & Scaling</h4>
+            <p class="service-description">Ongoing management for long-term success.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section curtain-section" id="contact">
+    <div class="container">
+      <div class="contact-container">
+        <div class="section-header animate-on-scroll">
+          <p class="section-label">Get In Touch</p>
+          <h2 class="section-title">Ready to <span class="gradient-text">Transform?</span></h2>
+          <p class="section-description">Book a free strategy call to discover how we can automate your success.</p>
+        </div>
+
+        <div class="contact-card animate-on-scroll">
+          <form class="contact-form" id="contact-form">
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" id="name" name="name" class="form-input" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" required placeholder="john@company.com">
+            </div>
+            <div class="form-group">
+              <label for="company" class="form-label">Company</label>
+              <input type="text" id="company" name="company" class="form-input" placeholder="Your Company">
+            </div>
+            <div class="form-group">
+              <label for="service" class="form-label">Service Interest</label>
+              <select id="service" name="service" class="form-input form-select">
+                <option value="">Select a service</option>
+                <option value="automation">Business Automation</option>
+                <option value="ai-video">AI Video Production</option>
+                <option value="marketing">Marketing Automation</option>
+                <option value="consulting">Strategic Consulting</option>
+                <option value="development">Custom Development</option>
+                <option value="analytics">Data Analytics</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message" class="form-label">Tell us about your project</label>
+              <textarea id="message" name="message" class="form-textarea" required
+                placeholder="Describe your goals..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">Send Message</button>
+          </form>
+        </div>
+
+        <div class="contact-info animate-on-scroll">
+          <div class="contact-info-item">
+            <span class="contact-icon">✉️</span>
+            <span>contact@techvedyaa.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4 class="gradient-text">TechVedyaa</h4>
+          <p>Empowering businesses with intelligent automation and AI-driven marketing solutions.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services">Business Automation</a></li>
+            <li><a href="#services">AI Video Production</a></li>
+            <li><a href="#services">Marketing Automation</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#approach">Approach</a></li>
+            <li><a href="#process">Process</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <ul class="footer-links">
+            <li><a href="#contact">Book a Call</a></li>
+            <li><a href="mailto:contact@techvedyaa.com">Email Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 TechVedyaa. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================
+    // SCROLL PROGRESS BAR
+    // ============================================
+    const scrollProgress = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      scrollProgress.style.width = progress + '%';
+    });
+
+    // ============================================
+    // NAVBAR SCROLL EFFECT
+    // ============================================
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ============================================
+    // MOBILE MENU TOGGLE
+    // ============================================
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu on link click
+    document.querySelectorAll('.nav-link, .nav-cta').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // ============================================
+    // CASCADING CURTAIN SCROLL REVEAL
+    // ============================================
+    const curtainSections = document.querySelectorAll('.curtain-section');
+    let lastRevealTime = 0;
+    const revealDelay = 3000; // 3 seconds between sections
+
+    const curtainObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const now = Date.now();
+          const delay = Math.max(0, revealDelay - (now - lastRevealTime));
+
+          setTimeout(() => {
+            entry.target.classList.add('revealed');
+            lastRevealTime = Date.now();
+          }, delay);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    curtainSections.forEach(section => curtainObserver.observe(section));
+
+    // ============================================
+    // SCROLL ANIMATIONS
+    // ============================================
+    const animateElements = document.querySelectorAll('.animate-on-scroll, .animate-left, .animate-right, .animate-scale');
+
+    const animateObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    animateElements.forEach(el => animateObserver.observe(el));
+
+    // ============================================
+    // PROCESS TIMELINE ANIMATION
+    // ============================================
+    const processItems = document.querySelectorAll('.process-item');
+
+    const processObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 200);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    processItems.forEach(item => processObserver.observe(item));
+
+    // ============================================
+    // ANIMATED PROGRESS BARS
+    // ============================================
+    const progressItems = document.querySelectorAll('.progress-item');
+
+    const progressObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+            const fill = entry.target.querySelector('.progress-fill');
+            const progress = entry.target.dataset.progress;
+            setTimeout(() => {
+              fill.style.width = progress + '%';
+            }, 300);
+          }, index * 200);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    progressItems.forEach(item => progressObserver.observe(item));
+
+    // ============================================
+    // ANIMATED COUNTERS
+    // ============================================
+    const counters = document.querySelectorAll('[data-count]');
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+          entry.target.classList.add('counted');
+          const target = parseInt(entry.target.dataset.count);
+          const duration = 2000;
+          const step = target / (duration / 16);
+          let current = 0;
+
+          const updateCounter = () => {
+            current += step;
+            if (current < target) {
+              entry.target.textContent = Math.round(current);
+              requestAnimationFrame(updateCounter);
+            } else {
+              entry.target.textContent = target;
+            }
+          };
+
+          updateCounter();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    // ============================================
+    // VIDEO SHOWCASE INTERACTION
+    // ============================================
+    const videoShowcases = document.querySelectorAll('.video-showcase');
+
+    videoShowcases.forEach(showcase => {
+      const video = showcase.querySelector('video');
+
+      showcase.addEventListener('click', () => {
+        if (showcase.classList.contains('playing')) {
+          video.pause();
+          showcase.classList.remove('playing');
+        } else {
+          video.play();
+          showcase.classList.add('playing');
+        }
+      });
+
+      // Auto pause when out of view
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting && showcase.classList.contains('playing')) {
+            video.pause();
+            showcase.classList.remove('playing');
+          }
+        });
+      }, { threshold: 0.3 });
+
+      videoObserver.observe(showcase);
+    });
+
+    // ============================================
+    // SMOOTH SCROLL
+    // ============================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ============================================
+    // FORM SUBMISSION
+    // ============================================
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.textContent = '✓ Message Sent!';
+        btn.style.background = '#10b981';
+        setTimeout(() => {
+          btn.textContent = 'Send Message';
+          btn.style.background = '';
+          btn.disabled = false;
+          e.target.reset();
+        }, 2500);
+      }, 1500);
+    });
+
+    // ============================================
+    // PARALLAX EFFECT ON HERO
+    // ============================================
+    const heroVideo = document.querySelector('.hero-video-bg video');
+    if (heroVideo) {
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        heroVideo.style.transform = `translateY(${scrolled * 0.3}px)`;
+      });
+    }
+
+    // ============================================
+    // SERVICE CARD TILT EFFECT
+    // ============================================
+    const serviceCards = document.querySelectorAll('.service-card');
+
+    serviceCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // Initial curtain reveal for hero
+    setTimeout(() => {
+      document.querySelector('.hero').classList.add('revealed');
+    }, 500);
+  </script>
+</body>
+
+</html>

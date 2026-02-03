@@ -1,0 +1,2989 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Strategic Marketing & Sales Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-blue: #003B73;
+            --dark-navy: #001F3F;
+            --orange-accent: #F28C28;
+            --light-blue: #4AA8FF;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: var(--white);
+            margin: 0;
+            padding: 0;
+            letter-spacing: 0.2px;
+        }
+
+        /* Website Layout - Flexible 16:9 Sections */
+        body {
+            background: #f4f6f9;
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f4f6f9;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 100vw;
+            /* Use min-height to maintain 16:9 aspect ratio FEEL, but allow growth */
+            min-height: 56.25vw;
+            height: auto;
+
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Add generous padding to prevent content from hitting edges or overlapping */
+            padding: 6rem 5%;
+
+            position: relative;
+            background: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+            /* CRITICAL: overflow visible ensures content is never clipped */
+            overflow: visible;
+            z-index: 1;
+        }
+
+        /* Remove Scrollbars from sections */
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            /* Allow height to be auto determined by content */
+            height: auto;
+            min-height: 100%;
+            padding: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cover Slide */
+        .cover-slide {
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--dark-navy) 100%);
+            color: var(--white);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            padding: 8rem 2rem !important;
+            /* Increase padding for cover */
+            position: relative;
+            /* Keep cover strictly contained if possible to preserve effect boundaries */
+            overflow: hidden;
+            display: flex !important;
+            min-height: 100vh;
+            /* Cover is always full screen */
+        }
+
+        .cover-slide .slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cover-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(74, 168, 255, 0.15) 0%, transparent 50%);
+            animation: floatBubble 20s ease-in-out infinite;
+        }
+
+        .cover-slide::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -30%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at 70% 70%, rgba(242, 140, 40, 0.1) 0%, transparent 60%);
+            animation: floatBubble 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatBubble {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .cover-decorative-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            animation: pulse-circle 4s ease-in-out infinite;
+        }
+
+        .deco-circle-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -150px;
+            animation-delay: 0s;
+            border-width: 3px;
+        }
+
+        .deco-circle-2 {
+            width: 280px;
+            height: 280px;
+            bottom: -80px;
+            left: -100px;
+            animation-delay: 1s;
+        }
+
+        .deco-circle-3 {
+            width: 180px;
+            height: 180px;
+            top: 50%;
+            right: 5%;
+            animation-delay: 2s;
+        }
+
+        .deco-circle-4 {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            left: 8%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes pulse-circle {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.15);
+                opacity: 0.5;
+            }
+        }
+
+        /* Geometric shapes */
+        .cover-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .geo-shape {
+            position: absolute;
+            opacity: 0.1;
+        }
+
+        .geo-triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 173px solid var(--white);
+            top: 15%;
+            right: 10%;
+            animation: rotate-shape 25s linear infinite;
+        }
+
+        .geo-square {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            bottom: 20%;
+            left: 15%;
+            animation: rotate-shape 30s linear infinite reverse;
+        }
+
+        .geo-hexagon {
+            width: 100px;
+            height: 57.74px;
+            background: var(--white);
+            position: absolute;
+            top: 60%;
+            left: 70%;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .geo-hexagon:before {
+            content: "";
+            position: absolute;
+            top: -28.87px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 28.87px solid var(--white);
+        }
+
+        .geo-hexagon:after {
+            content: "";
+            position: absolute;
+            bottom: -28.87px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-top: 28.87px solid var(--white);
+        }
+
+        @keyframes rotate-shape {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Glowing lines */
+        .cover-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .glow-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(74, 168, 255, 0.4), transparent);
+            height: 2px;
+            width: 100%;
+            animation: slide-line 8s ease-in-out infinite;
+        }
+
+        .glow-line-1 {
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .glow-line-2 {
+            top: 50%;
+            animation-delay: 2s;
+        }
+
+        .glow-line-3 {
+            top: 80%;
+            animation-delay: 4s;
+        }
+
+        @keyframes slide-line {
+
+            0%,
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Floating particles */
+        .cover-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particle 15s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            top: 80%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            top: 40%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            top: 70%;
+            animation-delay: 1s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            top: 30%;
+            animation-delay: 3s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            top: 60%;
+            animation-delay: 5s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            top: 50%;
+            animation-delay: 2.5s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            top: 25%;
+            animation-delay: 4.5s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            top: 75%;
+            animation-delay: 1.5s;
+        }
+
+        .particle:nth-child(10) {
+            left: 15%;
+            top: 55%;
+            animation-delay: 3.5s;
+        }
+
+        .particle:nth-child(11) {
+            left: 25%;
+            top: 15%;
+            animation-delay: 2.8s;
+        }
+
+        .particle:nth-child(12) {
+            left: 35%;
+            top: 85%;
+            animation-delay: 4.2s;
+        }
+
+        .particle:nth-child(13) {
+            left: 45%;
+            top: 35%;
+            animation-delay: 1.8s;
+        }
+
+        .particle:nth-child(14) {
+            left: 55%;
+            top: 65%;
+            animation-delay: 3.2s;
+        }
+
+        .particle:nth-child(15) {
+            left: 85%;
+            top: 45%;
+            animation-delay: 5.5s;
+        }
+
+        @keyframes float-particle {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(50px, -100px);
+                opacity: 0;
+            }
+        }
+
+        /* Data dots */
+        .cover-data-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .data-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(242, 140, 40, 0.5);
+            border-radius: 50%;
+            animation: pulse-dot 3s ease-in-out infinite;
+        }
+
+        .data-dot:nth-child(1) {
+            left: 25%;
+            top: 35%;
+            animation-delay: 0s;
+        }
+
+        .data-dot:nth-child(2) {
+            left: 75%;
+            top: 65%;
+            animation-delay: 1s;
+        }
+
+        .data-dot:nth-child(3) {
+            left: 50%;
+            top: 20%;
+            animation-delay: 2s;
+        }
+
+        .data-dot:nth-child(4) {
+            left: 20%;
+            top: 70%;
+            animation-delay: 1.5s;
+        }
+
+        .data-dot:nth-child(5) {
+            left: 80%;
+            top: 40%;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo-container svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            line-height: 1.2;
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 10;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .cover-highlight-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .cover-stat {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .cover-stat-number {
+            display: block;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: var(--orange-accent);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(242, 140, 40, 0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .cover-stat-label {
+            display: block;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            opacity: 0.9;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Section Styles */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--deep-blue);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .accent-bar {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--orange-accent), var(--light-blue));
+            margin: 0 auto 1.5rem;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 1px solid rgba(0, 59, 115, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 59, 115, 0.15);
+        }
+
+        .stat-number {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--deep-blue);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 1px solid rgba(0, 59, 115, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 59, 115, 0.15);
+            border-color: var(--light-blue);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .process-step:hover {
+            border-color: var(--light-blue);
+            transform: scale(1.05);
+        }
+
+        .process-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .process-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .process-desc {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .process-arrow {
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--orange-accent);
+            font-weight: 700;
+        }
+
+        .process-step:last-child .process-arrow {
+            display: none;
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 59, 115, 0.06);
+            border-left: 4px solid var(--orange-accent);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.12);
+            transform: translateX(5px);
+        }
+
+        .feature-icon {
+            color: var(--deep-blue);
+            font-weight: 700;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: #444;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Circle Stats */
+        .circle-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .circle-stat {
+            text-align: center;
+        }
+
+        .circle-progress {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(var(--orange-accent) 0deg,
+                    var(--orange-accent) var(--percentage),
+                    #e0e0e0 var(--percentage),
+                    #e0e0e0 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .circle-progress::before {
+            content: '';
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .circle-value {
+            position: relative;
+            z-index: 1;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--deep-blue);
+        }
+
+        .circle-label {
+            font-size: 1rem;
+            color: #666;
+            max-width: 150px;
+            margin: 0 auto;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-pill {
+            background: linear-gradient(135deg, var(--deep-blue), var(--dark-navy));
+            color: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 59, 115, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .service-pill:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(0, 59, 115, 0.3);
+        }
+
+        .service-pill-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Service Categories - Clickable Cards */
+        .service-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-category-card {
+            background: linear-gradient(135deg, var(--deep-blue), var(--dark-navy));
+            color: white;
+            padding: 2rem 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 6px 25px rgba(0, 59, 115, 0.25);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(242, 140, 40, 0.15) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-category-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 59, 115, 0.35);
+        }
+
+        .service-category-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-category-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 0.75rem 0;
+            letter-spacing: -0.3px;
+        }
+
+        .service-category-hint {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .service-category-hint::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .service-category-card:hover .service-category-hint::after {
+            transform: translateX(5px);
+        }
+
+        /* Service Modal Overlay */
+        .service-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 31, 63, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .service-modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .service-modal-overlay.active .service-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .service-modal-header {
+            background: linear-gradient(135deg, var(--deep-blue), var(--dark-navy));
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .service-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .service-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .service-modal-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .service-modal-body {
+            padding: 2rem;
+        }
+
+        .service-modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .service-modal-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 59, 115, 0.1);
+        }
+
+        .service-modal-item:last-child {
+            border-bottom: none;
+        }
+
+        .service-modal-item-icon {
+            color: var(--orange-accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .service-modal-item-text {
+            color: #444;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .service-categories {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .service-category-card {
+                padding: 1.5rem;
+            }
+
+            .service-modal {
+                max-height: 90vh;
+                margin: 1rem;
+            }
+        }
+
+        /* VS Container */
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+
+        .vs-column {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vs-column:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 59, 115, 0.15);
+        }
+
+        .vs-column.highlight {
+            background: linear-gradient(135deg, rgba(0, 59, 115, 0.05) 0%, rgba(74, 168, 255, 0.05) 100%);
+            border: 2px solid var(--light-blue);
+            box-shadow: 0 8px 30px rgba(74, 168, 255, 0.15);
+        }
+
+        .vs-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.3px;
+        }
+
+        .vs-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(0, 59, 115, 0.1);
+            font-size: 1rem;
+        }
+
+        .vs-item:last-child {
+            border-bottom: none;
+        }
+
+        .vs-metric {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .vs-value {
+            color: var(--deep-blue);
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .vs-divider {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--orange-accent);
+            text-align: center;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 1px solid rgba(0, 59, 115, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .comparison-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 59, 115, 0.15);
+            border-color: var(--light-blue);
+        }
+
+        .comparison-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .comparison-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--deep-blue);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            margin-bottom: 3rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 3rem;
+            height: 200px;
+            margin-bottom: 2rem;
+        }
+
+        .bar {
+            width: 120px;
+            background: linear-gradient(180deg, var(--deep-blue), var(--dark-navy));
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            transform: scale(1.05);
+        }
+
+        .bar-value {
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--deep-blue);
+            white-space: nowrap;
+        }
+
+        /* Pricing Container */
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 2px solid rgba(0, 59, 115, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 59, 115, 0.15);
+            border-color: var(--light-blue);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--orange-accent);
+            border-width: 3px;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--orange-accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pricing-tier {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--orange-accent);
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-period {
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            color: #444;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pricing-feature::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--deep-blue);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Service Details Table */
+        .service-table {
+            width: 100%;
+            margin-top: 2rem;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+        }
+
+        .service-table th {
+            background: linear-gradient(135deg, var(--deep-blue), var(--dark-navy));
+            color: white;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .service-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 59, 115, 0.1);
+            font-size: 1rem;
+        }
+
+        .service-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .service-table tr:hover {
+            background: rgba(74, 168, 255, 0.05);
+        }
+
+        .service-name {
+            color: var(--deep-blue);
+            font-weight: 600;
+        }
+
+        .service-price {
+            color: var(--orange-accent);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .service-billing {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Mobile Pricing Cards - Better than table on small screens */
+        .pricing-cards-mobile {
+            display: none;
+        }
+
+        .pricing-card-mobile {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 59, 115, 0.08);
+            border-left: 4px solid var(--orange-accent);
+        }
+
+        .pricing-card-mobile-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            letter-spacing: -0.2px;
+        }
+
+        .pricing-card-mobile-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid rgba(0, 59, 115, 0.08);
+            gap: 0.75rem;
+        }
+
+        .pricing-card-mobile-row:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-card-mobile-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .pricing-card-mobile-value {
+            font-size: 0.95rem;
+            color: var(--deep-blue);
+            font-weight: 600;
+            text-align: right;
+            max-width: 65%;
+            line-height: 1.4;
+        }
+
+        .pricing-card-mobile-value.price {
+            color: var(--orange-accent);
+            font-weight: 700;
+        }
+
+        /* Pricing Note Box */
+        .pricing-note {
+            margin-top: 2.5rem;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+        }
+
+        .pricing-note-title {
+            font-size: 1.4rem;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .pricing-note-text {
+            font-size: 1.05rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 2rem auto 3rem;
+            max-width: 900px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--orange-accent), var(--light-blue));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .timeline-marker {
+            background: var(--orange-accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(242, 140, 40, 0.3);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 59, 115, 0.08);
+            border: 1px solid rgba(0, 59, 115, 0.1);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            grid-column: 1;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            grid-column: 3;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-text {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* CTA Slide */
+        .cta-slide {
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--dark-navy) 100%);
+            color: white;
+            justify-content: center;
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 700px;
+            padding: 2rem;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .contact-info {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .contact-item a {
+            color: var(--orange-accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--light-blue);
+            text-decoration: underline;
+        }
+
+        /* Navigation Dots - Removed for website view */
+        .nav-dots {
+            display: none !important;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0, 59, 115, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover {
+            background: rgba(0, 59, 115, 0.6);
+            transform: scale(1.2);
+        }
+
+        .nav-dot.active {
+            background: var(--orange-accent);
+            transform: scale(1.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 3rem 1rem 7rem 1rem;
+            }
+
+            .slide-content {
+                padding: 0 0.5rem;
+                padding-bottom: 3rem;
+            }
+
+            .cover-slide {
+                padding: 4rem 1.5rem 3rem 1.5rem !important;
+            }
+
+            .cover-slide .slide-content {
+                padding-top: 1.5rem;
+                padding-bottom: 2.5rem;
+            }
+
+            .logo-container {
+                margin-top: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+                line-height: 1.3;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            .cta-content {
+                padding: 1.5rem;
+            }
+
+            .cta-title {
+                font-size: 1.9rem;
+            }
+
+            .subtitle {
+                font-size: 1.05rem;
+            }
+
+            .contact-info {
+                margin-top: 2.5rem;
+                gap: 1.25rem;
+            }
+
+            .contact-item {
+                font-size: 1.15rem;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-box {
+                padding: 1.5rem 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .card {
+                padding: 1.75rem 1.5rem;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .card-text {
+                font-size: 0.95rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 0.85rem;
+            }
+
+            .service-pill {
+                padding: 1.1rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .process-flow {
+                flex-direction: column;
+                gap: 1.25rem;
+            }
+
+            .process-step {
+                padding: 1.75rem 1.5rem;
+            }
+
+            .process-arrow {
+                display: none;
+            }
+
+            .process-icon {
+                font-size: 2.5rem;
+            }
+
+            .process-title {
+                font-size: 1.25rem;
+            }
+
+            .process-desc {
+                font-size: 0.95rem;
+            }
+
+            .vs-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .vs-divider {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 1rem 0;
+                font-size: 2.5rem;
+                padding: 1rem 0;
+            }
+
+            .vs-column {
+                padding: 2rem 1.5rem;
+            }
+
+            .vs-title {
+                font-size: 1.4rem;
+            }
+
+            .vs-item {
+                font-size: 0.95rem;
+                padding: 0.75rem 0;
+            }
+
+            .vs-value {
+                font-size: 1.1rem;
+            }
+
+            .circle-stats {
+                gap: 2.5rem;
+                flex-wrap: wrap;
+            }
+
+            .circle-progress {
+                width: 130px;
+                height: 130px;
+            }
+
+            .circle-progress::before {
+                width: 100px;
+                height: 100px;
+            }
+
+            .circle-value {
+                font-size: 1.8rem;
+            }
+
+            .circle-label {
+                font-size: 0.95rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                grid-template-columns: auto 1fr;
+                gap: 1.25rem;
+            }
+
+            .timeline-marker {
+                grid-column: 1;
+                grid-row: 1;
+                font-size: 0.9rem;
+                padding: 0.65rem 1.25rem;
+            }
+
+            .timeline-content {
+                grid-column: 2;
+                grid-row: 1;
+                text-align: left !important;
+                padding: 1.5rem;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content {
+                grid-column: 2;
+            }
+
+            .timeline-title {
+                font-size: 1.2rem;
+            }
+
+            .timeline-text {
+                font-size: 0.95rem;
+            }
+
+            .pricing-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .pricing-card {
+                padding: 2rem 1.75rem;
+            }
+
+            .pricing-tier {
+                font-size: 1.6rem;
+            }
+
+            .pricing-price {
+                font-size: 2.2rem;
+            }
+
+            .features-list {
+                margin-bottom: 2rem;
+                gap: 0.85rem;
+            }
+
+            .feature-item {
+                padding: 1rem 1.25rem;
+            }
+
+            .feature-text {
+                font-size: 0.95rem;
+            }
+
+            .bar-chart {
+                gap: 2rem;
+                height: 170px;
+                margin-bottom: 2rem;
+            }
+
+            .bar {
+                width: 90px;
+            }
+
+            .bar-value {
+                font-size: 1.15rem;
+            }
+
+            .bar-label {
+                font-size: 0.9rem;
+            }
+
+            .chart-container {
+                padding: 2rem 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .nav-dots {
+                display: none;
+                /* Hide navigation dots for vertical scrolling layout */
+            }
+
+            .nav-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .service-table {
+                display: none;
+            }
+
+            .pricing-cards-mobile {
+                display: block;
+            }
+
+            .pricing-note {
+                margin-top: 2rem;
+                padding: 1.5rem;
+            }
+
+            .pricing-note-title {
+                font-size: 1.2rem;
+            }
+
+            .pricing-note-text {
+                font-size: 0.95rem;
+            }
+
+            .service-name {
+                font-size: 0.9rem;
+            }
+
+            .service-price {
+                font-size: 0.85rem;
+            }
+
+            .service-billing {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                padding: 3rem 1rem 7rem 1rem;
+            }
+
+            .cover-slide {
+                padding: 4rem 1rem 3rem 1rem !important;
+            }
+
+            .cover-slide .slide-content {
+                padding-top: 1rem;
+                padding-bottom: 2rem;
+            }
+
+            .logo-container {
+                margin-top: 0.25rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .cover-highlight-box {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .cover-stat {
+                padding: 0.75rem;
+            }
+
+            .cover-stat-number {
+                font-size: 1.5rem;
+            }
+
+            .cover-stat-label {
+                font-size: 0.8rem;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-box {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+                line-height: 1.25;
+            }
+
+            .section-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .bar-chart {
+                gap: 1.5rem;
+                height: 150px;
+            }
+
+            .bar {
+                width: 80px;
+            }
+
+            .bar-value {
+                font-size: 1.1rem;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .comparison-item {
+                padding: 1.25rem;
+                margin-bottom: 0;
+            }
+
+            .comparison-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .comparison-value {
+                font-size: 1.35rem;
+            }
+
+            .vs-title {
+                font-size: 1.3rem;
+            }
+
+            .vs-item {
+                font-size: 0.9rem;
+                padding: 0.7rem 0;
+            }
+
+            .vs-value {
+                font-size: 1.05rem;
+            }
+
+            .vs-column {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .vs-divider {
+                font-size: 2.2rem;
+            }
+
+            .accent-bar {
+                width: 40px;
+                height: 2.5px;
+                margin: 0.65rem auto 1.25rem;
+            }
+
+            .process-flow {
+                gap: 1rem;
+            }
+
+            .process-step {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .process-icon {
+                font-size: 2.2rem;
+            }
+
+            .process-title {
+                font-size: 1.15rem;
+            }
+
+            .process-desc {
+                font-size: 0.9rem;
+            }
+
+            .timeline {
+                margin: 1.5rem auto 2.5rem;
+            }
+
+            .timeline-marker {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+
+            .timeline-content {
+                padding: 1.25rem;
+            }
+
+            .timeline-title {
+                font-size: 1.1rem;
+            }
+
+            .timeline-text {
+                font-size: 0.9rem;
+            }
+
+            .circle-stats {
+                gap: 2rem;
+            }
+
+            .circle-progress {
+                width: 120px;
+                height: 120px;
+            }
+
+            .circle-progress::before {
+                width: 90px;
+                height: 90px;
+            }
+
+            .circle-value {
+                font-size: 1.6rem;
+            }
+
+            .circle-label {
+                font-size: 0.9rem;
+            }
+
+            .features-list {
+                margin-bottom: 1.75rem;
+            }
+
+            .feature-item {
+                padding: 0.9rem 1rem;
+            }
+
+            .feature-text {
+                font-size: 0.9rem;
+            }
+
+            .cards-grid {
+                margin-bottom: 1.75rem;
+            }
+
+            .card {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .card-icon {
+                font-size: 2.3rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .card-text {
+                font-size: 0.9rem;
+            }
+
+            .services-grid {
+                margin-bottom: 1.75rem;
+            }
+
+            .service-pill {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .pricing-card {
+                padding: 1.75rem 1.5rem;
+            }
+
+            .pricing-tier {
+                font-size: 1.5rem;
+            }
+
+            .pricing-price {
+                font-size: 2rem;
+            }
+
+            .pricing-feature {
+                font-size: 0.9rem;
+            }
+
+            .service-table {
+                display: none;
+            }
+
+            .pricing-cards-mobile {
+                display: block;
+            }
+
+            .pricing-card-mobile {
+                padding: 1.25rem;
+            }
+
+            .pricing-card-mobile-title {
+                font-size: 1rem;
+            }
+
+            .pricing-note {
+                margin-top: 1.75rem;
+                padding: 1.25rem;
+            }
+
+            .pricing-note-title {
+                font-size: 1.1rem;
+            }
+
+            .pricing-note-text {
+                font-size: 0.9rem;
+            }
+
+            .pricing-card-mobile-value {
+                font-size: 0.85rem;
+                max-width: 68%;
+            }
+
+            .pricing-card-mobile-label {
+                font-size: 0.8rem;
+            }
+
+            .cta-title {
+                font-size: 1.8rem;
+            }
+
+            .contact-info {
+                gap: 1.25rem;
+            }
+
+            .contact-item {
+                font-size: 1.15rem;
+            }
+
+            .chart-container {
+                padding: 1.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="presentation-container" id="presentation">
+
+        <!-- Slide 1: Cover -->
+        <div class="slide cover-slide" data-slide="0">
+            <!-- Decorative circles -->
+            <div class="cover-decorative-circles">
+                <div class="deco-circle deco-circle-1"></div>
+                <div class="deco-circle deco-circle-2"></div>
+                <div class="deco-circle deco-circle-3"></div>
+                <div class="deco-circle deco-circle-4"></div>
+            </div>
+
+            <!-- Geometric shapes -->
+            <div class="cover-shapes">
+                <div class="geo-shape geo-triangle"></div>
+                <div class="geo-shape geo-square"></div>
+                <div class="geo-shape geo-hexagon"></div>
+            </div>
+
+            <!-- Glowing lines -->
+            <div class="cover-lines">
+                <div class="glow-line glow-line-1"></div>
+                <div class="glow-line glow-line-2"></div>
+                <div class="glow-line glow-line-3"></div>
+            </div>
+
+            <!-- Floating particles -->
+            <div class="cover-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+
+            <!-- Data dots -->
+            <div class="cover-data-dots">
+                <div class="data-dot"></div>
+                <div class="data-dot"></div>
+                <div class="data-dot"></div>
+                <div class="data-dot"></div>
+                <div class="data-dot"></div>
+            </div>
+
+            <div class="slide-content">
+                <div class="logo-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120"
+                        style="max-width: 280px; width: 100%;">
+                        <text x="200" y="65" font-family="Poppins, sans-serif" font-size="48" font-weight="700"
+                            fill="#FFFFFF" text-anchor="middle">
+                            TECH<tspan fill="#F28C28">✓</tspan>EDYAA
+                        </text>
+                        <text x="200" y="90" font-family="Poppins, sans-serif" font-size="15"
+                            fill="rgba(255,255,255,0.8)" text-anchor="middle">
+                            TechVedyaa India Pvt Ltd
+                        </text>
+                    </svg>
+                </div>
+                <h1 class="main-title">Strategic Marketing & Sales Solutions</h1>
+                <p class="subtitle">Powered by AI-Driven Automation & Data Intelligence</p>
+
+                <div class="cover-highlight-box">
+                    <div class="cover-stat">
+                        <span class="cover-stat-number">24/7</span>
+                        <span class="cover-stat-label">Always Active</span>
+                    </div>
+                    <div class="cover-stat">
+                        <span class="cover-stat-number">100%</span>
+                        <span class="cover-stat-label">Consistent</span>
+                    </div>
+                    <div class="cover-stat">
+                        <span class="cover-stat-number">Data</span>
+                        <span class="cover-stat-label">Driven Growth</span>
+                    </div>
+                    <div class="cover-stat">
+                        <span class="cover-stat-number">Custom</span>
+                        <span class="cover-stat-label">Solutions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Executive Summary -->
+        <div class="slide" data-slide="1">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Transforming Business Growth</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Delivering measurable outcomes through intelligent automation</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Always-On Availability</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Message Consistency</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Custom</div>
+                        <div class="stat-label">Tailored Solutions</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Scalable</div>
+                        <div class="stat-label">Growth-Focused</div>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon">🚀</div>
+                        <h3 class="card-title">Accelerated Growth</h3>
+                        <p class="card-text">Achieve faster market penetration and revenue acceleration through
+                            continuous, intelligent outreach tailored to your business needs.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">Operational Excellence</h3>
+                        <p class="card-text">Maximise efficiency with automated workflows that eliminate manual
+                            bottlenecks and human error while scaling with your growth.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Data-Driven Execution</h3>
+                        <p class="card-text">Make informed decisions with real-time analytics and actionable
+                            intelligence from every interaction, customised to your KPIs.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📈</div>
+                        <h3 class="card-title">Scalable Consistency</h3>
+                        <p class="card-text">Maintain brand excellence across all touchpoints with unwavering quality
+                            and messaging that adapts to your volume requirements.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🌐</div>
+                        <h3 class="card-title">Always-On Availability</h3>
+                        <p class="card-text">Never miss an opportunity with round-the-clock engagement capability across
+                            all time zones and channels.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💰</div>
+                        <h3 class="card-title">Cost Optimisation</h3>
+                        <p class="card-text">Reduce operational expenses whilst increasing output, creating sustainable
+                            competitive advantage with flexible pricing models.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Problems We Solve -->
+        <div class="slide" data-slide="2" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Business Challenges<br>We Address</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Eliminating the barriers to sustainable growth</p>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon">📉</div>
+                        <h3 class="card-title">Inconsistent Lead Quality</h3>
+                        <p class="card-text">Struggling with low-quality prospects that waste valuable sales time and
+                            resources.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🔄</div>
+                        <h3 class="card-title">Fragmented Outreach</h3>
+                        <p class="card-text">Inconsistent messaging and engagement across channels dilutes brand impact
+                            and confuses prospects.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">⏰</div>
+                        <h3 class="card-title">Delayed Follow-Ups</h3>
+                        <p class="card-text">Manual processes cause critical delays in response times, resulting in lost
+                            opportunities and revenue leakage.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📋</div>
+                        <h3 class="card-title">Poor Data Discipline</h3>
+                        <p class="card-text">Incomplete or outdated information in systems undermines strategy and
+                            decision-making effectiveness.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💸</div>
+                        <h3 class="card-title">Escalating Team Costs</h3>
+                        <p class="card-text">Rising personnel expenses and attrition create unpredictable costs and
+                            operational instability.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Limited Performance Visibility</h3>
+                        <p class="card-text">Lack of real-time insights prevents rapid optimisation and strategic course
+                            correction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Our Solution -->
+        <div class="slide" data-slide="3">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Intelligent Automation Platform</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Comprehensive capabilities engineered for commercial excellence</p>
+                </div>
+
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-icon">🎯</div>
+                        <div class="process-title">Identify</div>
+                        <div class="process-desc">Target ideal prospects with precision</div>
+                        <div class="process-arrow">→</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">📧</div>
+                        <div class="process-title">Engage</div>
+                        <div class="process-desc">Personalised multi-channel outreach</div>
+                        <div class="process-arrow">→</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">🤝</div>
+                        <div class="process-title">Qualify</div>
+                        <div class="process-desc">Intelligent conversation analysis</div>
+                        <div class="process-arrow">→</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">📈</div>
+                        <div class="process-title">Convert</div>
+                        <div class="process-desc">Seamless handoff to sales</div>
+                        <div class="process-arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Continuous multi-channel engagement operating around the clock without
+                            interruption</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Contextually aware messaging personalised to each prospect's profile
+                            and behaviour</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Instant, intelligent follow-up sequences triggered by prospect actions
+                            and intent signals</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Live performance dashboards with actionable insights updated in
+                            real-time</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Comprehensive sales support from initial contact through conversion
+                            and beyond</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Seamless data synchronisation ensuring perfect information accuracy
+                            across systems</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Strategic Planning -->
+        <div class="slide" data-slide="4">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Strategic Planning</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Data-driven blueprints for market dominance</p>
+                </div>
+
+                <div class="vs-container" style="margin-top: 2rem;">
+                    <div class="vs-column"
+                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <div style="font-size: 8rem; margin-bottom: 2rem; color: var(--deep-blue);">🎯</div>
+                        <h3 class="vs-title">Vision & Strategy</h3>
+                        <p class="card-text">Comprehensive roadmaps aligning brand goals with market opportunities.</p>
+                    </div>
+
+                    <div class="vs-column highlight">
+                        <h3 class="vs-title">Core Capabilities</h3>
+                        <div class="vs-item"><span class="vs-metric">Market Intelligence & Competitive
+                                Analysis</span><span class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Brand Positioning & Identity</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Narrative Architecture</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Audience Segmentation</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Go-to-Market Strategy</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Channel Planning</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Content Strategy</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">PR & Media Relations</span><span
+                                class="vs-value">✓</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Campaign Management -->
+        <div class="slide" data-slide="5" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Campaign Management</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Orchestrating complex engagements with precision</p>
+                </div>
+
+                <div class="vs-container" style="margin-top: 2rem;">
+                    <div class="vs-column"
+                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <div style="font-size: 8rem; margin-bottom: 2rem; color: var(--orange-accent);">📢</div>
+                        <h3 class="vs-title">Execution & Optimization</h3>
+                        <p class="card-text">Seamless delivery across all channels with automated precision.</p>
+                    </div>
+
+                    <div class="vs-column highlight">
+                        <h3 class="vs-title">Core Capabilities</h3>
+                        <div class="vs-item"><span class="vs-metric">Multi-Channel Orchestration</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Automated Workflows</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Performance Monitoring</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">A/B Testing</span><span class="vs-value">✓</span>
+                        </div>
+                        <div class="vs-item"><span class="vs-metric">Tech Stack Integration</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Personalisation Engine</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Advanced Reporting</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Budget & ROI Tracking</span><span
+                                class="vs-value">✓</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Lead Servicing -->
+        <div class="slide" data-slide="6">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Lead Servicing</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Nurturing relationships from first touch to conversion</p>
+                </div>
+
+                <div class="vs-container" style="margin-top: 2rem;">
+                    <div class="vs-column"
+                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <div style="font-size: 8rem; margin-bottom: 2rem; color: var(--deep-blue);">🤝</div>
+                        <h3 class="vs-title">Engagement & Conversion</h3>
+                        <p class="card-text">Human-centric connections powered by intelligent data.</p>
+                    </div>
+
+                    <div class="vs-column highlight">
+                        <h3 class="vs-title">Core Capabilities</h3>
+                        <div class="vs-item"><span class="vs-metric">Prospect Research</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Lead Qualification</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Outbound Engagement</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Voice Calling</span><span class="vs-value">✓</span>
+                        </div>
+                        <div class="vs-item"><span class="vs-metric">CRM Administration</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Pipeline Nurturing</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Sales Enablement</span><span
+                                class="vs-value">✓</span></div>
+                        <div class="vs-item"><span class="vs-metric">Meeting Preparation</span><span
+                                class="vs-value">✓</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Why We Outperform -->
+        <div class="slide" data-slide="7">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Competitive Advantages</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Superiority over traditional approaches</p>
+                </div>
+
+                <div class="vs-container">
+                    <div class="vs-column">
+                        <h3 class="vs-title">Traditional Model</h3>
+                        <div class="vs-item">
+                            <span class="vs-metric">Volume Capacity:</span>
+                            <span class="vs-value">Limited</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Reporting:</span>
+                            <span class="vs-value">Weekly</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Consistency:</span>
+                            <span class="vs-value">Variable</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Attrition Risk:</span>
+                            <span class="vs-value">30-40%</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Scaling Time:</span>
+                            <span class="vs-value">4-6 Weeks</span>
+                        </div>
+                    </div>
+
+                    <div class="vs-divider">VS</div>
+
+                    <div class="vs-column highlight">
+                        <h3 class="vs-title">Our AI Platform</h3>
+                        <div class="vs-item">
+                            <span class="vs-metric">Volume Capacity:</span>
+                            <span class="vs-value">Scalable</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Reporting:</span>
+                            <span class="vs-value">Real-Time</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Consistency:</span>
+                            <span class="vs-value">100%</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Attrition Risk:</span>
+                            <span class="vs-value">Zero</span>
+                        </div>
+                        <div class="vs-item">
+                            <span class="vs-metric">Scaling Time:</span>
+                            <span class="vs-value">Instant</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-label">Volume Capacity</div>
+                        <div class="comparison-value">Fully Scalable</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Reporting Speed</div>
+                        <div class="comparison-value">Real-Time</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Message Consistency</div>
+                        <div class="comparison-value">100% Accuracy</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Team Attrition</div>
+                        <div class="comparison-value">Zero Risk</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Scaling Timeline</div>
+                        <div class="comparison-value">Instant</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Performance Predictability</div>
+                        <div class="comparison-value">Guaranteed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Slide 9: Trust & Compliance -->
+        <div class="slide" data-slide="8">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Trust & Compliance</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Operating with integrity and respect for all stakeholders</p>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon">🔒</div>
+                        <h3 class="card-title">Permission-Based Engagement</h3>
+                        <p class="card-text">All communications are conducted with appropriate consent and legitimate
+                            business interest, respecting prospect preferences at every stage.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">✋</div>
+                        <h3 class="card-title">Opt-Out Respect</h3>
+                        <p class="card-text">Immediate honour of all unsubscribe requests with automated list management
+                            ensuring complete compliance and prospect dignity.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🛡️</div>
+                        <h3 class="card-title">Data Protection</h3>
+                        <p class="card-text">Enterprise-grade security protocols safeguard all information with
+                            encryption, access controls, and regular auditing procedures.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">✓</div>
+                        <h3 class="card-title">Ethical Standards</h3>
+                        <p class="card-text">Transparent, honest communication practices that build trust and maintain
+                            the integrity of your brand reputation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Timeline -->
+        <div class="slide" data-slide="9" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+            <div class="slide-content">
+                <div class="section-header">
+                    <h2 class="section-title">Implementation Roadmap</h2>
+                    <div class="accent-bar"></div>
+                    <p class="section-subtitle">Rapid deployment with minimal disruption</p>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">Week 1–2</div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Setup & Discovery</h3>
+                            <p class="timeline-text">Strategic workshops to understand your business objectives, target
+                                markets, and unique value propositions. Technical configuration and integration planning
+                                initiated.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">Week 3–4</div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Configuration & Testing</h3>
+                            <p class="timeline-text">System customisation to your specifications. Comprehensive testing
+                                protocols ensure messaging accuracy, workflow logic, and seamless integration with
+                                existing systems.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">Week 5</div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Soft Launch</h3>
+                            <p class="timeline-text">Controlled market entry with measured volume to validate
+                                performance, gather initial feedback, and optimise based on real-world engagement data.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">Week 6+</div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Full-Scale Operations</h3>
+                            <p class="timeline-text">Gradual ramp to optimal capacity with continuous monitoring,
+                                optimisation, and strategic refinement based on performance metrics and market response.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: CTA -->
+        <div class="slide cta-slide" data-slide="10">
+            <div class="slide-content">
+                <div class="cta-content">
+                    <h2 class="cta-title">Transform Your Revenue Operations</h2>
+                    <p class="subtitle">Let's discuss how intelligent automation can accelerate your growth</p>
+
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <strong>Ravi Shankar Chavali</strong>
+                        </div>
+                        <div class="contact-item">
+                            <a href="tel:+919397820222">+91 93978 20222</a>
+                        </div>
+                        <div class="contact-item">
+                            <a href="/cdn-cgi/l/email-protection#e193809788a195848289978485988080cf888f"><span
+                                    class="__cf_email__"
+                                    data-cfemail="d3a1b2a5ba93a7b6b0bba5b6b7aab2b2fdbabd">[email&#160;protected]</span></a>
+                        </div>
+                        <div class="contact-item" style="margin-top: 1rem; font-size: 1.1rem; opacity: 0.9;">
+                            Based in Hyderabad, India
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="nav-dots" id="navDots"></div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        const presentation = document.getElementById('presentation');
+        const slides = document.querySelectorAll('.slide');
+        const navDots = document.getElementById('navDots');
+        let currentSlide = 0;
+
+        // Create navigation dots
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot';
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            navDots.appendChild(dot);
+        });
+
+        function updateNavDots() {
+            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            presentation.scrollTo({
+                left: index * presentation.clientWidth,
+                behavior: 'smooth'
+            });
+            updateNavDots();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        });
+
+        // Touch swipe navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        presentation.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        presentation.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 50 && currentSlide < slides.length - 1) {
+                goToSlide(currentSlide + 1);
+            } else if (touchEndX - touchStartX > 50 && currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // Update current slide on scroll
+        presentation.addEventListener('scroll', () => {
+            const scrollPosition = presentation.scrollLeft;
+            const slideWidth = presentation.clientWidth;
+            const newSlide = Math.round(scrollPosition / slideWidth);
+            if (newSlide !== currentSlide) {
+                currentSlide = newSlide;
+                updateNavDots();
+            }
+        });
+
+        // Service Modal Functions
+        function openServiceModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeServiceModal(event, modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.service-modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
