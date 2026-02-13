@@ -1,6 +1,61 @@
 // TechVedyaa - Interactive Elements & Animations
 
 // ============================================
+// THEME TOGGLE (Light/Dark)
+// ============================================
+
+(function initTheme() {
+  const savedTheme = localStorage.getItem('tv-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+
+// ============================================
+// LOGO MANAGEMENT
+// ============================================
+
+const lightLogo = 'assets/logo.png';
+const darkLogo = 'assets/techvedyaa_logo_dark.png';
+
+function updateLogo(theme) {
+  const logoImg = document.querySelector('.nav-logo img');
+  if (logoImg) {
+    const newSrc = theme === 'dark' ? darkLogo : lightLogo;
+    console.log(`Updating log to: ${newSrc} (Theme: ${theme})`);
+    logoImg.src = newSrc;
+  } else {
+    console.error('Logo image element not found');
+  }
+}
+
+// Initial logo set - wait for DOM
+document.addEventListener('DOMContentLoaded', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  updateLogo(currentTheme);
+});
+
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('tv-theme', next);
+    updateLogo(next);
+  });
+}
+
+// Listen for system theme changes (when user hasn't manually set a preference)
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('tv-theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    updateLogo(newTheme);
+  }
+});
+
+// ============================================
 // NAVIGATION
 // ============================================
 
