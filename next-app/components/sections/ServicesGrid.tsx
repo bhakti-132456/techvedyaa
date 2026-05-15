@@ -33,9 +33,7 @@ export default function ServicesGrid() {
                                 <li key={i}>{feature}</li>
                             ))}
                         </ul>
-                        <a href="#contact" className={styles.serviceLink}>
-                            Learn More →
-                        </a>
+
                     </div>
                 ))}
             </div>

@@ -18,7 +18,6 @@ gsap.registerPlugin(ScrollTrigger);
  * GPU-only rule: All tweens use transform + opacity exclusively.
  */
 export default function LocomotionEngine() {
-    const containerRef = useRef<HTMLDivElement>(null);
     const [isMobile, setIsMobile] = useState(false);
 
     // Detect mobile once on mount + on resize
@@ -140,20 +139,10 @@ export default function LocomotionEngine() {
             });
         },
         {
-            scope: containerRef,
             dependencies: [isMobile],
             revertOnUpdate: true,
         }
     );
 
-    return (
-        <div ref={containerRef} className="locomotion-engine">
-            {/* 
-        This component wraps no children directly.
-        It targets DOM elements by data attributes 
-        rendered by the RSC sections.
-        The ref scopes GSAP to prevent memory leaks.
-      */}
-        </div>
-    );
+    return null;
 }
