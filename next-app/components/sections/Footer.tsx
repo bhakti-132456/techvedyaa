@@ -1,12 +1,23 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 
 export default function Footer() {
+    const [mounted, setMounted] = useState(false);
+    const { theme } = useTheme();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
         <footer style={{ padding: 'var(--spacing-2xl) 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)' }}>
             <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--spacing-lg)' }}>
                 <Link href="/">
                     <img
-                        src="/assets/logo-full.png"
+                        src={mounted && theme === 'dark' ? "/assets/techvedyaa_logo_dark.png" : "/assets/logo-full.png"}
                         alt="TechVedyaa"
                         style={{ height: '60px', width: 'auto', objectFit: 'contain' }}
                     />

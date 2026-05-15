@@ -39,6 +39,7 @@
 .navMenu {
     display: flex;
     gap: var(--spacing-lg);
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -66,6 +67,27 @@
 
 .navCta:hover {
     background: var(--color-primary);
+}
+
+.themeToggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.themeToggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .themeToggle:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {

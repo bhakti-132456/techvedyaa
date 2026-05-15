@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const { theme, setTheme } = useTheme();
 
     useEffect(() => {
+        setMounted(true);
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
@@ -20,7 +24,7 @@ export default function Navbar() {
             <div className={`container ${styles.navContainer}`}>
                 <Link href="/" className={styles.logo}>
                     <img
-                        src="/assets/techvedyaa_logo_new.png"
+                        src={mounted && theme === 'dark' ? "/assets/techvedyaa_logo_dark.png" : "/assets/techvedyaa_logo_new.png"}
                         alt="TechVedyaa"
                         className={styles.logoImg}
                     />
@@ -31,6 +35,17 @@ export default function Navbar() {
                     <li><Link href="#methodology" className={styles.navLink}>Approach</Link></li>
                     <li><Link href="#process" className={styles.navLink}>Process</Link></li>
                     <li><Link href="#contact" className={`${styles.navLink} ${styles.navCta}`}>Get Started</Link></li>
+                    {mounted && (
+                        <li>
+                            <button 
+                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                className={styles.themeToggle}
+                                aria-label="Toggle Dark Mode"
+                            >
+                                {theme === 'dark' ? '☀️' : '🌙'}
+                            </button>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>

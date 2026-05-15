@@ -18,16 +18,13 @@ export default function ServicesGrid() {
 
     const { scrollYProgress } = useScroll({
         target: targetRef,
+        offset: ["start start", "end end"] // Pin from when section hits top to when section hits bottom
     });
 
-    // The horizontal translation depends on the number of items. 
-    // We map 0-1 of the vertical scroll to 0% to -100% (or specific negative translation)
-    // Adjust the percentage so the last card is fully visible.
     const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
     return (
         <section ref={targetRef} className={styles.servicesTrack} id="services" style={{ height: isMobile ? 'auto' : '300vh' }}>
-            {/* The pinned container that holds the sticky content */}
             <div className={isMobile ? '' : styles.stickyContainer} style={isMobile ? {} : { position: 'sticky', top: 0, height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
                 <div className={styles.sectionHeader}>
                     <p className={styles.sectionLabel}>What We Do</p>
