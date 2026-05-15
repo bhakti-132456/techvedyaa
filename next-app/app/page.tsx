@@ -4,6 +4,7 @@ import StatsSection from '@/components/sections/StatsSection';
 import MethodologySection from '@/components/sections/MethodologySection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import IndustriesSection from '@/components/sections/IndustriesSection';
+import ContactSection from '@/components/sections/ContactSection';
 import ClientIslands from '@/components/islands/ClientIslands';
 import Footer from '@/components/sections/Footer';
 
@@ -19,6 +20,7 @@ export default function Home() {
         <MethodologySection />
         <ProcessSection />
         <IndustriesSection />
+        <ContactSection />
         <Footer />
       </main>
     </>
