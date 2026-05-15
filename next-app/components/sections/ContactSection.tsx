@@ -64,7 +64,7 @@ export default function ContactSection() {
                 <div className={styles.contactHeader}>
                     <p className={styles.contactLabel}>Get In Touch</p>
                     <h2 className={styles.contactTitle}>
-                        Let's Discuss Your <span className="gradient-text">Requirements</span>
+                        Let&apos;s Discuss Your <span className="gradient-text">Requirements</span>
                     </h2>
                     <p className={styles.contactDescription}>
                         Fill out the form below and our team will get back to you shortly to discuss how we can help elevate your business.
@@ -153,7 +153,7 @@ export default function ContactSection() {
 
                         {status === 'success' && (
                             <div className={`${styles.statusMessage} ${styles.statusSuccess}`}>
-                                Thank you! Your request has been received. We'll be in touch soon.
+                                Thank you! Your request has been received. We&apos;ll be in touch soon.
                             </div>
                         )}
                         

@@ -36,8 +36,8 @@ export default function ProcessSection() {
                         style={{ scaleY }}
                     />
 
-                    {processSteps.map((step, index) => (
-                        <StepItem key={step.number} step={step} index={index} />
+                    {processSteps.map((step) => (
+                        <StepItem key={step.number} step={step} />
                     ))}
                 </div>
             </div>
@@ -46,7 +46,7 @@ export default function ProcessSection() {
 }
 
 // Separate component for each step to track its own visibility
-function StepItem({ step, index }: { step: any, index: number }) {
+function StepItem({ step }: { step: { number: number, title: string, description: string } }) {
     const stepRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: stepRef,
@@ -64,6 +64,7 @@ function StepItem({ step, index }: { step: any, index: number }) {
                         scale: useTransform(scrollYProgress, [0, 0.5], [0, 1])
                     }}
                 >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/assets/favicon.png" alt="Checkmark" className={styles.checkmark} />
                 </motion.div>
             </div>

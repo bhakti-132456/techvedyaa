@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useMemo, useEffect, useState } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -222,7 +222,7 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
         return () => observer.disconnect();
     }, []);
 
-    useFrame((state, delta) => {
+    useFrame((state) => {
         if (!meshRef.current) return;
         const material = meshRef.current.material as THREE.ShaderMaterial;
 
@@ -274,7 +274,7 @@ export default function ReactiveEnvironment() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => setMounted(true), 0);
         const check = () => {
             const mobile = window.innerWidth <= 768;
             setIsMobile(mobile);
@@ -282,7 +282,10 @@ export default function ReactiveEnvironment() {
         };
         check();
         window.addEventListener('resize', check);
-        return () => window.removeEventListener('resize', check);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('resize', check);
+        };
     }, []);
 
     if (!mounted) return null;

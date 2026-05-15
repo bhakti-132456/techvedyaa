@@ -9,13 +9,15 @@ export default function Footer() {
     const { theme } = useTheme();
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
     }, []);
 
     return (
         <footer style={{ padding: 'var(--spacing-2xl) 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)' }}>
             <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--spacing-lg)' }}>
                 <Link href="/">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={mounted && theme === 'dark' ? "/assets/techvedyaa_logo_dark.png" : "/assets/logo-full.png"}
                         alt="TechVedyaa"

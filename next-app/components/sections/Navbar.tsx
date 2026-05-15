@@ -11,18 +11,22 @@ export default function Navbar() {
     const { theme, setTheme } = useTheme();
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => setMounted(true), 0);
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     return (
         <nav className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
             <div className={`container ${styles.navContainer}`}>
                 <Link href="/" className={styles.logo}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={mounted && theme === 'dark' ? "/assets/techvedyaa_logo_dark.png" : "/assets/techvedyaa_logo_new.png"}
                         alt="TechVedyaa"
