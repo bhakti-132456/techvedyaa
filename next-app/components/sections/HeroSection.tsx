@@ -1,9 +1,27 @@
+'use client';
+
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import styles from './Hero.module.css';
 
 export default function HeroSection() {
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start start", "end start"]
+    });
+
+    const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+    const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const y3 = useTransform(scrollYProgress, [0, 1], ["0%", "80%"]);
+    
+    const scale1 = useTransform(scrollYProgress, [0, 1], [1, 1.02]);
+    const scale2 = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+    const scale3 = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+
     return (
-        <section className={styles.hero} id="home">
-            <div className="container">
+        <section ref={ref} className={styles.hero} id="home">
+            <div className="container" style={{ position: 'relative', zIndex: 10 }}>
                 <div className={styles.heroContent}>
                     <p className={styles.heroSubtitle}>Digital Solutions Provider</p>
                     <h1 className={styles.heroTitle}>
@@ -25,10 +43,19 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Parallax layers for LocomotionEngine */}
-            <div className={`${styles.parallaxLayer} ${styles.parallaxLayer1}`} data-parallax-depth="0.2" />
-            <div className={`${styles.parallaxLayer} ${styles.parallaxLayer2}`} data-parallax-depth="0.5" />
-            <div className={`${styles.parallaxLayer} ${styles.parallaxLayer3}`} data-parallax-depth="0.8" />
+            {/* Parallax layers powered by framer-motion */}
+            <motion.div 
+                style={{ y: y1, scale: scale1 }}
+                className={`${styles.parallaxLayer} ${styles.parallaxLayer1}`} 
+            />
+            <motion.div 
+                style={{ y: y2, scale: scale2 }}
+                className={`${styles.parallaxLayer} ${styles.parallaxLayer2}`} 
+            />
+            <motion.div 
+                style={{ y: y3, scale: scale3 }}
+                className={`${styles.parallaxLayer} ${styles.parallaxLayer3}`} 
+            />
         </section>
     );
 }
