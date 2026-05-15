@@ -1,0 +1,186 @@
+/* ============================================
+   Services Grid — Horizontal Scroll Track
+   ============================================ */
+.servicesTrack {
+    position: relative;
+    overflow: hidden;
+}
+
+.sectionHeader {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--spacing-2xl);
+    padding: 0 var(--spacing-md);
+}
+
+.sectionLabel {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-secondary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md);
+}
+
+.sectionTitle {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: var(--spacing-md);
+}
+
+.sectionDescription {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+/* Horizontal scroll container */
+.horizontalWrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    will-change: transform;
+}
+
+.serviceCard {
+    flex: 0 0 380px;
+    min-width: 380px;
+    padding: var(--spacing-xl);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    margin-right: var(--spacing-lg);
+}
+
+.serviceCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-base);
+}
+
+.serviceCard:hover::before {
+    transform: scaleX(1);
+}
+
+.serviceCard:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+
+.serviceIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    background: rgba(0, 94, 184, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-primary);
+}
+
+.serviceTitle {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+}
+
+.serviceDescription {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.serviceFeatures {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--spacing-md);
+}
+
+.serviceFeatures li {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    padding: 4px 0;
+    padding-left: var(--spacing-md);
+    position: relative;
+}
+
+.serviceFeatures li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    transform: translateY(-50%);
+}
+
+.serviceLink {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-primary);
+    letter-spacing: 0.02em;
+}
+
+.serviceLink:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Dark mode */
+[data-theme="dark"] .serviceCard {
+    background: #1A1D27;
+    border-color: #2A2D3A;
+}
+
+[data-theme="dark"] .serviceCard:hover {
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(74, 168, 255, 0.1);
+}
+
+[data-theme="dark"] .serviceIcon {
+    background: rgba(74, 168, 255, 0.12);
+}
+
+/* ============================================
+   Mobile: Native CSS Scroll Snap
+   ============================================ */
+@media (max-width: 768px) {
+    .horizontalWrapper {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        padding: var(--spacing-sm);
+        gap: var(--spacing-md);
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    .horizontalWrapper::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    .serviceCard {
+        flex: 0 0 85vw;
+        min-width: 85vw;
+        scroll-snap-align: center;
+        margin-right: 0;
+    }
+}

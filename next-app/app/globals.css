@@ -1,0 +1,58 @@
+/* ============================================
+   TechVedyaa — Global Styles
+   ============================================ */
+/* Imports moved to layout.tsx for direct processing */
+
+html {
+   scroll-behavior: smooth;
+}
+
+body {
+   background-color: var(--color-bg);
+   color: var(--color-text-primary);
+   font-family: var(--font-inter), sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+.outfit-font {
+   font-family: var(--font-outfit), sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+   width: 10px;
+}
+
+::-webkit-scrollbar-track {
+   background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+   background: var(--color-border);
+   border-radius: 10px;
+   border: 3px solid var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+   background: var(--color-text-muted);
+}
+
+.gradient-text {
+   background: var(--gradient-primary);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+   display: inline-block;
+}
+
+.container {
+   width: 100%;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 0 var(--spacing-md);
+}

@@ -1,0 +1,121 @@
+import type { ServiceItem, ServiceOption } from '@/lib/types';
+
+export const services: ServiceItem[] = [
+    {
+        id: 'marketing-automation',
+        title: 'Marketing Automation',
+        description: 'End-to-end marketing workflow automation and optimization to streamline your campaigns.',
+        features: [
+            'Email marketing automation & drip campaigns',
+            'Lead nurturing and scoring systems',
+            'Customer journey automation',
+            'CRM integration with marketing platforms',
+            'Real-time data synchronization',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 4V3"/><path d="M8 13v-1"/><path d="M4.5 5.5l-.7-.7"/><path d="M12.2 5.5l.7-.7"/><path d="M5 8H3"/><path d="M13 8h-1"/><path d="M4.5 10.5l-.7.7"/><path d="M12.2 10.5l.7.7"/><path d="M14 12l4 4m0 0l4-4m-4 4V8"/></svg>`,
+    },
+    {
+        id: 'marketing-communications',
+        title: 'Marketing Communications',
+        description: 'Integrated marketing communication strategies that connect with your audience.',
+        features: [
+            'Multi-channel campaign planning',
+            'Content calendar development',
+            'Copywriting & messaging strategy',
+            'Channel optimization (email, SMS, push)',
+            'A/B testing & conversion optimization',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M17 2c1.5 1 2.5 3 2.5 5" opacity="0.5"/><path d="M19.5 0c2 1.5 3.5 4 3.5 7" opacity="0.3"/></svg>`,
+    },
+    {
+        id: 'strategy',
+        title: 'Strategy & Brand Strategy',
+        description: 'Strategic consulting to position your brand for long-term success.',
+        features: [
+            'Brand positioning & competitive analysis',
+            'Market research & audience insights',
+            'Marketing strategy development',
+            'Digital transformation consulting',
+            'Growth strategy alignment',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 22H5v-2h14v2z"/><path d="M7 20V10c0-1 .5-2 1.5-3l2-2c.5-.5 1-.8 1.5-.8s1 .3 1.5.8c-1 1-1.5 2.5-1 4h2c1.5 0 3 1.5 3 3v2c0 1.5-1.5 3-3 3H9"/><circle cx="10" cy="9" r="1" fill="currentColor"/><path d="M9 4l1-2 1 1.5L12 2l1 1.5L14 2l1 2" opacity="0.5"/></svg>`,
+    },
+    {
+        id: 'tech-solutions',
+        title: 'Tech Solutions',
+        description: 'Custom development and technical infrastructure to power your business.',
+        features: [
+            'Custom web & mobile app development',
+            'API development & integrations',
+            'Cloud infrastructure management',
+            'Database design & implementation',
+            'Scalable architecture design',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 8 3 12 7 16"/><polyline points="17 8 21 12 17 16"/><line x1="14" y1="4" x2="10" y2="20" opacity="0.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8" cy="12" r="0.75" fill="currentColor" opacity="0.4"/><circle cx="16" cy="12" r="0.75" fill="currentColor" opacity="0.4"/></svg>`,
+    },
+    {
+        id: 'ai-solutions',
+        title: 'AI-Powered Solutions',
+        description: 'Cutting-edge AI and machine learning solutions for intelligent automation.',
+        features: [
+            'AI-driven content generation',
+            'Predictive analytics & data intelligence',
+            'Chatbot & conversational AI',
+            'Natural language processing',
+            'Sentiment analysis & monitoring',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><circle cx="12" cy="12" r="3"/><line x1="7.5" y1="7.5" x2="9.5" y2="9.5"/><line x1="16.5" y1="7.5" x2="14.5" y2="9.5"/><line x1="7.5" y1="16.5" x2="9.5" y2="14.5"/><line x1="16.5" y1="16.5" x2="14.5" y2="14.5"/><path d="M12 3v3" opacity="0.4"/><path d="M12 18v3" opacity="0.4"/><path d="M3 12h3" opacity="0.4"/><path d="M18 12h3" opacity="0.4"/></svg>`,
+    },
+    {
+        id: 'social-media',
+        title: 'Social Media & Organic Marketing',
+        description: 'Build authentic connections and grow organically across all platforms.',
+        features: [
+            'Social media strategy development',
+            'Content creation & curation',
+            'Community management',
+            'Platform-specific optimization',
+            'Organic SEO & search visibility',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4" ry="10"/><line x1="2" y1="12" x2="22" y2="12"/><circle cx="5" cy="6" r="1.5" fill="currentColor" opacity="0.6"/><circle cx="19" cy="18" r="1.5" fill="currentColor" opacity="0.6"/><circle cx="18" cy="8" r="1" fill="currentColor" opacity="0.4"/></svg>`,
+    },
+    {
+        id: 'pr',
+        title: 'Public Relations (PR)',
+        description: 'Strategic communication to build and protect your brand reputation.',
+        features: [
+            'Press release writing & distribution',
+            'Media relations & outreach',
+            'Crisis communication management',
+            'Reputation management',
+            'Thought leadership positioning',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/><line x1="13" y1="13" x2="18" y2="13" opacity="0.6"/><line x1="13" y1="16" x2="18" y2="16" opacity="0.6"/><line x1="13" y1="19" x2="16" y2="19" opacity="0.4"/><rect x="4.5" y="11" width="3.5" height="3" rx="0.5" opacity="0.5"/></svg>`,
+    },
+    {
+        id: 'lms',
+        title: 'Learning Management Systems',
+        description: 'Complete LMS solutions from platform selection to implementation.',
+        features: [
+            'LMS platform implementation',
+            'Course design & curriculum development',
+            'Assessment & certification systems',
+            'Analytics & progress tracking',
+            'Mobile learning optimization',
+        ],
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/><line x1="5" y1="8" x2="8" y2="8" opacity="0.5"/><line x1="5" y1="11" x2="8" y2="11" opacity="0.5"/><line x1="16" y1="8" x2="19" y2="8" opacity="0.5"/><line x1="16" y1="11" x2="19" y2="11" opacity="0.5"/><path d="M12 2l3 2-3 2-3-2z" opacity="0.4"/></svg>`,
+    },
+];
+
+export const serviceOptions: ServiceOption[] = [
+    { value: '', label: 'Select a service' },
+    { value: 'marketing-automation', label: 'Marketing Automation' },
+    { value: 'marketcom', label: 'Marketing Communications' },
+    { value: 'strategy', label: 'Strategy & Brand Strategy' },
+    { value: 'tech', label: 'Tech Solutions' },
+    { value: 'ai', label: 'AI-Powered Solutions' },
+    { value: 'social', label: 'Social Media & Organic Marketing' },
+    { value: 'pr', label: 'Public Relations' },
+    { value: 'lms', label: 'Learning Management Systems' },
+    { value: 'consultation', label: 'General Consultation' },
+];
