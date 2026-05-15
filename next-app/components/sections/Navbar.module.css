@@ -57,37 +57,161 @@
     color: var(--color-primary);
 }
 
+/* ---- Neumorphic Orange CTA Button ---- */
 .navCta {
     padding: var(--spacing-xs) var(--spacing-lg);
-    background: var(--color-text-primary);
+    background: #F97316;
     color: white !important;
     border-radius: 50px;
     font-weight: 600;
+    border: none;
+    box-shadow:
+        3px 3px 6px rgba(0, 0, 0, 0.12),
+        -2px -2px 5px rgba(255, 255, 255, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all var(--transition-base);
 }
 
 .navCta:hover {
-    background: var(--color-primary);
+    background: #EA580C;
+    box-shadow:
+        1px 1px 3px rgba(0, 0, 0, 0.15),
+        -1px -1px 3px rgba(255, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
 }
 
-.themeToggle {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
+.navCta:active {
+    box-shadow:
+        inset 2px 2px 4px rgba(0, 0, 0, 0.18),
+        inset -1px -1px 3px rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+}
+
+[data-theme="dark"] .navCta {
+    background: #F97316;
+    color: white !important;
+    box-shadow:
+        3px 3px 8px rgba(0, 0, 0, 0.4),
+        -2px -2px 5px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .navCta:hover {
+    background: #EA580C;
+    box-shadow:
+        1px 1px 4px rgba(0, 0, 0, 0.5),
+        -1px -1px 3px rgba(255, 255, 255, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ---- Day/Night Switch ---- */
+.themeSwitchContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0.5rem;
+    gap: 0;
+}
+
+.themeSwitch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.themeSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.themeSlider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #e2e8f0;
+    border-radius: 26px;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+    box-shadow:
+        inset 1px 1px 3px rgba(0, 0, 0, 0.1),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.themeSlider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
     border-radius: 50%;
-    transition: background 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.4s ease,
+                box-shadow 0.4s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    z-index: 1;
 }
 
-.themeToggle:hover {
-    background: rgba(0, 0, 0, 0.05);
+/* Sun & Moon SVG icons inside the knob */
+.themeSlider .iconSun,
+.themeSlider .iconMoon {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    z-index: 2;
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    top: 50%;
 }
 
-[data-theme="dark"] .themeToggle:hover {
-    background: rgba(255, 255, 255, 0.1);
+/* Sun sits centered on the knob in unchecked (light) position */
+/* Knob: left 3px, width 20px → center at 13px → minus half icon (6px) = 7px */
+.themeSlider .iconSun {
+    left: 7px;
+    transform: translateY(-50%);
+    color: #F59E0B;
+    opacity: 1;
+}
+
+/* Moon sits centered on the knob in checked (dark) position */
+/* Knob moves 22px right → center at 35px → minus half icon (6px) = 29px */
+.themeSlider .iconMoon {
+    left: 29px;
+    transform: translateY(-50%);
+    color: #93c5fd;
+    opacity: 0;
+}
+
+/* Checked (dark mode) */
+.themeSwitch input:checked + .themeSlider {
+    background: #1e293b;
+    box-shadow:
+        inset 1px 1px 3px rgba(0, 0, 0, 0.4),
+        0 0 10px rgba(99, 102, 241, 0.15);
+}
+
+.themeSwitch input:checked + .themeSlider::before {
+    transform: translateX(22px);
+    background: #1e293b;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* When checked: hide sun, show moon */
+.themeSwitch input:checked + .themeSlider .iconSun {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5) rotate(90deg);
+}
+
+.themeSwitch input:checked + .themeSlider .iconMoon {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+.themeSwitch input:focus-visible + .themeSlider {
+    outline: 2px solid var(--color-primary, #005eb8);
+    outline-offset: 2px;
 }
 
 @media (max-width: 768px) {

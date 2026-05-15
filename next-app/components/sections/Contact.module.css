@@ -143,7 +143,7 @@
     font-size: var(--text-lg);
     font-weight: 600;
     color: white;
-    background: var(--color-text-primary);
+    background: #F97316;
     border: none;
     border-radius: 50px;
     cursor: pointer;
@@ -151,16 +151,47 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.12),
+        -3px -3px 6px rgba(255, 255, 255, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .submitBtn:hover:not(:disabled) {
-    background: var(--color-primary);
+    background: #EA580C;
     transform: translateY(-2px);
+    box-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.15),
+        -2px -2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.submitBtn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow:
+        inset 3px 3px 6px rgba(0, 0, 0, 0.18),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.1);
 }
 
 .submitBtn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+[data-theme="dark"] .submitBtn {
+    background: #F97316;
+    box-shadow:
+        4px 4px 10px rgba(0, 0, 0, 0.4),
+        -3px -3px 6px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .submitBtn:hover:not(:disabled) {
+    background: #EA580C;
+    box-shadow:
+        2px 2px 5px rgba(0, 0, 0, 0.5),
+        -2px -2px 4px rgba(255, 255, 255, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .statusMessage {
