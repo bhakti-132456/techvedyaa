@@ -21,7 +21,7 @@ export default function Footer() {
                     <img
                         src={mounted && theme === 'dark' ? "/assets/techvedyaa_logo_dark.png" : "/assets/logo-full.png"}
                         alt="TechVedyaa"
-                        style={{ height: '60px', width: 'auto', objectFit: 'contain' }}
+                        style={{ height: '100px', width: 'auto', objectFit: 'contain' }}
                     />
                 </Link>
                 <div style={{ textAlign: 'center' }}>
