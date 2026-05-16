@@ -2,9 +2,6 @@ import { industries } from '@/lib/data/industries';
 import styles from './Industries.module.css';
 
 export default function IndustriesSection() {
-    // Double the industries for seamless loop
-    const doubledIndustries = [...industries, ...industries];
-
     return (
         <section className={styles.industries}>
             <div className="container">
@@ -15,9 +12,19 @@ export default function IndustriesSection() {
             </div>
 
             <div className={styles.ticker}>
-                <div className={styles.tickerContent}>
-                    {doubledIndustries.map((industry, index) => (
+                {/* Two identical strips side-by-side — when the first scrolls fully 
+                    off-screen, the second has taken its exact position, creating 
+                    a perfectly seamless infinite loop */}
+                <div className={styles.tickerContent} aria-hidden="false">
+                    {industries.map((industry, index) => (
                         <div key={index} className={styles.industryItem}>
+                            {industry}
+                        </div>
+                    ))}
+                </div>
+                <div className={styles.tickerContent} aria-hidden="true">
+                    {industries.map((industry, index) => (
+                        <div key={`dup-${index}`} className={styles.industryItem}>
                             {industry}
                         </div>
                     ))}

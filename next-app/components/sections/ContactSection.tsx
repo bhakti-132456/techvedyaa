@@ -33,22 +33,19 @@ export default function ContactSection() {
         const SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || '';
 
         try {
-            // We use 'no-cors' because Google Scripts often have CORS issues when returning responses directly
-            // from client-side form submissions, or we can use a standard fetch if CORS is configured in the script.
-            // Using a standard POST request with 'application/x-www-form-urlencoded' is often more reliable
-            // for simple Google Apps Scripts without preflight issues.
-            
-            const formBody = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key as keyof typeof formData])).join('&');
-
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formBody
+            // Use GET with query parameters to avoid CORS preflight issues entirely.
+            // Google Apps Script's doGet receives these via e.parameter.
+            const params = new URLSearchParams();
+            Object.keys(formData).forEach(key => {
+                params.append(key, String(formData[key as keyof typeof formData]));
             });
 
-            // If using 'no-cors', response.ok is false and status is 0, so we just assume success if it doesn't throw
+            await fetch(`${SCRIPT_URL}?${params.toString()}`, {
+                method: 'GET',
+                mode: 'no-cors',
+            });
+
+            // With 'no-cors', response is opaque (status 0), so we assume success if no error is thrown
             setStatus('success');
             setFormData({ name: '', phone: '', email: '', whatsappEnabled: false, requirements: '' });
             

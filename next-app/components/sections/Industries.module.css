@@ -8,26 +8,36 @@
     display: flex;
     overflow: hidden;
     user-select: none;
-    gap: var(--spacing-lg);
     padding: var(--spacing-xl) 0;
+    /* GPU-accelerated layer for buttery smooth scrolling */
+    will-change: transform;
 }
 
 .tickerContent {
     flex-shrink: 0;
     display: flex;
-    justify-content: space-around;
-    min-width: 100%;
     gap: var(--spacing-lg);
-    animation: scroll 30s linear infinite;
+    /* 
+     * Each strip uses min-width: max-content so it's exactly as wide 
+     * as its items. We add padding-right equal to the gap so the space 
+     * between the last item of strip 1 and the first item of strip 2 
+     * matches the internal gaps perfectly — seamless.
+     */
+    min-width: max-content;
+    padding-right: var(--spacing-lg);
+    animation: ticker-scroll 25s linear infinite;
+    /* Force GPU compositing for jank-free animation */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
-@keyframes scroll {
-    from {
-        transform: translateX(0);
+@keyframes ticker-scroll {
+    0% {
+        transform: translate3d(0, 0, 0);
     }
-
-    to {
-        transform: translateX(-100%);
+    100% {
+        transform: translate3d(-100%, 0, 0);
     }
 }
 
@@ -40,7 +50,7 @@
     font-size: var(--text-lg);
     font-weight: 500;
     color: var(--color-text-secondary);
-    transition: all var(--transition-base);
+    transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .industryItem:hover {
@@ -49,11 +59,29 @@
     transform: scale(1.05);
 }
 
+/* Pause animation on hover for readability */
+.ticker:hover .tickerContent {
+    animation-play-state: paused;
+}
+
 @media (max-width: 768px) {
     .tickerContent {
         animation: none;
         flex-wrap: wrap;
         justify-content: center;
+        min-width: 100%;
+        padding-right: 0;
+    }
+
+    .ticker {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        justify-content: center;
+    }
+
+    /* Hide the duplicate strip on mobile since we're wrapping */
+    .tickerContent:nth-child(2) {
+        display: none;
     }
 
     .industryItem {
