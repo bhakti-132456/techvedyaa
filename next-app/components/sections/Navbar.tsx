@@ -8,6 +8,7 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { theme, setTheme } = useTheme();
 
     useEffect(() => {
@@ -34,11 +35,21 @@ export default function Navbar() {
                     />
                 </Link>
 
-                <ul className={styles.navMenu}>
-                    <li><Link href="#services" className={styles.navLink}>Services</Link></li>
-                    <li><Link href="#methodology" className={styles.navLink}>Approach</Link></li>
-                    <li><Link href="#process" className={styles.navLink}>Process</Link></li>
-                    <li><Link href="#contact" className={`${styles.navLink} ${styles.navCta}`}>Get Started</Link></li>
+                <button 
+                    className={`${styles.mobileMenuBtn} ${isMobileMenuOpen ? styles.open : ''}`}
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    <span className={styles.hamburgerLine}></span>
+                    <span className={styles.hamburgerLine}></span>
+                    <span className={styles.hamburgerLine}></span>
+                </button>
+
+                <ul className={`${styles.navMenu} ${isMobileMenuOpen ? styles.navMenuOpen : ''}`}>
+                    <li><Link href="#services" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Services</Link></li>
+                    <li><Link href="#methodology" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Approach</Link></li>
+                    <li><Link href="#process" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Process</Link></li>
+                    <li><Link href="#contact" className={`${styles.navLink} ${styles.navCta}`} onClick={() => setIsMobileMenuOpen(false)}>Get Started</Link></li>
                     {mounted && (
                         <li>
                             <div className={styles.themeSwitchContainer}>

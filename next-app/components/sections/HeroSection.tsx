@@ -7,7 +7,7 @@ export default function HeroSection() {
                 <div className={styles.heroContent}>
                     <p className={styles.heroSubtitle}>Digital Solutions Provider</p>
                     <h1 className={styles.heroTitle}>
-                        Transform Business with <br />
+                        Transform <span style={{ color: '#F97316' }}>Business</span> with <br />
                         <span className="gradient-text">Intelligent Solutions</span>
                     </h1>
                     <p className={styles.heroDescription}>

@@ -157,24 +157,66 @@
     background: rgba(74, 168, 255, 0.12);
 }
 
+.mobileControls {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--spacing-sm);
+    margin-bottom: -10px;
+    padding: 0 var(--spacing-sm);
+}
+
+.mobileScrollHint {
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.scrollButtons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.scrollBtn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.scrollBtn:active {
+    transform: scale(0.95);
+}
+
 /* ============================================
    Mobile: Native CSS Scroll Snap
    ============================================ */
 @media (max-width: 768px) {
+    .mobileControls {
+        display: flex;
+    }
+
     .horizontalWrapper {
         overflow-x: auto;
+        overflow-y: hidden; /* Prevent vertical scroll within the wrapper/cards */
         scroll-snap-type: x mandatory;
         overscroll-behavior-x: contain;
         -webkit-overflow-scrolling: touch;
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm);
         gap: var(--spacing-md);
         scrollbar-width: none;
-        /* Firefox */
     }
 
     .horizontalWrapper::-webkit-scrollbar {
         display: none;
-        /* Chrome/Safari */
     }
 
     .serviceCard {
@@ -182,5 +224,42 @@
         min-width: 85vw;
         scroll-snap-align: center;
         margin-right: 0;
+        /* Completely solid background */
+        background: var(--color-bg);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Normal shadow */
+        padding: var(--spacing-md);
+        height: auto;
+        overflow: hidden; /* Prevent internal scroll */
+    }
+    
+    [data-theme="dark"] .serviceCard {
+        background: #111827; /* Solid dark color */
+        border-color: #374151;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    .serviceTitle {
+        font-size: var(--text-lg);
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .serviceDescription {
+        font-size: 13px;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .serviceFeatures li {
+        font-size: 13px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    
+    .serviceIcon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: var(--spacing-sm);
     }
 }

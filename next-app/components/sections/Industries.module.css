@@ -64,24 +64,28 @@
     animation-play-state: paused;
 }
 
+.mobileTickers {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    .desktopTicker {
+        display: none;
+    }
+    
+    .mobileTickers {
+        display: block;
+        padding: var(--spacing-md) 0;
+    }
+
     .tickerContent {
-        animation: none;
-        flex-wrap: wrap;
-        justify-content: center;
-        min-width: 100%;
-        padding-right: 0;
+        /* Keep animation running, just smaller gap/padding */
+        gap: var(--spacing-md);
+        padding-right: var(--spacing-md);
     }
 
     .ticker {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
-        justify-content: center;
-    }
-
-    /* Hide the duplicate strip on mobile since we're wrapping */
-    .tickerContent:nth-child(2) {
-        display: none;
+        padding: 0;
     }
 
     .industryItem {

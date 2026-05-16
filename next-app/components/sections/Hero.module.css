@@ -176,6 +176,10 @@
         font-size: clamp(2rem, 8vw, 3rem);
     }
 
+    .heroDescription {
+        font-size: var(--text-base);
+    }
+
     .heroCtaGroup {
         flex-direction: column;
     }

@@ -47,4 +47,13 @@
     .grid {
         grid-template-columns: 1fr;
     }
+    
+    .card {
+        padding: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .iconWrapper {
+        margin: 0 auto var(--spacing-md) auto;
+    }
 }
