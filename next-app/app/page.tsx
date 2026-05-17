@@ -9,11 +9,13 @@ import IndustriesSection from '@/components/sections/IndustriesSection';
 import ContactSection from '@/components/sections/ContactSection';
 import ClientIslands from '@/components/islands/ClientIslands';
 import Footer from '@/components/sections/Footer';
+import Global3DCanvas from '@/components/3d/Global3DCanvasWrapper';
 
 export default function Home() {
   return (
     <>
       <ClientIslands />
+      <Global3DCanvas />
 
       <main style={{ position: 'relative', zIndex: 1 }}>
         <HeroSection />

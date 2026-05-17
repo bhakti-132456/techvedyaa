@@ -1,4 +1,5 @@
 import styles from './Engagement.module.css';
+import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
 
 export default function EngagementSection() {
     const models = [
@@ -31,16 +32,18 @@ export default function EngagementSection() {
                 </div>
 
                 <div className={styles.grid}>
-                    {models.map((model, index) => (
-                        <div key={index} className={styles.card}>
-                            <div
-                                className={styles.iconWrapper}
-                                dangerouslySetInnerHTML={{ __html: model.icon }}
-                            />
-                            <h3 className={styles.cardTitle}>{model.title}</h3>
-                            <p className={styles.cardDescription}>{model.description}</p>
-                        </div>
-                    ))}
+                    {models.map((model, index) => {
+                        const iconType = model.title.toLowerCase().replace(/\s+/g, '-');
+                        return (
+                            <div key={index} className={styles.card}>
+                                <div className={styles.iconWrapper}>
+                                    <Micro3DIcon type={iconType} />
+                                </div>
+                                <h3 className={styles.cardTitle}>{model.title}</h3>
+                                <p className={styles.cardDescription}>{model.description}</p>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

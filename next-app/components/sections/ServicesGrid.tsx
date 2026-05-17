@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { services } from '@/lib/data/services';
 import styles from './Services.module.css';
+import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
 
 export default function ServicesGrid() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -47,10 +48,9 @@ export default function ServicesGrid() {
             <div className={styles.horizontalWrapper} data-horizontal-track ref={scrollContainerRef}>
                 {services.map((service) => (
                     <div key={service.id} className={styles.serviceCard}>
-                        <div
-                            className={styles.serviceIcon}
-                            dangerouslySetInnerHTML={{ __html: service.icon }}
-                        />
+                        <div className={styles.serviceIcon}>
+                            <Micro3DIcon type={service.id} />
+                        </div>
                         <h3 className={styles.serviceTitle}>{service.title}</h3>
                         <p className={styles.serviceDescription}>{service.description}</p>
                         <ul className={styles.serviceFeatures}>

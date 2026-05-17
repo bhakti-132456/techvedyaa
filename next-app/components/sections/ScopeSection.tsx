@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import styles from './Scope.module.css';
+import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
 
 export default function ScopeSection() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [expandedCards, setExpandedCards] = useState<boolean[]>([]);
 
     const scopes = [
         {
@@ -44,6 +46,12 @@ export default function ScopeSection() {
         setIsExpanded(!isExpanded);
     };
 
+    const toggleCardExpand = (index: number) => {
+        const newExpandedCards = [...expandedCards];
+        newExpandedCards[index] = !newExpandedCards[index];
+        setExpandedCards(newExpandedCards);
+    };
+
     return (
         <section className={styles.scope} id="scope">
             <div className="container">
@@ -62,23 +70,32 @@ export default function ScopeSection() {
                 </div>
 
                 <div className={styles.grid}>
-                    {scopes.map((scope, index) => (
-                        <div key={index} className={styles.card}>
-                            <div
-                                className={styles.iconWrapper}
-                                dangerouslySetInnerHTML={{ __html: scope.icon }}
-                            />
+                    {scopes.map((scope, index) => {
+                        const iconType = scope.title.toLowerCase().replace(/\s+/g, '-');
+                        return (
+                            <div key={index} className={styles.card}>
+                                <div className={styles.iconWrapper}>
+                                    <Micro3DIcon type={iconType} />
+                                </div>
                             <h3 className={styles.cardTitle}>{scope.title}</h3>
 
-                            <div className={`${styles.detailsContainer} ${isExpanded ? styles.expanded : ''}`}>
+                            <button 
+                                className={styles.mobileExpandBtn} 
+                                onClick={() => toggleCardExpand(index)}
+                            >
+                                {expandedCards[index] || isExpanded ? 'Hide Details' : 'Show Details'}
+                            </button>
+
+                            <div className={`${styles.detailsContainer} ${isExpanded || expandedCards[index] ? styles.expanded : ''}`}>
                                 <ul className={styles.detailsList}>
                                     {scope.details.map((detail, i) => (
                                         <li key={i}>{detail}</li>
                                     ))}
                                 </ul>
                             </div>
-                        </div>
-                    ))}
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

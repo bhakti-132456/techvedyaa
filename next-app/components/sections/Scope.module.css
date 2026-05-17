@@ -30,8 +30,8 @@
 }
 
 .iconWrapper {
-    width: 56px;
-    height: 56px;
+    width: 80px;
+    height: 80px;
     margin: 0 auto var(--spacing-md);
     color: var(--color-primary);
     display: flex;
@@ -53,34 +53,56 @@
 
 .globalExpandBtn {
     background: var(--color-bg);
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-border);
     color: var(--color-primary);
     font-size: var(--text-sm);
     font-weight: 600;
     cursor: pointer;
     padding: var(--spacing-sm) var(--spacing-xl);
     border-radius: 50px;
+    box-shadow: var(--neu-shadow-raised);
     transition: all var(--transition-fast);
     display: inline-block;
-    box-shadow: 0 2px 10px rgba(0, 94, 184, 0.1);
 }
 
-.globalExpandBtn:hover {
+.mobileExpandBtn {
+    display: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 50px;
+    box-shadow: var(--neu-shadow-raised);
+    transition: all var(--transition-fast);
+    margin: var(--spacing-sm) auto;
+}
+
+.mobileExpandBtn:hover, .globalExpandBtn:hover {
     background: var(--color-primary);
     color: white;
+    box-shadow: var(--neu-shadow-primary-inset);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 94, 184, 0.2);
 }
 
-[data-theme="dark"] .globalExpandBtn {
-    border-color: rgba(74, 168, 255, 0.5);
+.mobileExpandBtn:active, .globalExpandBtn:active {
+    transform: translateY(1px);
+    box-shadow: var(--neu-shadow-primary-inset);
+}
+
+[data-theme="dark"] .mobileExpandBtn, [data-theme="dark"] .globalExpandBtn {
+    border-color: var(--color-border);
     color: var(--color-text-primary);
-    background: rgba(74, 168, 255, 0.1);
+    background: var(--color-bg);
+    box-shadow: var(--neu-shadow-raised);
 }
 
-[data-theme="dark"] .globalExpandBtn:hover {
+[data-theme="dark"] .mobileExpandBtn:hover, [data-theme="dark"] .globalExpandBtn:hover {
     background: var(--color-primary);
     color: #111;
+    box-shadow: var(--neu-shadow-inset);
 }
 
 .detailsContainer {
@@ -123,5 +145,11 @@
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
+    }
+    .globalExpandBtn {
+        display: none;
+    }
+    .mobileExpandBtn {
+        display: inline-block;
     }
 }

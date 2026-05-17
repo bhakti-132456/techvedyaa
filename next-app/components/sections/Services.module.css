@@ -4,6 +4,7 @@
 .servicesTrack {
     position: relative;
     overflow: hidden;
+    padding: var(--spacing-3xl) 0 var(--spacing-3xl);
 }
 
 .sectionHeader {
@@ -38,6 +39,7 @@
     display: flex;
     flex-wrap: nowrap;
     will-change: transform;
+    padding: var(--spacing-md) 0 var(--spacing-2xl);
 }
 
 .serviceCard {
@@ -79,15 +81,13 @@
 }
 
 .serviceIcon {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-md);
-    background: rgba(0, 94, 184, 0.08);
+    width: 80px;
+    height: 80px;
+    background: transparent !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--spacing-md);
-    color: var(--color-primary);
+    margin: 0 auto var(--spacing-md);
 }
 
 .serviceTitle {
@@ -95,6 +95,7 @@
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
     color: var(--color-text-primary);
+    text-align: center;
 }
 
 .serviceDescription {
@@ -102,6 +103,7 @@
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin-bottom: var(--spacing-md);
+    text-align: center;
 }
 
 .serviceFeatures {
@@ -154,7 +156,7 @@
 }
 
 [data-theme="dark"] .serviceIcon {
-    background: rgba(74, 168, 255, 0.12);
+    background: transparent !important;
 }
 
 .mobileControls {
@@ -181,19 +183,39 @@
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     color: var(--color-text-primary);
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--neu-shadow-raised);
+    transition: all var(--transition-fast);
+}
+
+.scrollBtn:hover {
+    color: var(--color-primary);
+    box-shadow: var(--neu-shadow-inset);
+    transform: translateY(-2px);
 }
 
 .scrollBtn:active {
-    transform: scale(0.95);
+    transform: translateY(1px);
+    box-shadow: var(--neu-shadow-inset);
+}
+
+[data-theme="dark"] .scrollBtn {
+    background: var(--color-bg);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+    box-shadow: var(--neu-shadow-raised);
+}
+
+[data-theme="dark"] .scrollBtn:hover {
+    color: var(--color-primary);
+    box-shadow: var(--neu-shadow-inset);
 }
 
 /* ============================================
@@ -206,11 +228,11 @@
 
     .horizontalWrapper {
         overflow-x: auto;
-        overflow-y: hidden; /* Prevent vertical scroll within the wrapper/cards */
+        overflow-y: visible; /* Allow drop shadows and card bottoms to be fully visible */
         scroll-snap-type: x mandatory;
         overscroll-behavior-x: contain;
         -webkit-overflow-scrolling: touch;
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm) var(--spacing-2xl);
         gap: var(--spacing-md);
         scrollbar-width: none;
     }
@@ -258,8 +280,8 @@
     }
     
     .serviceIcon {
-        width: 40px;
-        height: 40px;
-        margin-bottom: var(--spacing-sm);
+        width: 64px;
+        height: 64px;
+        margin: 0 auto var(--spacing-sm);
     }
 }

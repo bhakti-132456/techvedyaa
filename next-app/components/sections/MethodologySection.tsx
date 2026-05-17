@@ -1,5 +1,6 @@
 import { methodologyItems } from '@/lib/data/methodology';
 import styles from './Methodology.module.css';
+import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
 
 export default function MethodologySection() {
     return (
@@ -14,16 +15,18 @@ export default function MethodologySection() {
                 </div>
 
                 <div className={styles.grid}>
-                    {methodologyItems.map((item, index) => (
-                        <div key={index} className={styles.card}>
-                            <div
-                                className={styles.iconWrapper}
-                                dangerouslySetInnerHTML={{ __html: item.icon }}
-                            />
-                            <h3 className={styles.cardTitle}>{item.title}</h3>
-                            <p className={styles.cardDescription}>{item.description}</p>
-                        </div>
-                    ))}
+                    {methodologyItems.map((item, index) => {
+                        const iconType = item.title.toLowerCase().replace(/\s+/g, '-');
+                        return (
+                            <div key={index} className={styles.card}>
+                                <div className={styles.iconWrapper}>
+                                    <Micro3DIcon type={iconType} />
+                                </div>
+                                <h3 className={styles.cardTitle}>{item.title}</h3>
+                                <p className={styles.cardDescription}>{item.description}</p>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

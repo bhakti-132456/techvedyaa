@@ -151,47 +151,34 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow:
-        4px 4px 8px rgba(0, 0, 0, 0.12),
-        -3px -3px 6px rgba(255, 255, 255, 0.7),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: 5px 5px 12px rgba(249, 115, 22, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.4);
 }
 
 .submitBtn:hover:not(:disabled) {
     background: #EA580C;
     transform: translateY(-2px);
-    box-shadow:
-        2px 2px 4px rgba(0, 0, 0, 0.15),
-        -2px -2px 4px rgba(255, 255, 255, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 6px rgba(255, 255, 255, 0.3);
 }
 
 .submitBtn:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow:
-        inset 3px 3px 6px rgba(0, 0, 0, 0.18),
-        inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+    transform: translateY(1px);
+    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3), inset -2px -2px 5px rgba(255, 255, 255, 0.2);
 }
 
 .submitBtn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 [data-theme="dark"] .submitBtn {
     background: #F97316;
-    box-shadow:
-        4px 4px 10px rgba(0, 0, 0, 0.4),
-        -3px -3px 6px rgba(255, 255, 255, 0.04),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.6), -5px -5px 12px rgba(249, 115, 22, 0.2), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="dark"] .submitBtn:hover:not(:disabled) {
     background: #EA580C;
-    box-shadow:
-        2px 2px 5px rgba(0, 0, 0, 0.5),
-        -2px -2px 4px rgba(255, 255, 255, 0.03),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.1);
 }
 
 .statusMessage {
