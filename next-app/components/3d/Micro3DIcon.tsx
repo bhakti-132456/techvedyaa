@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { View } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -399,49 +399,68 @@ function DefaultPrimitive({ hovered }: { hovered: boolean }) {
 export default function Micro3DIcon({ type = 'default', className = '' }: { type?: string, className?: string }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(containerRef, { once: false, margin: '100px' });
-    const [hovered, setHover] = useState(false);
+    const [cardHovered, setCardHovered] = useState(false);
+    const [iconHovered, setIconHovered] = useState(false);
+
+    useEffect(() => {
+        const el = containerRef.current?.closest('[class*="card"], [class*="Card"]');
+        if (!el) return;
+        if (el.matches(':hover')) {
+            setCardHovered(true);
+        }
+        const handleEnter = () => setCardHovered(true);
+        const handleLeave = () => setCardHovered(false);
+        el.addEventListener('pointerenter', handleEnter);
+        el.addEventListener('pointerleave', handleLeave);
+        return () => {
+            el.removeEventListener('pointerenter', handleEnter);
+            el.removeEventListener('pointerleave', handleLeave);
+        };
+    }, []);
+
+    const isActive = cardHovered || iconHovered;
 
     const renderMesh = () => {
         switch (type) {
             case 'marketing-communications':
             case 'marketcom':
-                return <AntennaMesh hovered={hovered} />;
+                return <AntennaMesh hovered={isActive} />;
             case 'strategy':
             case 'brand':
             case 'campaign-management':
-                return <StrategyConeMesh hovered={hovered} />;
+                return <StrategyConeMesh hovered={isActive} />;
             case 'tech-solutions':
             case 'tech':
-                return <TechCubeMesh hovered={hovered} />;
+                return <TechCubeMesh hovered={isActive} />;
             case 'ai-solutions':
             case 'ai':
-                return <AINetworkMesh hovered={hovered} />;
+                return <AINetworkMesh hovered={isActive} />;
             case 'social-media':
             case 'social':
-                return <SocialOrbitMesh hovered={hovered} />;
+                return <SocialOrbitMesh hovered={isActive} />;
             case 'pr':
-                return <PRWaveMesh hovered={hovered} />;
+                return <PRWaveMesh hovered={isActive} />;
             case 'strategic-alignment':
-                return <BracketsMesh hovered={hovered} />;
+                return <BracketsMesh hovered={isActive} />;
             case 'data-driven':
             case 'continuous-optimization':
-                return <EqualizerMesh hovered={hovered} />;
+                return <EqualizerMesh hovered={isActive} />;
             case 'channel-integration':
             case 'scalable-solutions':
-                return <JunctionMesh hovered={hovered} />;
+                return <JunctionMesh hovered={isActive} />;
             case 'automation-first':
             case 'marketing-automation':
             case 'lms':
-                return <InfinityMesh hovered={hovered} />;
+                return <InfinityMesh hovered={isActive} />;
             case 'strategic-planning':
             case 'project-based':
-                return <PillarMesh hovered={hovered} />;
+                return <PillarMesh hovered={isActive} />;
             case 'lead-servicing':
             case 'retainer-based':
             case 'hybrid':
-                return <FunnelMesh hovered={hovered} />;
+                return <FunnelMesh hovered={isActive} />;
             default:
-                return <DefaultPrimitive hovered={hovered} />;
+                return <DefaultPrimitive hovered={isActive} />;
         }
     };
 
@@ -449,9 +468,18 @@ export default function Micro3DIcon({ type = 'default', className = '' }: { type
         <div 
             ref={containerRef} 
             className={`micro-3d-icon-container ${className}`} 
-            style={{ width: '100%', height: '100%', minWidth: '64px', minHeight: '64px', position: 'relative', cursor: 'pointer' }}
-            onPointerEnter={() => setHover(true)}
-            onPointerLeave={() => setHover(false)}
+            style={{ 
+                width: '100%', 
+                height: '100%', 
+                minWidth: '64px', 
+                minHeight: '64px', 
+                position: 'relative', 
+                cursor: 'pointer',
+                transform: iconHovered ? 'scale(1.1)' : 'scale(1)',
+                transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            }}
+            onPointerEnter={() => setIconHovered(true)}
+            onPointerLeave={() => setIconHovered(false)}
         >
             {isInView && (
                 <View style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
