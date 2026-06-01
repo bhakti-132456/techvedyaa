@@ -1,34 +1,61 @@
 /**
- * Google Apps Script for TechVedyaa Lead Form (Secure Version)
+ * =========================================================================
+ *             TECHVEDYAA LEAD FORM GOOGLE APPS SCRIPT (v2.0)
+ * =========================================================================
  * 
- * This script handles incoming GET & POST requests from the lead contact form,
- * populates the spreadsheet with the lead details, and sends a real-time 
- * notification via Telegram instead of email.
+ * INSTRUCTIONS FOR SETTING UP TELEGRAM NOTIFICATIONS:
  * 
- * SECURITY: This version retrieves credentials securely from Google Apps Script 
- * environment variables (Script Properties), so no raw secrets are in the code.
+ * 1. BOT TOKEN: Paste your Telegram Bot Token in the CONFIG.botToken field below.
+ *    Example: "1234567890:ABCdefGhIJKlmNoPqRStUvWxYz"
+ * 
+ * 2. CHAT ID: Paste your personal Telegram Chat ID (a number) in the CONFIG.chatId field.
+ *    Example: "987654321" (Use @userinfobot in Telegram to get this number)
+ * 
+ * 3. SAVE AND RUN TEST:
+ *    - Press Cmd+S (Mac) or Ctrl+S (Windows) to Save in the Google Apps Script editor.
+ *    - Select the function "testTelegramConnection" from the dropdown in the toolbar.
+ *    - Click the "Run" button to verify.
+ * 
+ * 4. DEPLOY:
+ *    - Click "Deploy" -> "Manage deployments" -> Click the Edit (pencil) icon -> Select "New version" -> Click "Deploy".
  */
 
-// Retrieve credentials securely from Google Apps Script environment settings
-var TELEGRAM_BOT_TOKEN = PropertiesService.getScriptProperties().getProperty("TELEGRAM_BOT_TOKEN");
-var TELEGRAM_CHAT_ID = PropertiesService.getScriptProperties().getProperty("TELEGRAM_CHAT_ID");
+var CONFIG = {
+  // --- PASTE YOUR CREDENTIALS HERE ---
+  botToken: "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+  chatId: "YOUR_TELEGRAM_CHAT_ID_HERE",
+  
+  // If set to true, it will read from Project Settings -> Script Properties instead.
+  // Set to false to force it to use the tokens pasted above.
+  useScriptProperties: false
+};
+
+// Resolve credentials based on config choice
+var TELEGRAM_BOT_TOKEN = CONFIG.useScriptProperties 
+  ? (PropertiesService.getScriptProperties().getProperty("TELEGRAM_BOT_TOKEN") || CONFIG.botToken)
+  : CONFIG.botToken;
+
+var TELEGRAM_CHAT_ID = CONFIG.useScriptProperties 
+  ? (PropertiesService.getScriptProperties().getProperty("TELEGRAM_CHAT_ID") || CONFIG.chatId)
+  : CONFIG.chatId;
+
 
 /**
- * Handles GET requests from the Next.js frontend (ContactSection.tsx uses fetch with GET)
+ * Web App entry point for GET requests
  */
 function doGet(e) {
   return handleLeadFormSubmit(e);
 }
 
 /**
- * Handles POST requests (for future-proofing or alternative submission methods)
+ * Web App entry point for POST requests
  */
 function doPost(e) {
   return handleLeadFormSubmit(e);
 }
 
 /**
- * Main request handler to process form inputs, append to Google Sheets, and notify Telegram
+ * Processes incoming form submissions, writes to Sheet, and alerts Telegram
  */
 function handleLeadFormSubmit(e) {
   try {
@@ -38,79 +65,73 @@ function handleLeadFormSubmit(e) {
     
     var sheet = SpreadsheetApp.getActiveSheet();
     
-    // Initialize headers if spreadsheet is completely empty
+    // Initialize sheet headers if empty
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "WhatsApp Enabled", "Requirements"]);
     }
     
-    // Capture form values from the URL query parameters
+    // Parse form parameters
     var timestamp = new Date();
     var name = e.parameter.name || "N/A";
     var email = e.parameter.email || "N/A";
     var phone = e.parameter.phone || "N/A";
-    var whatsappEnabled = e.parameter.whatsappEnabled === "true" || e.parameter.whatsappEnabled === true ? "Yes" : "No";
+    var whatsappEnabled = (e.parameter.whatsappEnabled === "true" || e.parameter.whatsappEnabled === true) ? "Yes" : "No";
     var requirements = e.parameter.requirements || "N/A";
     
-    // Append a new row to the sheet
+    // Append to Google sheet
     sheet.appendRow([timestamp, name, email, phone, whatsappEnabled, requirements]);
     
-    // Send Telegram Notification (instead of traditional Email notification)
-    sendTelegramNotification();
+    // Trigger Telegram notification
+    sendTelegramAlert(name, email, phone, whatsappEnabled, requirements, timestamp);
     
-    // Return a JSON response back to the Next.js frontend
-    var result = { status: "success", message: "Lead recorded and notification sent." };
-    return ContentService.createTextOutput(JSON.stringify(result))
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "Lead saved and Telegram alert sent!" }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
-    var errorResult = { status: "error", message: error.toString() };
-    return ContentService.createTextOutput(JSON.stringify(errorResult))
+    Logger.log("Error in submission handler: " + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 /**
- * Sends a rich, dynamically formatted Telegram notification with the latest lead details
+ * Sends a safely formatted HTML notification to Telegram
  */
-function sendTelegramNotification() {
+function sendTelegramAlert(name, email, phone, whatsappEnabled, requirements, timestamp) {
   var botToken = TELEGRAM_BOT_TOKEN;
   var chatId = TELEGRAM_CHAT_ID;
   
-  // Guard clause in case they haven't configured the credentials yet in Script Properties
-  if (!botToken || !chatId) {
-    Logger.log("Telegram credentials not configured in Script Properties. Skipping notification.");
-    return;
+  if (!botToken || botToken.indexOf("YOUR_TELEGRAM_BOT_TOKEN") === 0 || botToken.trim() === "") {
+    throw new Error("Telegram Bot Token is not configured! Please configure it at the top of the script.");
+  }
+  if (!chatId || chatId.indexOf("YOUR_TELEGRAM_CHAT_ID") === 0 || chatId.toString().trim() === "") {
+    throw new Error("Telegram Chat ID is not configured! Please configure it at the top of the script.");
   }
   
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var lastRow = sheet.getLastRow();
+  // Format the date/time nicely
+  var formattedTime = Utilities.formatDate(timestamp || new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
   
-  if (lastRow <= 1) {
-    Logger.log("No data rows found to notify.");
-    return;
-  }
+  // HTML-escape values to ensure the Telegram API parser never crashes on special characters
+  var safeName = htmlEscape(name);
+  var safeEmail = htmlEscape(email);
+  var safePhone = htmlEscape(phone);
+  var safeWhatsapp = htmlEscape(whatsappEnabled);
+  var safeRequirements = htmlEscape(requirements);
   
-  // Fetch the headers (Row 1) and the new lead data (Last Row)
-  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  var leadData = sheet.getRange(lastRow, 1, 1, sheet.getLastColumn()).getValues()[0];
+  // Construct the HTML formatted message
+  var message = "🚀 <b>New Lead Received!</b>\n\n" +
+                "🔹 <b>Name:</b> " + safeName + "\n" +
+                "🔹 <b>Email:</b> " + safeEmail + "\n" +
+                "🔹 <b>Phone:</b> " + safePhone + "\n" +
+                "🔹 <b>WhatsApp:</b> " + safeWhatsapp + "\n" +
+                "🔹 <b>Time:</b> " + formattedTime + "\n\n" +
+                "📝 <b>Requirements:</b>\n" + safeRequirements;
   
-  // Construct the notification message using Telegram Markdown
-  var message = "🚀 *New Lead Received!* \n\n";
-  for (var i = 0; i < headers.length; i++) {
-    // Format timestamp nicely if it is a Date object
-    var value = leadData[i];
-    if (value instanceof Date) {
-      value = Utilities.formatDate(value, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
-    }
-    message += "🔹 *" + headers[i] + ":* " + value + "\n";
-  }
-  
-  // Call the Telegram sendMessage API
-  var url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
+  var url = "https://api.telegram.org/bot" + botToken.trim() + "/sendMessage";
   var payload = {
-    "chat_id": chatId,
+    "chat_id": chatId.toString().trim(),
     "text": message,
-    "parse_mode": "Markdown"
+    "parse_mode": "HTML"
   };
   
   var options = {
@@ -121,5 +142,71 @@ function sendTelegramNotification() {
   };
   
   var response = UrlFetchApp.fetch(url, options);
-  Logger.log("Telegram API Response: " + response.getContentText());
+  var responseCode = response.getResponseCode();
+  var responseText = response.getContentText();
+  
+  Logger.log("Telegram API Response Code: " + responseCode + ", Content: " + responseText);
+  
+  if (responseCode !== 200) {
+    throw new Error("Telegram notification failed: " + responseText);
+  }
+}
+
+/**
+ * Diagnostic test to run directly in Apps Script editor
+ */
+function testTelegramConnection() {
+  Logger.log("=== STARTING TELEGRAM BOT DIAGNOSTIC ===");
+  try {
+    var botToken = TELEGRAM_BOT_TOKEN;
+    var chatId = TELEGRAM_CHAT_ID;
+    
+    Logger.log("1. Checking config variables...");
+    Logger.log("   - Bot Token: " + (botToken ? botToken.substring(0, Math.min(10, botToken.length)) + "..." : "EMPTY"));
+    Logger.log("   - Chat ID: " + chatId);
+    
+    if (!botToken || botToken.indexOf("YOUR_") === 0) {
+      throw new Error("Please configure your actual Bot Token in the CONFIG object at the top of the file.");
+    }
+    if (!chatId || chatId.indexOf("YOUR_") === 0) {
+      throw new Error("Please configure your actual Chat ID in the CONFIG object at the top of the file.");
+    }
+    
+    if (botToken.indexOf(":") === -1) {
+      Logger.log("⚠️ WARNING: Your Bot Token does not contain a colon (:). It might be incomplete or swapped!");
+    } else {
+      var extractedBotId = botToken.split(":")[0];
+      Logger.log("   - Extracted Bot ID from Token: " + extractedBotId);
+      if (String(extractedBotId).trim() === String(chatId).trim()) {
+        Logger.log("❌ ERROR: Your Chat ID is identical to your Bot ID! This is why you get the 'Forbidden' error. You must use your personal Telegram User ID, NOT the bot's ID.");
+        throw new Error("Chat ID matches Bot ID. Check instruction step 2.");
+      }
+    }
+    
+    Logger.log("2. Attempting to send secure HTML test message...");
+    sendTelegramAlert(
+      "Test User",
+      "test@example.com",
+      "+1 234 567 8900",
+      "Yes",
+      "This is a manual connection test from the Apps Script editor! 🚀",
+      new Date()
+    );
+    
+    Logger.log("✅ SUCCESS: Telegram bot sent the message successfully! Check your Telegram app.");
+  } catch (error) {
+    Logger.log("❌ FAILED: " + error.toString());
+  }
+  Logger.log("=== DIAGNOSTIC COMPLETE ===");
+}
+
+/**
+ * Helper to escape HTML tags to protect Telegram API HTML parser
+ */
+function htmlEscape(str) {
+  if (!str) return "N/A";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
