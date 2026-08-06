@@ -1,0 +1,94 @@
+/* ============================================
+   Why TechVedyaa — closing differentiators
+   ============================================ */
+
+.why {
+    padding: var(--spacing-3xl) 0;
+    background: transparent;
+}
+
+.header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto var(--spacing-2xl);
+}
+
+.label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-sm);
+}
+
+.title {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.05;
+    margin-bottom: var(--spacing-sm);
+}
+
+.description {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.card {
+    padding: var(--spacing-xl);
+    background: var(--surface-card);
+    backdrop-filter: var(--surface-card-blur);
+    -webkit-backdrop-filter: var(--surface-card-blur);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--neu-shadow-raised);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    text-align: center;
+}
+
+.card:hover {
+    box-shadow: var(--neu-shadow-float), 0 0 0 1px rgba(0, 94, 184, 0.12);
+    transform: translateY(-6px);
+}
+
+.iconWrapper {
+    width: 76px;
+    height: 76px;
+    color: var(--color-primary);
+    margin: 0 auto var(--spacing-md);
+}
+
+.cardTitle {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.cardDescription {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .why {
+        padding: var(--spacing-2xl) 0;
+    }
+
+    .card {
+        padding: var(--spacing-lg);
+    }
+}

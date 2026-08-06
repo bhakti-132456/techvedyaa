@@ -1,29 +1,37 @@
 .engagement {
     padding: var(--spacing-3xl) 0;
     position: relative;
-    background: var(--color-bg-alt);
+    background: transparent;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: var(--spacing-lg);
     margin-top: var(--spacing-2xl);
 }
 
 .card {
     padding: var(--spacing-xl);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    transition: all var(--transition-base);
+    background: var(--surface-card);
+    backdrop-filter: var(--surface-card-blur);
+    -webkit-backdrop-filter: var(--surface-card-blur);
+    border: none;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--neu-shadow-raised);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
     text-align: center;
 }
 
 .card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
+    box-shadow: var(--neu-shadow-float), 0 0 0 1px rgba(0, 94, 184, 0.12);
+    transform: translateY(-6px);
+}
+
+.card:active {
+    transform: translateY(0) scale(0.985);
+    box-shadow: var(--neu-shadow-inset);
+    transition-duration: 0.12s;
 }
 
 .iconWrapper {

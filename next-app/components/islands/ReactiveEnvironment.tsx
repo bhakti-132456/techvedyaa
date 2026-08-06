@@ -87,8 +87,8 @@ const fragmentShaderBody = /* glsl */ `
   // ---- Wave Interference ----
   float waveInterference(vec2 uv, vec2 center, float velocity) {
     float dist = length(uv - center);
-    float wave1 = sin(dist * 40.0 - u_time * 3.0) * 0.5 + 0.5;
-    float wave2 = sin(dist * 60.0 - u_time * 4.5 + 1.57) * 0.5 + 0.5;
+    float wave1 = sin(dist * 22.0 - u_time * 0.9) * 0.5 + 0.5;
+    float wave2 = sin(dist * 30.0 - u_time * 1.3 + 1.57) * 0.5 + 0.5;
     float interference = wave1 * wave2;
     float falloff = 1.0 - smoothstep(0.0, 0.25, dist);
     return interference * falloff * min(velocity * 2.0, 1.0);
@@ -122,8 +122,9 @@ const fragmentShaderBody = /* glsl */ `
     // Wave interference near cursor
     float waves = waveInterference(uvAspect, mouseUV, u_mouseVelocity);
 
-    // Light traces: boost circuit brightness near cursor
-    float lightTrace = circuit * glow * 3.0;
+    // Light traces: boost circuit brightness near cursor (kept gentle so
+    // the glow never washes out foreground text)
+    float lightTrace = circuit * glow * 1.5;
 
     // Theme-dependent colors
     vec3 bgColor = mix(vec3(0.98, 0.98, 1.0), vec3(0.06, 0.067, 0.09), u_theme);
@@ -147,12 +148,12 @@ const fragmentShaderBody = /* glsl */ `
     vec3 color = bgColor;
     color += circuitColor * circuit * mix(0.03, 0.06, u_theme);
     color += circuitColor * bgNoise * 0.015;
-    color += glowColor * lightTrace * 0.15;
-    color += waveColor * waves * 0.12;
-    color += glowColor * glow * u_mouseVelocity * 0.08;
+    color += glowColor * lightTrace * 0.07;
+    color += waveColor * waves * 0.06;
+    color += glowColor * glow * u_mouseVelocity * 0.03;
 
     // Very subtle overall opacity to not overpower content
-    float alpha = mix(0.04, 0.08, u_theme) + circuit * 0.02 + lightTrace * 0.06 + waves * 0.04;
+    float alpha = mix(0.04, 0.08, u_theme) + circuit * 0.02 + lightTrace * 0.025 + waves * 0.02;
 
     gl_FragColor = vec4(color, alpha);
   }
@@ -175,6 +176,7 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
     const prevMouseRef = useRef({ x: 0.5, y: 0.5 });
     const velocityRef = useRef(0);
     const themeRef = useRef(0);
+    const scrollYRef = useRef(0);
 
     const noiseTexture = useTexture('/textures/pcb-noise.jpg');
     noiseTexture.wrapS = noiseTexture.wrapT = THREE.RepeatWrapping;
@@ -206,6 +208,15 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
+    // Track scroll
+    useEffect(() => {
+        const handleScroll = () => {
+            scrollYRef.current = window.scrollY;
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // Track theme changes
     useEffect(() => {
         const observer = new MutationObserver(() => {
@@ -226,7 +237,10 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
         if (!meshRef.current) return;
         const material = meshRef.current.material as THREE.ShaderMaterial;
 
-        material.uniforms.u_time.value = state.clock.elapsedTime;
+        // Scroll nudges the pattern very slightly. A larger coupling makes
+        // fast scrolling jump the shader's clock and read as strobing.
+        material.uniforms.u_time.value =
+            state.clock.elapsedTime * 0.45 + scrollYRef.current * 0.0002;
         material.uniforms.u_resolution.value.set(size.width, size.height);
 
         // Smooth mouse tracking
@@ -236,12 +250,13 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
         currentMouse.x += (targetX - currentMouse.x) * 0.08;
         currentMouse.y += (targetY - currentMouse.y) * 0.08;
 
-        // Mouse velocity (distance moved per frame)
+        // Mouse velocity (distance moved per frame) — heavily damped so the
+        // ripple swells and settles instead of snapping on every twitch.
         const dx = mouseRef.current.x - prevMouseRef.current.x;
         const dy = mouseRef.current.y - prevMouseRef.current.y;
         const rawVelocity = Math.sqrt(dx * dx + dy * dy);
-        velocityRef.current += (rawVelocity * 10 - velocityRef.current) * 0.1;
-        material.uniforms.u_mouseVelocity.value = Math.min(velocityRef.current, 1.0);
+        velocityRef.current += (rawVelocity * 6 - velocityRef.current) * 0.04;
+        material.uniforms.u_mouseVelocity.value = Math.min(velocityRef.current, 0.7);
 
         prevMouseRef.current = { ...mouseRef.current };
 
@@ -265,6 +280,47 @@ function CircuitBoardMesh({ isMobile }: { isMobile: boolean }) {
 }
 
 // ============================================
+// ActivityInvalidator — demand-render driver
+// Full frame rate while the user scrolls or
+// moves the cursor; ~22fps once idle. Cuts the
+// background's GPU cost to a fraction without
+// ever looking frozen.
+// ============================================
+
+function ActivityInvalidator() {
+    const invalidate = useThree((state) => state.invalidate);
+
+    useEffect(() => {
+        let lastActive = performance.now();
+        let lastRender = 0;
+        let raf = 0;
+
+        const poke = () => {
+            lastActive = performance.now();
+        };
+        const events: (keyof WindowEventMap)[] = ['scroll', 'wheel', 'pointermove', 'touchmove', 'resize'];
+        events.forEach((e) => window.addEventListener(e, poke, { passive: true }));
+
+        const loop = (t: number) => {
+            const idle = t - lastActive > 2500;
+            if (!idle || t - lastRender > 45) {
+                lastRender = t;
+                invalidate();
+            }
+            raf = requestAnimationFrame(loop);
+        };
+        raf = requestAnimationFrame(loop);
+
+        return () => {
+            events.forEach((e) => window.removeEventListener(e, poke));
+            cancelAnimationFrame(raf);
+        };
+    }, [invalidate]);
+
+    return null;
+}
+
+// ============================================
 // ReactiveEnvironment — Public Component
 // ============================================
 
@@ -278,7 +334,9 @@ export default function ReactiveEnvironment() {
         const check = () => {
             const mobile = window.innerWidth <= 768;
             setIsMobile(mobile);
-            setDpr(mobile ? 1 : Math.min(window.devicePixelRatio, 1.5));
+            // Soft background — render at reduced resolution, invisible
+            // at these glow levels but a large GPU saving.
+            setDpr(mobile ? 0.75 : 1);
         };
         check();
         window.addEventListener('resize', check);
@@ -301,10 +359,11 @@ export default function ReactiveEnvironment() {
                     precision: isMobile ? 'mediump' : 'highp',
                 }}
                 camera={{ position: [0, 0, 1] }}
-                frameloop="always"
+                frameloop="demand"
                 style={{ pointerEvents: 'none' }}
             >
                 <CircuitBoardMesh isMobile={isMobile} />
+                <ActivityInvalidator />
             </Canvas>
         </div>
     );

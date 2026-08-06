@@ -7,12 +7,71 @@ html {
    scroll-behavior: smooth;
 }
 
+/* ---- Lenis smooth scroll (recommended base styles) ---- */
+html.lenis,
+html.lenis body {
+   height: auto;
+}
+
+.lenis.lenis-smooth {
+   scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+   overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+   overflow: hidden;
+}
+
+/* ---- Motion gate ----
+   .anim is added by an inline script before first paint (never under
+   reduced motion). Reveal targets start hidden only when it's present;
+   GSAP takes over with inline styles from there. */
+html.anim [data-reveal],
+html.anim [data-reveal-item],
+html.anim [data-hero],
+html.anim [data-nav-reveal] {
+   opacity: 0;
+}
+
+/* SplitText measures lines — text-wrap: balance skews the measurement */
+[data-reveal='lines'],
+[data-hero='title'] {
+   text-wrap: initial;
+}
+
+*, *::before, *::after {
+   box-sizing: border-box;
+}
+
 body {
    background-color: var(--color-bg);
    color: var(--color-text-primary);
-   font-family: var(--font-inter), sans-serif;
+   font-family: var(--font-montserrat), sans-serif;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
+   overflow-x: hidden;
+   -webkit-tap-highlight-color: transparent;
+}
+
+/* Tactile press physics — fires on touch and click alike */
+a:active,
+button:active {
+   transition-duration: 0.08s;
+}
+
+/* Respect reduced-motion preferences — elite accessibility baseline */
+@media (prefers-reduced-motion: reduce) {
+   *,
+   *::before,
+   *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+   }
 }
 
 h1,
@@ -20,12 +79,24 @@ h2,
 h3,
 h4,
 .outfit-font {
-   font-family: var(--font-outfit), sans-serif;
+   font-family: var(--font-display), var(--font-montserrat), sans-serif;
+   letter-spacing: -0.02em;
+   font-weight: 600;
+}
+
+/* Typography hygiene — balanced headings, no orphans/widows in body copy.
+   Explicit <br>/spans (impact words) still take precedence. */
+h1, h2, h3, h4 {
+   text-wrap: balance;
+}
+
+p, li {
+   text-wrap: pretty;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-   width: 10px;
+   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -35,24 +106,70 @@ h4,
 ::-webkit-scrollbar-thumb {
    background: var(--color-border);
    border-radius: 10px;
-   border: 3px solid var(--color-bg);
+   border: 2px solid var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb:hover {
    background: var(--color-text-muted);
 }
 
+/* Selection highlight */
+::selection {
+   background: rgba(0, 94, 184, 0.2);
+   color: inherit;
+}
+
+[data-theme="dark"] ::selection {
+   background: rgba(74, 168, 255, 0.3);
+}
+
 .gradient-text {
    background: var(--gradient-primary);
+   background-size: 200% 200%;
+   background-position: 0% 50%;
    -webkit-background-clip: text;
    -webkit-text-fill-color: transparent;
    background-clip: text;
    display: inline-block;
+   transition: background-position 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Subtle shimmer on hover — gradient drifts through the letters */
+.gradient-text:hover {
+   background-position: 100% 50%;
+}
+
+/* Animated gradient text — use on headings for extra polish */
+.gradient-text-animated {
+   background: linear-gradient(
+      135deg,
+      var(--color-primary) 0%,
+      var(--color-primary-light) 25%,
+      var(--color-secondary) 50%,
+      var(--color-primary-light) 75%,
+      var(--color-primary) 100%
+   );
+   background-size: 300% 300%;
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+   display: inline-block;
+   animation: gradientShift 6s ease infinite;
 }
 
 .container {
    width: 100%;
-   max-width: 1200px;
+   max-width: clamp(340px, 90vw, 1500px);
    margin: 0 auto;
-   padding: 0 var(--spacing-md);
+   padding: 0 clamp(1rem, 3vw, 3rem);
+}
+
+/* Section label utility */
+.section-label {
+   font-size: var(--text-sm);
+   font-weight: 600;
+   color: var(--color-secondary);
+   letter-spacing: 0.15em;
+   text-transform: uppercase;
+   margin-bottom: var(--spacing-sm);
 }

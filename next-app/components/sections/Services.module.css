@@ -1,171 +1,243 @@
 /* ============================================
-   Services Grid — Horizontal Scroll Track
+   Services — full-viewport horizontal panels
+   Desktop: pinned section, GSAP scrub + snap.
+   Mobile: native CSS scroll-snap carousel.
    ============================================ */
-.servicesTrack {
+
+.services {
     position: relative;
+    height: 100vh;
     overflow: hidden;
-    padding: var(--spacing-3xl) 0 var(--spacing-3xl);
+    background: transparent;
 }
 
-.sectionHeader {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto var(--spacing-2xl);
-    padding: 0 var(--spacing-md);
-}
-
-.sectionLabel {
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-secondary);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: var(--spacing-md);
-}
-
-.sectionTitle {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    margin-bottom: var(--spacing-md);
-}
-
-.sectionDescription {
-    font-size: var(--text-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-}
-
-/* Horizontal scroll container */
-.horizontalWrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    will-change: transform;
-    padding: var(--spacing-md) 0 var(--spacing-2xl);
-}
-
-.serviceCard {
-    flex: 0 0 380px;
-    min-width: 380px;
-    padding: var(--spacing-xl);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--glass-shadow);
-    transition: all var(--transition-base);
-    position: relative;
-    overflow: hidden;
-    margin-right: var(--spacing-lg);
-}
-
-.serviceCard::before {
-    content: '';
+/* ---- Compact editorial header band ---- */
+.header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: var(--gradient-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--transition-base);
-}
-
-.serviceCard:hover::before {
-    transform: scaleX(1);
-}
-
-.serviceCard:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-md);
-}
-
-.serviceIcon {
-    width: 80px;
-    height: 80px;
-    background: transparent !important;
+    z-index: 6;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto var(--spacing-md);
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: calc(76px + 1.25rem) clamp(1.5rem, 4vw, 3.5rem) 1.1rem;
+    border-bottom: 1px solid var(--color-border);
+    pointer-events: none;
 }
 
-.serviceTitle {
-    font-size: var(--text-xl);
+.sectionLabel {
+    font-size: var(--text-xs);
     font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    color: var(--color-text-primary);
-    text-align: center;
+    color: var(--color-secondary);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
 }
 
-.serviceDescription {
+.sectionTitle {
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.sectionDescription {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
     line-height: 1.6;
-    margin-bottom: var(--spacing-md);
-    text-align: center;
+    max-width: 380px;
+    text-align: right;
+    margin: 0;
 }
 
-.serviceFeatures {
+/* ---- Track + panels ---- */
+.track {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+    will-change: transform;
+}
+
+.panel {
+    flex: 0 0 100vw;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+.panelInner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding: 170px clamp(1.5rem, 4vw, 3.5rem) 110px;
+    transform: scale(0.95);
+    opacity: 0.35;
+    transition:
+        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel[data-active='true'] .panelInner {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* ---- Visual third: shared-canvas 3D scene + ghost numeral ---- */
+.panelVisual {
+    position: relative;
+    height: min(56vh, 560px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panelIndex {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display), var(--font-montserrat), sans-serif;
+    font-size: clamp(8rem, 18vw, 16rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-border);
+    user-select: none;
+    pointer-events: none;
+}
+
+.sceneView {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---- Copy two-thirds: editorial scale ---- */
+.panelCopy {
+    max-width: 760px;
+}
+
+.titleRow {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(0.9rem, 1.6vw, 1.4rem);
+    margin-bottom: var(--spacing-sm);
+}
+
+.titleGlyph {
+    flex: 0 0 auto;
+    width: clamp(34px, 3.2vw, 44px);
+    height: clamp(34px, 3.2vw, 44px);
+    margin-top: 0.35em;
+    color: var(--color-primary);
+}
+
+.panelTitle {
+    font-size: clamp(2rem, 3.6vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    margin-bottom: 0;
+    color: var(--color-text-primary);
+}
+
+.panelDescription {
+    font-size: clamp(var(--text-base), 1.4vw, var(--text-xl));
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: clamp(1.25rem, 3vh, 2.5rem);
+    max-width: 56ch;
+}
+
+.panelFeatures {
     list-style: none;
     padding: 0;
-    margin-bottom: var(--spacing-md);
+    margin: 0;
 }
 
-.serviceFeatures li {
-    font-size: var(--text-sm);
+/* Line-by-line reveal when the panel is active */
+.featureLine {
+    font-size: clamp(var(--text-sm), 1.1vw, var(--text-lg));
     color: var(--color-text-secondary);
-    padding: 4px 0;
-    padding-left: var(--spacing-md);
-    position: relative;
+    line-height: 1.5;
+    padding: clamp(0.55rem, 1.2vh, 0.85rem) 0;
+    border-top: 1px solid var(--color-border);
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+        opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0s;
 }
 
-.serviceFeatures li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-primary);
-    transform: translateY(-50%);
+.featureLine:last-child {
+    border-bottom: 1px solid var(--color-border);
 }
 
-.serviceLink {
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-primary);
-    letter-spacing: 0.02em;
-}
-
-.serviceLink:hover {
+.panel[data-active='true'] .featureLine {
     opacity: 1;
-    text-decoration: underline;
+    transform: translateY(0);
+    transition-delay: calc(0.25s + var(--line-i) * 0.12s);
 }
 
-/* Dark mode */
-[data-theme="dark"] .serviceCard {
-    background: #1A1D27;
-    border-color: #2A2D3A;
+/* ---- Progress rail + counter ---- */
+.progress {
+    position: absolute;
+    left: clamp(1.5rem, 4vw, 3.5rem);
+    right: clamp(1.5rem, 4vw, 3.5rem);
+    bottom: 34px;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    pointer-events: none;
 }
 
-[data-theme="dark"] .serviceCard:hover {
-    border-color: transparent;
-    box-shadow: 0 4px 20px rgba(74, 168, 255, 0.1);
+.counter {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
-[data-theme="dark"] .serviceIcon {
-    background: transparent !important;
+.counterTotal {
+    color: var(--color-text-muted);
 }
 
+.rail {
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.railFill {
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-accent-mixed);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+}
+
+/* ---- Mobile controls (hint + arrows) ---- */
 .mobileControls {
     display: none;
     align-items: center;
     justify-content: space-between;
     margin-top: var(--spacing-sm);
-    margin-bottom: -10px;
-    padding: 0 var(--spacing-sm);
+    pointer-events: auto;
 }
 
 .mobileScrollHint {
@@ -191,97 +263,170 @@
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: var(--neu-shadow-raised);
+    box-shadow: var(--neu-shadow-btn);
     transition: all var(--transition-fast);
 }
 
 .scrollBtn:hover {
     color: var(--color-primary);
-    box-shadow: var(--neu-shadow-inset);
+    box-shadow: var(--neu-shadow-btn-inset);
     transform: translateY(-2px);
 }
 
 .scrollBtn:active {
     transform: translateY(1px);
-    box-shadow: var(--neu-shadow-inset);
-}
-
-[data-theme="dark"] .scrollBtn {
-    background: var(--color-bg);
-    border-color: var(--color-border);
-    color: var(--color-text-primary);
-    box-shadow: var(--neu-shadow-raised);
-}
-
-[data-theme="dark"] .scrollBtn:hover {
-    color: var(--color-primary);
-    box-shadow: var(--neu-shadow-inset);
+    box-shadow: var(--neu-shadow-btn-inset);
 }
 
 /* ============================================
-   Mobile: Native CSS Scroll Snap
+   Reduced motion (desktop): no pin — the track
+   becomes a native horizontal scroller instead.
    ============================================ */
-@media (max-width: 768px) {
-    .mobileControls {
-        display: flex;
+@media (prefers-reduced-motion: reduce) {
+    .services {
+        height: auto;
     }
 
-    .horizontalWrapper {
+    .header {
+        position: static;
+        pointer-events: auto;
+    }
+
+    .track {
         overflow-x: auto;
-        overflow-y: visible; /* Allow drop shadows and card bottoms to be fully visible */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .panel {
+        scroll-snap-align: center;
+        height: auto;
+    }
+
+    .panelInner {
+        transform: none !important;
+        opacity: 1 !important;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .featureLine {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .progress {
+        display: none;
+    }
+}
+
+/* ============================================
+   Mobile: native scroll-snap carousel,
+   visual stacked above copy. No pinning.
+   ============================================ */
+@media (max-width: 768px) {
+    .services {
+        height: auto;
+        overflow: visible;
+        padding: var(--spacing-2xl) 0 var(--spacing-xl);
+    }
+
+    .header {
+        position: static;
+        display: block;
+        border-bottom: none;
+        padding: 0 var(--spacing-md) var(--spacing-sm);
+        text-align: center;
+        pointer-events: auto;
+    }
+
+    .sectionTitle {
+        font-size: clamp(1.8rem, 7vw, 2.4rem);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .sectionDescription {
+        max-width: 100%;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .mobileControls {
+        display: flex;
+        padding: 0 var(--spacing-xs);
+    }
+
+    .track {
+        overflow-x: auto;
+        overflow-y: visible;
         scroll-snap-type: x mandatory;
         overscroll-behavior-x: contain;
         -webkit-overflow-scrolling: touch;
-        padding: var(--spacing-md) var(--spacing-sm) var(--spacing-2xl);
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm) var(--spacing-lg);
         scrollbar-width: none;
+        height: auto;
     }
 
-    .horizontalWrapper::-webkit-scrollbar {
+    .track::-webkit-scrollbar {
         display: none;
     }
 
-    .serviceCard {
-        flex: 0 0 85vw;
-        min-width: 85vw;
-        scroll-snap-align: center;
-        margin-right: 0;
-        /* Completely solid background */
-        background: var(--color-bg);
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        border: 1px solid var(--color-border);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Normal shadow */
-        padding: var(--spacing-md);
+    .panel {
+        flex: 0 0 90vw;
+        width: 90vw;
         height: auto;
-        overflow: hidden; /* Prevent internal scroll */
+        scroll-snap-align: center;
     }
-    
-    [data-theme="dark"] .serviceCard {
-        background: #111827; /* Solid dark color */
-        border-color: #374151;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+    .panelInner {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-xl);
+        background: var(--surface-card);
+        backdrop-filter: var(--surface-card-blur);
+        -webkit-backdrop-filter: var(--surface-card-blur);
+        box-shadow: var(--neu-shadow-raised);
+        transform: scale(0.96);
+        opacity: 0.75;
     }
-    
-    .serviceTitle {
-        font-size: var(--text-lg);
-        margin-bottom: var(--spacing-xs);
+
+    .panel[data-active='true'] .panelInner {
+        transform: scale(1);
+        opacity: 1;
     }
-    
-    .serviceDescription {
-        font-size: 13px;
+
+    .panelVisual {
+        height: 36vh;
+        min-height: 220px;
+        width: 100%;
+    }
+
+    .panelIndex {
+        font-size: clamp(5rem, 32vw, 8rem);
+    }
+
+    .panelCopy {
+        max-width: 100%;
+    }
+
+    .panelTitle {
+        font-size: var(--text-2xl);
+    }
+
+    .panelDescription {
+        font-size: var(--text-sm);
         margin-bottom: var(--spacing-sm);
     }
-    
-    .serviceFeatures li {
+
+    .featureLine {
         font-size: 13px;
-        padding-top: 2px;
-        padding-bottom: 2px;
+        padding: 0.5rem 0;
     }
-    
-    .serviceIcon {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto var(--spacing-sm);
+
+    .progress {
+        display: none;
     }
 }

@@ -6,36 +6,39 @@
 
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
     gap: var(--spacing-lg);
-    text-align: center;
+    text-align: left;
 }
 
+/* Editorial stat blocks — hairline top rule, huge numerals */
 .statItem {
-    padding: var(--spacing-lg);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--glass-shadow);
-    transition: transform var(--transition-base);
+    padding: var(--spacing-md) 0 0;
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+    text-align: left;
+    transition: border-color var(--transition-base);
 }
 
 .statItem:hover {
-    transform: translateY(-8px);
+    border-top-color: var(--color-text-primary);
 }
 
 .statValue {
     display: block;
-    font-size: var(--text-5xl);
-    font-weight: 800;
-    font-family: var(--font-outfit);
+    font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    font-family: var(--font-display), var(--font-montserrat), sans-serif;
     margin-bottom: var(--spacing-xs);
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-text-primary);
+    transition: color var(--transition-base);
+}
+
+.statItem:hover .statValue {
+    color: var(--color-secondary);
 }
 
 .statLabel {

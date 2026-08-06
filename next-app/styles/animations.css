@@ -158,3 +158,88 @@
         transform: scaleX(1);
     }
 }
+
+/* ============================================
+   NEW — Premium Interactive Animations
+   ============================================ */
+
+/* Floating icon animation */
+@keyframes floatIcon {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-3px) rotate(0.5deg);
+    }
+    75% {
+        transform: translateY(2px) rotate(-0.5deg);
+    }
+}
+
+/* Shimmer sweep for gradient accents */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+/* Gradient text shimmer */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Glow pulse for active elements */
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Spin for loading or decorative use */
+@keyframes gentleSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Border gradient rotation */
+@keyframes borderRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scale bounce for interactive elements */
+@keyframes scaleBounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

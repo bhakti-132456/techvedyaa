@@ -1,186 +1,222 @@
 /* ============================================
-   Hero Section
+   Hero Section — minimal, centered, type-led
    ============================================ */
+/* Every vertical value below is viewport-relative, and the type is capped
+   by BOTH width and height — so the statement fits inside one screen on a
+   1024×768 laptop and a 4K panel alike, with no pixel hardcoding. */
 .hero {
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     position: relative;
-    padding-top: 100px;
-    padding-bottom: var(--spacing-3xl);
-    background: var(--color-bg);
+    padding-top: clamp(4.5rem, 10vh, 8rem);
+    padding-bottom: clamp(2.5rem, 8vh, 7rem);
+    background: transparent;
     overflow: hidden;
-    background-image: var(--gradient-glow);
-}
-
-.heroBackground {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.03;
-    will-change: transform;
-}
-
-.heroBackground img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .heroGrid {
     position: relative;
     z-index: 1;
-    max-width: 1200px;
+    max-width: min(100%, 1400px);
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px 40px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: clamp(0.75rem, 2vh, 2rem);
 }
 
 .heroText {
-    grid-column: 1;
-    grid-row: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
 }
 
-.hero3dSlot {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    width: 100%;
-    height: 100%;
-    min-height: 500px;
-    position: relative;
-    border-radius: 20px;
-    overflow: visible;
-}
-
-.canvasPlaceholder {
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(0, 94, 184, 0.1), transparent 70%);
-}
-
+/* ---- Editorial eyebrow label with live pulse ---- */
 .heroSubtitle {
-    font-size: var(--text-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: var(--text-xs);
     font-weight: 600;
-    color: var(--color-secondary);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    margin-bottom: var(--spacing-md);
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
+    color: var(--color-text-secondary);
+    margin-bottom: clamp(0.75rem, 2.6vh, 2rem);
+    transition: color var(--transition-fast);
 }
 
+.heroSubtitle:hover {
+    color: var(--color-text-primary);
+}
+
+.pulseDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    flex-shrink: 0;
+    animation: pulseDot 4.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+    70% { box-shadow: 0 0 0 9px rgba(249, 115, 22, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}
+
+/* ---- Statement title + keyword interactions ---- */
 .heroTitle {
-    font-size: clamp(2.5rem, 7vw, 5.5rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: var(--spacing-lg);
-    /* opacity: 0; */
-    /* animation: fadeInUp 0.8s ease 0.4s forwards; */
+    /* min() caps the size by whichever axis is tighter — short viewports
+       are limited by height, wide ones by width. */
+    font-size: clamp(2.5rem, min(8.5vw, 12vh), 8rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    margin-bottom: clamp(0.9rem, 2.8vh, 2.25rem);
+}
+
+.kw {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+}
+
+/* Underline draws in on hover — impact words respond to touch */
+.kw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.02em;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--gradient-accent-mixed);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.kw:hover::after {
+    transform: scaleX(1);
+}
+
+.kwOrange {
+    color: #F97316;
 }
 
 .heroDescription {
-    font-size: var(--text-xl);
-    line-height: 1.6;
+    font-size: clamp(1rem, min(1.7vw, 2.4vh), 1.5rem);
+    line-height: 1.5;
     color: var(--color-text-secondary);
-    max-width: 700px;
-    margin-bottom: var(--spacing-xl);
-    /* opacity: 0; */
-    /* animation: fadeInUp 0.8s ease 0.6s forwards; */
+    max-width: 60ch;
+    margin: 0 0 clamp(1.25rem, 4vh, 3rem);
 }
 
+/* ---- CTAs — flat editorial pills ---- */
 .heroCtaGroup {
-    grid-column: 1;
-    grid-row: 2;
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .btn {
-    padding: 12px 24px;
-    font-size: var(--text-base);
+    padding: 0 clamp(1.5rem, 2.2vw, 2rem);
+    font-size: clamp(0.9rem, min(1.05vw, 1.9vh), 1rem);
     font-weight: 500;
     letter-spacing: 0.02em;
     border: none;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 12px;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    gap: 10px;
+    height: clamp(2.9rem, 6.6vh, 3.5rem);
 }
 
+/* Arrow nudges forward on hover — small, springy */
+.btnArrow {
+    display: inline-block;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn:hover .btnArrow {
+    transform: translateX(4px);
+}
+
+/* Primary: inverted pill — text color becomes the fill (Noomo-style) */
 .btnPrimary {
-    background: var(--color-primary);
-    color: white;
-    box-shadow: var(--neu-shadow-primary);
+    background: var(--color-text-primary);
+    color: var(--color-bg);
 }
 
+/* Fills with the brand accent on hover — near-black label keeps contrast
+   well above AA in both themes. */
 .btnPrimary:hover {
-    background: var(--color-primary-light);
+    background: var(--color-secondary);
+    color: #0A0A0B;
     transform: translateY(-2px);
-    box-shadow: var(--neu-shadow-primary-inset);
+    box-shadow: var(--shadow-btn-primary-hover);
 }
 
 .btnPrimary:active {
-    transform: translateY(1px);
-    box-shadow: var(--neu-shadow-primary-inset);
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
 }
 
+/* Secondary: hairline outlined pill, fills on hover */
 .btnSecondary {
-    background: var(--color-bg);
+    background: transparent;
     color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--neu-shadow-raised);
+    border: none;
+    box-shadow: var(--neu-shadow-btn);
 }
 
 .btnSecondary:hover {
-    background: var(--color-bg);
-    color: var(--color-primary);
+    background: var(--color-text-primary);
+    color: var(--color-bg);
     transform: translateY(-2px);
-    box-shadow: var(--neu-shadow-inset);
 }
 
 .btnSecondary:active {
-    transform: translateY(1px);
-    box-shadow: var(--neu-shadow-inset);
+    transform: translateY(0) scale(0.98);
 }
 
-/* Dark mode */
-[data-theme="dark"] .btnPrimary {
-    background: var(--color-primary);
-    color: #0F1117;
-    box-shadow: var(--neu-shadow-primary);
+/* ---- Scroll cue ---- */
+.scrollCue {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 44px;
+    border-radius: 2px;
+    background: var(--color-border);
+    overflow: hidden;
+    z-index: 2;
 }
 
-[data-theme="dark"] .btnPrimary:hover {
-    background: var(--color-primary-light);
-    box-shadow: var(--neu-shadow-primary-inset);
+.scrollCue span {
+    display: block;
+    width: 100%;
+    height: 40%;
+    border-radius: 2px;
+    background: var(--gradient-accent-mixed);
+    animation: scrollCue 3.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
-[data-theme="dark"] .btnSecondary {
-    border-color: var(--color-border);
-    color: var(--color-text-primary);
-    box-shadow: var(--neu-shadow-raised);
+@keyframes scrollCue {
+    0% { transform: translateY(-110%); }
+    100% { transform: translateY(280%); }
 }
 
-[data-theme="dark"] .btnSecondary:hover {
-    background: var(--color-bg);
-    color: var(--color-primary);
-    box-shadow: var(--neu-shadow-inset);
-}
-
-/* Parallax layers - styled via z-depth for LocomotionEngine */
+/* ---- Parallax accents ---- */
 .parallaxLayer {
     position: absolute;
     will-change: transform;
@@ -205,99 +241,42 @@
     background: radial-gradient(circle, rgba(255, 122, 77, 0.06) 0%, transparent 70%);
 }
 
-.parallaxLayer3 {
-    top: 30%;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 94, 184, 0.05) 0%, transparent 70%);
-}
-
+/* ============================================
+   Mobile
+   ============================================ */
 @media (max-width: 768px) {
     .hero {
         padding-top: 120px;
-        padding-bottom: 40px;
+        padding-bottom: 60px;
         min-height: auto;
     }
 
     .heroGrid {
-        grid-template-columns: 1fr;
         gap: 20px;
-        /* Define areas to place 3D slot between text and CTA */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .heroText {
-        order: 1;
-    }
-
-    .hero3dSlot {
-        order: 2;
-        height: 40vh;
-        min-height: 300px;
-    }
-
-    .heroCtaGroup {
-        order: 3;
-        flex-direction: column;
-        gap: 0.75rem;
-        width: 100%;
-    }
-
-    .hero::before {
-        content: '';
-        position: absolute;
-        top: -10%;
-        right: -10%;
-        width: 250px;
-        height: 250px;
-        background: rgba(255, 122, 0, 0.15);
-        filter: blur(80px);
-        border-radius: 50%;
-        z-index: 0;
-    }
-
-    .hero::after {
-        content: '';
-        position: absolute;
-        bottom: 0%;
-        left: -10%;
-        width: 200px;
-        height: 200px;
-        background: rgba(0, 94, 184, 0.15);
-        filter: blur(80px);
-        border-radius: 50%;
-        z-index: 0;
     }
 
     .heroSubtitle {
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        letter-spacing: 0.22em;
     }
 
     .heroTitle {
-        font-size: clamp(2rem, 8vw, 3rem);
-        font-weight: 500;
+        font-size: clamp(2.4rem, 11vw, 4rem);
+        font-weight: 600;
         margin-bottom: 1rem;
-    }
-
-    .heroTitle span {
-        font-weight: 800;
     }
 
     .heroDescription {
         font-size: var(--text-base);
         line-height: 1.6;
-        color: #555555;
         margin-bottom: 2rem;
     }
 
-    [data-theme="dark"] .heroDescription {
-        color: #A0AEC0;
+    .heroCtaGroup {
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
     }
-
-    /* removed heroCtaGroup from here since it's above */
 
     .btn {
         width: 100%;
@@ -306,9 +285,12 @@
         border-radius: 12px;
     }
 
+    .scrollCue {
+        display: none;
+    }
+
     .parallaxLayer1,
-    .parallaxLayer2,
-    .parallaxLayer3 {
+    .parallaxLayer2 {
         display: none;
     }
 }

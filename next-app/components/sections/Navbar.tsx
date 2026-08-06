@@ -24,7 +24,7 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
+        <nav className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`} data-nav-reveal>
             <div className={`container ${styles.navContainer}`}>
                 <Link href="/" className={styles.logo}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -46,6 +46,7 @@ export default function Navbar() {
                 </button>
 
                 <ul className={`${styles.navMenu} ${isMobileMenuOpen ? styles.navMenuOpen : ''}`}>
+                    <li><Link href="#about" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
                     <li><Link href="#services" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Services</Link></li>
                     <li><Link href="#methodology" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Approach</Link></li>
                     <li><Link href="#process" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Process</Link></li>

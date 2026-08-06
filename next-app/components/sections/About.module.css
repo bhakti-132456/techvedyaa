@@ -1,0 +1,56 @@
+/* ============================================
+   About — oversized editorial statement
+   ============================================ */
+
+.about {
+    padding: var(--spacing-3xl) 0;
+    background: transparent;
+    position: relative;
+}
+
+.eyebrow {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md);
+}
+
+.statement {
+    font-size: clamp(1.7rem, 3.4vw, 3.2rem);
+    font-weight: 600;
+    line-height: 1.16;
+    letter-spacing: -0.02em;
+    max-width: 1150px;
+    margin-bottom: var(--spacing-xl);
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    max-width: 1150px;
+}
+
+.columns p {
+    font-size: clamp(0.95rem, 1.1vw, 1.06rem);
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+    .about {
+        padding: var(--spacing-2xl) 0;
+    }
+
+    .statement {
+        font-size: clamp(1.5rem, 6.4vw, 2rem);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .columns {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}

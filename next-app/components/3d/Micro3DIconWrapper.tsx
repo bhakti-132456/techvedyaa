@@ -1,4 +1,3 @@
 'use client';
-import dynamic from 'next/dynamic';
-const Micro3DIcon = dynamic(() => import('./Micro3DIcon'), { ssr: false });
+import Micro3DIcon from './Micro3DIcon';
 export default Micro3DIcon;
