@@ -3,7 +3,7 @@
    ============================================ */
 .contactSection {
     padding: var(--spacing-3xl) 0;
-    background: var(--color-bg);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -55,15 +55,15 @@
 
 /* Form Styles */
 .formContainer {
-    max-width: 700px;
+    max-width: min(100%, 700px);
     margin: 0 auto;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    background: var(--surface-card);
+    backdrop-filter: var(--surface-card-blur);
+    -webkit-backdrop-filter: var(--surface-card-blur);
+    border: none;
+    border-radius: var(--radius-xl);
     padding: var(--spacing-xl);
-    box-shadow: var(--glass-shadow);
+    box-shadow: var(--neu-shadow-lg);
     position: relative;
     z-index: 1;
 }
@@ -94,9 +94,10 @@
     font-family: inherit;
     font-size: var(--text-base);
     color: var(--color-text-primary);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    background: var(--neu-surface-sunken);
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--neu-shadow-inset);
     transition: all var(--transition-fast);
 }
 
@@ -108,8 +109,7 @@
 .formInput:focus,
 .formTextarea:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(0, 94, 184, 0.1);
+    box-shadow: var(--neu-shadow-inset), 0 0 0 2px rgba(0, 94, 184, 0.25);
 }
 
 .formTextarea {
@@ -151,18 +151,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 5px 5px 12px rgba(249, 115, 22, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-btn-accent);
 }
 
 .submitBtn:hover:not(:disabled) {
     background: #EA580C;
     transform: translateY(-2px);
-    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 6px rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-btn-accent-hover);
 }
 
 .submitBtn:active:not(:disabled) {
-    transform: translateY(1px);
-    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3), inset -2px -2px 5px rgba(255, 255, 255, 0.2);
+    transform: translateY(0);
+    box-shadow: var(--shadow-btn-accent), inset 0 2px 4px rgba(0, 0, 0, 0.18);
 }
 
 .submitBtn:disabled {
@@ -173,12 +173,12 @@
 
 [data-theme="dark"] .submitBtn {
     background: #F97316;
-    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.6), -5px -5px 12px rgba(249, 115, 22, 0.2), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-btn-accent);
 }
 
 [data-theme="dark"] .submitBtn:hover:not(:disabled) {
     background: #EA580C;
-    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-btn-accent-hover);
 }
 
 .statusMessage {

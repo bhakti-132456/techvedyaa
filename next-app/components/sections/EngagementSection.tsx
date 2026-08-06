@@ -1,5 +1,5 @@
 import styles from './Engagement.module.css';
-import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
+import LineIcon from '@/components/icons/LineIcon';
 
 export default function EngagementSection() {
     const models = [
@@ -21,23 +21,23 @@ export default function EngagementSection() {
     ];
 
     return (
-        <section className={styles.engagement} id="engagement">
+        <section className={styles.engagement} id="engagement" data-flow>
             <div className="container">
-                <div style={{ textAlign: 'center' }}>
-                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, marginBottom: '1rem' }}>How We Work</p>
-                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>Flexible <span className="gradient-text">Engagement Models</span></h2>
-                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto 0', fontSize: 'var(--text-lg)' }}>
+                <div style={{ textAlign: 'center' }} data-flow-header>
+                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, marginBottom: '1rem' }} data-reveal="fade">How We Work</p>
+                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }} data-reveal="lines">Flexible <span className="gradient-text">Engagement Models</span></h2>
+                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto 0', fontSize: 'var(--text-lg)' }} data-reveal="fade">
                         Choose the engagement model that best fits your business needs and objectives.
                     </p>
                 </div>
 
-                <div className={styles.grid}>
+                <div className={styles.grid} data-reveal-group>
                     {models.map((model, index) => {
                         const iconType = model.title.toLowerCase().replace(/\s+/g, '-');
                         return (
-                            <div key={index} className={styles.card}>
+                            <div key={index} className={styles.card} data-reveal-item>
                                 <div className={styles.iconWrapper}>
-                                    <Micro3DIcon type={iconType} />
+                                    <LineIcon name={iconType} />
                                 </div>
                                 <h3 className={styles.cardTitle}>{model.title}</h3>
                                 <p className={styles.cardDescription}>{model.description}</p>

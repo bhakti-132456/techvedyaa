@@ -56,14 +56,14 @@ export default function ContactSection() {
     };
 
     return (
-        <section className={styles.contactSection} id="contact">
+        <section className={styles.contactSection} id="contact" data-flow>
             <div className="container">
                 <div className={styles.contactHeader}>
-                    <p className={styles.contactLabel}>Get In Touch</p>
-                    <h2 className={styles.contactTitle}>
+                    <p className={styles.contactLabel} data-reveal="fade">Get In Touch</p>
+                    <h2 className={styles.contactTitle} data-reveal="lines">
                         Let&apos;s Discuss Your <span className="gradient-text">Requirements</span>
                     </h2>
-                    <p className={styles.contactDescription}>
+                    <p className={styles.contactDescription} data-reveal="fade">
                         Fill out the form below and our team will get back to you shortly to discuss how we can help elevate your business.
                     </p>
                 </div>

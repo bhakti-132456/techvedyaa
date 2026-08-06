@@ -1,32 +1,42 @@
 /* ============================================
    TechVedyaa — Design Tokens
+   Editorial, typography-first system (Noomo-inspired)
+   Dark is the primary theme; light is a warm paper variant.
    ============================================ */
 :root {
     /* TechVedyaa Brand Colors */
     --color-primary: #005EB8;
     --color-primary-light: #0075D9;
     --color-primary-dark: #004A94;
-    --color-secondary: #FF7A4D;
+    --color-secondary: #F97316;
     --color-secondary-light: #FF9570;
 
-    /* Neutral Palette */
-    --color-bg: #FFFFFF;
-    --color-bg-alt: #FAFAFA;
-    --color-surface: #F5F5F5;
-    --color-text-primary: #000000;
-    --color-text-secondary: #666666;
-    --color-text-muted: #999999;
-    --color-border: #E5E5E5;
+    /* Neutral Palette — warm paper */
+    --color-bg: #F1EFEA;
+    --color-bg-alt: #F1EFEA;
+    --color-surface: #E9E7E0;
+    --color-text-primary: #0B0B0C;
+    --color-text-secondary: #55555C;
+    --color-text-muted: #98978F;
+    --color-border: rgba(11, 11, 12, 0.14);
 
-    /* Gradients */
+    /* Gradients — kept lean, used as accents only */
     --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-    --gradient-glow: radial-gradient(circle at center, rgba(0, 94, 184, 0.15) 0%, transparent 70%);
+    --gradient-glow: radial-gradient(circle at center, rgba(0, 94, 184, 0.06) 0%, transparent 70%);
+    --gradient-accent-blue: linear-gradient(135deg, #005EB8 0%, #00B4D8 100%);
+    --gradient-accent-orange: linear-gradient(135deg, #F97316 0%, #FF4D8D 100%);
+    --gradient-accent-mixed: linear-gradient(135deg, #005EB8 0%, #F97316 100%);
+    --gradient-border: linear-gradient(135deg, rgba(0, 94, 184, 0.4) 0%, rgba(249, 115, 22, 0.4) 100%);
 
-    /* Glassmorphism */
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.4);
+    /* Glass (navbar) */
+    --glass-bg: rgba(241, 239, 234, 0.72);
+    --glass-bg-strong: rgba(241, 239, 234, 0.9);
+    --glass-border: rgba(11, 11, 12, 0.08);
     --glass-blur: blur(12px);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --glass-blur-heavy: blur(20px);
+    --glass-shadow: none;
+
+    /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 2rem;
@@ -52,55 +62,108 @@
     --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-subtle: none;
+    --shadow-sm: 0 1px 0 var(--color-border);
+    --shadow-md: 0 12px 32px rgba(11, 11, 12, 0.08);
+    --shadow-lg: 0 24px 56px rgba(11, 11, 12, 0.1);
+    --shadow-glow-blue: none;
+    --shadow-glow-orange: none;
 
-    /* Neumorphic 3D Shadows (Light) */
-    --neu-shadow-raised: 5px 5px 10px #D5D5D5, -5px -5px 10px #FFFFFF;
-    --neu-shadow-inset: inset 4px 4px 8px #D5D5D5, inset -4px -4px 8px #FFFFFF;
-    --neu-shadow-primary: 6px 6px 16px rgba(0, 94, 184, 0.3), -6px -6px 16px rgba(255, 255, 255, 0.9);
-    --neu-shadow-primary-inset: inset 4px 4px 8px rgba(0, 40, 80, 0.4), inset -4px -4px 8px rgba(50, 150, 255, 0.4);
+    /* Flat editorial surfaces — these keys keep legacy module CSS working.
+       "Shadows" are hairline outlines; depth comes from type and spacing. */
+    --neu-surface: rgba(11, 11, 12, 0.025);
+    --neu-surface-sunken: rgba(11, 11, 12, 0.045);
 
+    /* Card surface — near-solid ink panels. Blur is disabled: backdrop
+       blur over a live WebGL canvas is a compositor killer, and the
+       higher opacity reads just as premium at a fraction of the cost. */
+    --surface-card: rgba(236, 234, 227, 0.95);
+    --surface-card-blur: none;
+    --neu-shadow-raised: 0 0 0 1px var(--color-border);
+    --neu-shadow-inset: inset 0 0 0 1px var(--color-border);
+    --neu-shadow-primary: 0 0 0 1px var(--color-border);
+    --neu-shadow-primary-inset: inset 0 0 0 1px rgba(11, 11, 12, 0.35);
+    --neu-shadow-lg: 0 0 0 1px var(--color-border), 0 20px 48px rgba(11, 11, 12, 0.06);
+    --neu-shadow-float: 0 0 0 1px rgba(11, 11, 12, 0.3), 0 24px 56px rgba(11, 11, 12, 0.08);
+
+    /* Buttons — flat pills */
+    --neu-shadow-btn: 0 0 0 1px var(--color-border);
+    --neu-shadow-btn-inset: inset 0 0 0 1px rgba(11, 11, 12, 0.4);
+    --shadow-btn-primary: none;
+    --shadow-btn-primary-hover: 0 12px 28px rgba(11, 11, 12, 0.18);
+    --shadow-btn-accent: none;
+    --shadow-btn-accent-hover: 0 12px 28px rgba(249, 115, 22, 0.3);
+
+    /* 3D / Perspective (legacy) */
+    --perspective-card: 800px;
+    --tilt-max: 8deg;
+
+    /* Border Radius */
     --radius-sm: 4px;
     --radius-md: 8px;
-    --radius-lg: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 50%;
+
+    /* Icon Colors */
+    --icon-glow-blue: rgba(0, 94, 184, 0.2);
+    --icon-glow-orange: rgba(249, 115, 22, 0.2);
 }
 
 /* ============================================
-   Dark Theme
+   Dark Theme — primary experience
    ============================================ */
 [data-theme="dark"] {
-    --color-primary: #4AA8FF;
-    --color-primary-light: #6BBDFF;
+    --color-primary: #5FB2FF;
+    --color-primary-light: #85C4FF;
     --color-primary-dark: #2E8CE6;
-    --color-secondary: #FF9570;
-    --color-secondary-light: #FFAB8E;
+    --color-secondary: #F97316;
+    --color-secondary-light: #FF9570;
 
-    --color-bg: #0F1117;
-    --color-bg-alt: #1A1D27;
-    --color-surface: #1A1D27;
-    --color-text-primary: #F0F2F5;
-    --color-text-secondary: #A0A8B8;
-    --color-text-muted: #6B7280;
-    --color-border: #2A2D3A;
+    --color-bg: #0A0A0B;
+    --color-bg-alt: #0A0A0B;
+    --color-surface: #131316;
+    --color-text-primary: #F4F3EF;
+    --color-text-secondary: #A3A29B;
+    --color-text-muted: #66655F;
+    --color-border: rgba(244, 243, 239, 0.12);
 
     --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-    --gradient-glow: radial-gradient(circle at center, rgba(74, 168, 255, 0.1) 0%, transparent 70%);
+    --gradient-glow: radial-gradient(circle at center, rgba(95, 178, 255, 0.05) 0%, transparent 70%);
+    --gradient-accent-blue: linear-gradient(135deg, #5FB2FF 0%, #00D4FF 100%);
+    --gradient-accent-orange: linear-gradient(135deg, #F97316 0%, #FF6B9D 100%);
+    --gradient-accent-mixed: linear-gradient(135deg, #5FB2FF 0%, #F97316 100%);
+    --gradient-border: linear-gradient(135deg, rgba(95, 178, 255, 0.3) 0%, rgba(249, 115, 22, 0.3) 100%);
 
-    /* Glassmorphism Dark */
-    --glass-bg: rgba(26, 29, 39, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.05);
-    --glass-blur: blur(16px);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --glass-bg: rgba(10, 10, 11, 0.72);
+    --glass-bg-strong: rgba(10, 10, 11, 0.9);
+    --glass-border: rgba(244, 243, 239, 0.08);
+    --glass-shadow: none;
 
-    --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 1px 0 var(--color-border);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.5);
 
-    /* Neumorphic 3D Shadows (Dark) */
-    --neu-shadow-raised: 5px 5px 10px #0A0B0E, -5px -5px 10px #141720;
-    --neu-shadow-inset: inset 4px 4px 8px #0A0B0E, inset -4px -4px 8px #141720;
-    --neu-shadow-primary: 6px 6px 16px rgba(0, 0, 0, 0.6), -6px -6px 16px rgba(74, 168, 255, 0.15);
-    --neu-shadow-primary-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.7), inset -4px -4px 8px rgba(74, 168, 255, 0.2);
+    /* Flat editorial surfaces */
+    --neu-surface: rgba(244, 243, 239, 0.03);
+    --neu-surface-sunken: rgba(244, 243, 239, 0.05);
+
+    /* Card surface — near-solid ink panel over the circuit canvas */
+    --surface-card: rgba(17, 17, 20, 0.93);
+    --neu-shadow-raised: 0 0 0 1px var(--color-border);
+    --neu-shadow-inset: inset 0 0 0 1px var(--color-border);
+    --neu-shadow-primary: 0 0 0 1px var(--color-border);
+    --neu-shadow-primary-inset: inset 0 0 0 1px rgba(244, 243, 239, 0.35);
+    --neu-shadow-lg: 0 0 0 1px var(--color-border), 0 20px 48px rgba(0, 0, 0, 0.35);
+    --neu-shadow-float: 0 0 0 1px rgba(244, 243, 239, 0.3), 0 24px 56px rgba(0, 0, 0, 0.4);
+
+    --neu-shadow-btn: 0 0 0 1px var(--color-border);
+    --neu-shadow-btn-inset: inset 0 0 0 1px rgba(244, 243, 239, 0.4);
+    --shadow-btn-primary: none;
+    --shadow-btn-primary-hover: 0 12px 28px rgba(0, 0, 0, 0.45);
+    --shadow-btn-accent: none;
+    --shadow-btn-accent-hover: 0 12px 28px rgba(249, 115, 22, 0.25);
+
+    --icon-glow-blue: rgba(95, 178, 255, 0.25);
+    --icon-glow-orange: rgba(249, 115, 22, 0.25);
 }

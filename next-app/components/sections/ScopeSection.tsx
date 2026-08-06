@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import styles from './Scope.module.css';
-import Micro3DIcon from '@/components/3d/Micro3DIconWrapper';
+import LineIcon from '@/components/icons/LineIcon';
 
 export default function ScopeSection() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -53,12 +53,12 @@ export default function ScopeSection() {
     };
 
     return (
-        <section className={styles.scope} id="scope">
+        <section className={styles.scope} id="scope" data-flow>
             <div className="container">
-                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl)' }}>
-                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, margin: '0 0 1rem 0' }}>Our Solution</p>
-                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>Scope of <span className="gradient-text">Work</span></h2>
-                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto var(--spacing-md)', fontSize: 'var(--text-lg)' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl)' }} data-flow-header>
+                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, margin: '0 0 1rem 0' }} data-reveal="fade">Our Solution</p>
+                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }} data-reveal="lines">Scope of <span className="gradient-text">Work</span></h2>
+                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto var(--spacing-md)', fontSize: 'var(--text-lg)' }} data-reveal="fade">
                         Strategic Planning, Campaign Management, and Lead Servicing - all powered by realtime data and analytics.
                     </p>
                     <button 
@@ -69,13 +69,13 @@ export default function ScopeSection() {
                     </button>
                 </div>
 
-                <div className={styles.grid}>
+                <div className={styles.grid} data-reveal-group>
                     {scopes.map((scope, index) => {
                         const iconType = scope.title.toLowerCase().replace(/\s+/g, '-');
                         return (
-                            <div key={index} className={styles.card}>
+                            <div key={index} className={styles.card} data-reveal-item>
                                 <div className={styles.iconWrapper}>
-                                    <Micro3DIcon type={iconType} />
+                                    <LineIcon name={iconType} />
                                 </div>
                             <h3 className={styles.cardTitle}>{scope.title}</h3>
 

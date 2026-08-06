@@ -1,0 +1,179 @@
+/* ============================================
+   LineIcon — draw-on + per-icon hover motion.
+   Every motion here is slow and single-shot;
+   nothing loops at a rate that could read as
+   flashing.
+   ============================================ */
+
+.root {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-primary);
+}
+
+.root svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.root svg :global(.accent) {
+    stroke: var(--color-secondary);
+}
+
+.root svg :global([data-fill]) {
+    fill: currentColor;
+    stroke: none;
+}
+
+.root svg :global(.accent[data-fill]) {
+    fill: var(--color-secondary);
+}
+
+/* ---- Draw-on (gated by the motion class on <html>) ----
+   Every stroked element has pathLength="1", so a single
+   dasharray/dashoffset pair animates any shape uniformly. */
+:global(html.anim) .root svg :global(path),
+:global(html.anim) .root svg :global(circle),
+:global(html.anim) .root svg :global(rect),
+:global(html.anim) .root svg :global(line),
+:global(html.anim) .root svg :global(polyline) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:global(html.anim) .root svg :global([data-fill]) {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.65, 0, 0.35, 1) 1.1s;
+}
+
+:global(html.anim) .drawn svg :global(path),
+:global(html.anim) .drawn svg :global(circle),
+:global(html.anim) .drawn svg :global(rect),
+:global(html.anim) .drawn svg :global(line),
+:global(html.anim) .drawn svg :global(polyline) {
+    stroke-dashoffset: 0;
+}
+
+:global(html.anim) .drawn svg :global([data-fill]) {
+    opacity: 1;
+}
+
+/* Stagger the strokes as they draw */
+:global(html.anim) .root svg > :global(*:nth-child(2)) { transition-delay: 0.14s; }
+:global(html.anim) .root svg > :global(*:nth-child(3)) { transition-delay: 0.28s; }
+:global(html.anim) .root svg > :global(*:nth-child(4)) { transition-delay: 0.42s; }
+:global(html.anim) .root svg > :global(*:nth-child(5)) { transition-delay: 0.56s; }
+:global(html.anim) .root svg > :global(*:nth-child(6)) { transition-delay: 0.7s; }
+:global(html.anim) .root svg > :global(*:nth-child(7)) { transition-delay: 0.84s; }
+:global(html.anim) .root svg > :global(*:nth-child(8)) { transition-delay: 0.98s; }
+:global(html.anim) .root svg > :global(*:nth-child(9)) { transition-delay: 1.12s; }
+
+/* ---- Hover micro-motions (per meaning) ----
+   Long, eased, and small in amplitude. */
+.root svg :global([data-anim]) {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* rotation — one slow revolution */
+.hovered svg :global([data-anim='spin']) {
+    animation: iconSpin 2.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* bars grow (origin bottom), staggered */
+.root svg :global([data-anim='grow']),
+.root svg :global([data-anim='grow2']),
+.root svg :global([data-anim='grow3']) {
+    transform-origin: center bottom;
+}
+
+.hovered svg :global([data-anim='grow']) { transform: scaleY(1.22); }
+.hovered svg :global([data-anim='grow2']) { transform: scaleY(1.14); transition-delay: 0.12s; }
+.hovered svg :global([data-anim='grow3']) { transform: scaleY(1.3); transition-delay: 0.24s; }
+
+/* node pulse — slow single swell */
+.hovered svg :global([data-anim='pulse']) {
+    animation: iconPulse 2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* directional nudges */
+.hovered svg :global([data-anim='nudge-r']) { transform: translate(1.4px, 0); }
+.hovered svg :global([data-anim='nudge-l']) { transform: translate(-1.4px, 0); }
+.hovered svg :global([data-anim='nudge-up']) { transform: translate(1px, -1.2px); }
+
+/* brackets spread */
+.hovered svg :global([data-anim='spread-l']) { transform: translateX(-1.4px); }
+.hovered svg :global([data-anim='spread-r']) { transform: translateX(1.4px); }
+.hovered svg :global([data-anim='slash']) { transform: rotate(7deg); }
+
+/* converge */
+.hovered svg :global([data-anim='converge-l']) { transform: translateX(-1.5px); }
+.hovered svg :global([data-anim='converge-r']) { transform: translateX(1.5px); }
+
+/* float / bob / drop / pop */
+.hovered svg :global([data-anim='float']) { transform: translateY(-1.4px); }
+
+.hovered svg :global([data-anim='bob']) {
+    animation: iconBob 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hovered svg :global([data-anim='drop']) {
+    animation: iconDrop 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hovered svg :global([data-anim='pop']) {
+    animation: iconPop 1.1s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* travelling stroke — slow continuous drift */
+.hovered svg :global([data-anim='dash-slide']) {
+    animation: iconDashSlide 3.4s linear infinite;
+}
+
+/* wave arc drifts outward once */
+.hovered svg :global([data-anim='wave']) {
+    animation: iconWave 2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes iconSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    45% { transform: scale(1.16); }
+}
+
+@keyframes iconBob {
+    0%, 100% { transform: translateY(0); }
+    45% { transform: translateY(-1.8px); }
+}
+
+@keyframes iconDrop {
+    0% { transform: translateY(-2.4px); opacity: 0.2; }
+    65% { transform: translateY(0.5px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes iconPop {
+    0% { transform: scale(0.86); }
+    55% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes iconDashSlide {
+    to { stroke-dashoffset: -1; }
+}
+
+@keyframes iconWave {
+    0%, 100% { transform: translateX(0); }
+    45% { transform: translateX(1.4px); }
+}

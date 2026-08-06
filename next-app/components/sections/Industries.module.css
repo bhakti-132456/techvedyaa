@@ -1,6 +1,6 @@
 .industries {
     padding: var(--spacing-3xl) 0;
-    background: var(--color-bg-alt);
+    background: transparent;
     overflow: hidden;
 }
 
@@ -41,22 +41,42 @@
     }
 }
 
+/* Ghost outline type — fills in as it passes under the cursor */
 .industryItem {
-    padding: var(--spacing-sm) var(--spacing-xl);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 50px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     white-space: nowrap;
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    font-family: var(--font-display), var(--font-montserrat), sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-text-muted);
+    transition: color 0.4s ease, -webkit-text-stroke-color 0.4s ease;
+    cursor: default;
+}
+
+.industryItem::after {
+    content: '·';
+    display: inline-block;
+    margin-left: var(--spacing-lg);
+    color: var(--color-text-muted);
+    -webkit-text-stroke: 0;
 }
 
 .industryItem:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    transform: scale(1.05);
+    color: var(--color-text-primary);
+    -webkit-text-stroke-color: var(--color-text-primary);
+}
+
+.industryItem:active {
+    color: var(--color-secondary);
+    -webkit-text-stroke-color: var(--color-secondary);
+    transition-duration: 0.12s;
 }
 
 /* Pause animation on hover for readability */

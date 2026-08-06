@@ -39,3 +39,9 @@ next-env.d.ts
 .agent/
 ._*
 .env.local
+
+# Local reference / skills guide
+skills/
+
+# Claude Code machine-local settings (permission grants); launch.json is shared
+.claude/settings.local.json

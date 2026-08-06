@@ -1,33 +1,43 @@
 import type { Metadata } from 'next';
-import { Inter, Outfit } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
+import localFont from 'next/font/local';
 import '../styles/tokens.css';
 import '../styles/reset.css';
 import '../styles/animations.css';
 import './globals.css';
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-montserrat',
+  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
-const outfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
-  weight: ['700', '800'],
+/* Display face for headlines, numerals and marquee type
+   (Clash Display — Fontshare/ITF free license, self-hosted) */
+const clashDisplay = localFont({
+  src: [
+    { path: '../fonts/ClashDisplay-400.woff2', weight: '400', style: 'normal' },
+    { path: '../fonts/ClashDisplay-500.woff2', weight: '500', style: 'normal' },
+    { path: '../fonts/ClashDisplay-600.woff2', weight: '600', style: 'normal' },
+    { path: '../fonts/ClashDisplay-700.woff2', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-display',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'TechVedyaa | Marketing & Automation Services | Digital Solutions Provider',
+  title: 'TechVedyaa | Strategic Growth & Transformation Partner for Manufacturing',
   description:
-    'Comprehensive digital solutions provider specializing in integrated marketing, automation, and technology services. Elevate your brand with our expert services.',
+    'TechVedyaa India Pvt Ltd is a strategic growth and transformation partner for modern businesses, with deep domain expertise in manufacturing — specialized manufacturing recruitment, digital transformation, marketing & sales strategy consulting, and digital & product marketing services.',
   keywords:
-    'marketing automation, AI solutions, tech solutions, brand strategy, social media marketing, PR services, LMS',
+    'manufacturing recruitment, manufacturing digital transformation, smart factory, IIoT advisory, marketing strategy consulting, go-to-market strategy, product marketing, B2B lead generation, marketing automation, TechVedyaa',
 };
 
 import Navbar from '@/components/sections/Navbar';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
+import CustomCursor from '@/components/CustomCursor';
 
 export default function RootLayout({
   children,
@@ -35,11 +45,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${clashDisplay.variable}`} suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
-          <Navbar />
-          {children}
+        {/* Motion gate: adds .anim before first paint so reveal targets
+            start hidden — skipped entirely under reduced motion. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('anim')}}catch(e){}})()",
+          }}
+        />
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <CustomCursor />
+          <SmoothScrollProvider>
+            <Navbar />
+            {children}
+          </SmoothScrollProvider>
         </ThemeProvider>
       </body>
     </html>
