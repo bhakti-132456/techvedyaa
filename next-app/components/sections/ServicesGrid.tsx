@@ -117,10 +117,12 @@ export default function ServicesGrid() {
             <SharedServicesCanvas />
 
             <div className={styles.header}>
-                <p className={styles.sectionLabel} data-reveal="fade">What We Do</p>
-                <h2 className={styles.sectionTitle} data-reveal="lines">
-                    Comprehensive <span className="gradient-text">Service Offerings</span>
-                </h2>
+                <div className={styles.headerLead}>
+                    <p className={styles.sectionLabel} data-reveal="fade">What We Do</p>
+                    <h2 className={styles.sectionTitle} data-reveal="lines">
+                        Comprehensive <span className="gradient-text">Service Offerings</span>
+                    </h2>
+                </div>
                 <p className={styles.sectionDescription} data-reveal="fade">
                     From marketing automation to AI-powered solutions, we provide end-to-end services that
                     transform your business.

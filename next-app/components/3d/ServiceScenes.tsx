@@ -1,9 +1,9 @@
 'use client';
 
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { advance, Canvas, useFrame, useThree, type ThreeElements } from '@react-three/fiber';
-import { View } from '@react-three/drei';
+import { Environment, Lightformer, useGLTF, View } from '@react-three/drei';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
 import gsap from 'gsap';
 
@@ -402,17 +402,21 @@ function latCircle(r: number, lat: number): THREE.Vector3[] {
 function SceneRig({
     active,
     idleSpeed = 0.09,
+    spinAxis = 'y',
+    parallax = 'rotate',
     baseRotation = [0, 0, 0] as [number, number, number],
     children,
 }: {
     active: boolean;
     idleSpeed?: number;
+    spinAxis?: 'y' | 'z';
+    parallax?: 'rotate' | 'shift';
     baseRotation?: [number, number, number];
     children: React.ReactNode;
 }) {
     const outer = useRef<THREE.Group>(null);
     const inner = useRef<THREE.Group>(null);
-    const scale = useRef(0.001);
+    const scale = useRef(0.88);
 
     useFrame((_, delta) => {
         const dt = Math.min(delta, 0.05);
@@ -420,17 +424,33 @@ function SceneRig({
         const i = inner.current;
         if (!o || !i) return;
 
-        const target = active ? 1 : 0.78;
-        scale.current += (target - scale.current) * (1 - Math.exp(-dt * (active ? 5 : 3)));
+        // Gentle settle rather than a pop — inactive panels sit only slightly back
+        const target = active ? 1 : 0.92;
+        scale.current += (target - scale.current) * (1 - Math.exp(-dt * 2.4));
         o.scale.setScalar(scale.current);
 
-        const tx = baseRotation[0] + pointer.y * 0.22;
-        const ty = baseRotation[1] + pointer.x * 0.3;
-        o.rotation.x += (tx - o.rotation.x) * (1 - Math.exp(-dt * 1.6));
-        o.rotation.y += (ty - o.rotation.y) * (1 - Math.exp(-dt * 1.6));
-        o.rotation.z = baseRotation[2];
+        // Cursor parallax is the primary motion, eased so it trails the
+        // pointer rather than snapping to it.
+        const k = 1 - Math.exp(-dt * 2.6);
+        if (parallax === 'shift') {
+            // Keep the pose fixed and slide instead, so coplanar parts stay
+            // coplanar and cannot intersect.
+            o.rotation.set(baseRotation[0], baseRotation[1], baseRotation[2]);
+            o.position.x += (pointer.x * 0.11 - o.position.x) * k;
+            o.position.y += (pointer.y * 0.08 - o.position.y) * k;
+        } else {
+            const tx = baseRotation[0] + pointer.y * 0.14;
+            const ty = baseRotation[1] + pointer.x * 0.18;
+            o.rotation.x += (tx - o.rotation.x) * k;
+            o.rotation.y += (ty - o.rotation.y) * k;
+            o.rotation.z = baseRotation[2];
+        }
 
-        i.rotation.y += dt * idleSpeed;
+        // idleSpeed defaults to 0; where set it is a very slow turntable
+        if (idleSpeed) {
+            if (spinAxis === 'z') i.rotation.z += dt * idleSpeed;
+            else i.rotation.y += dt * idleSpeed;
+        }
     });
 
     return (
@@ -877,6 +897,347 @@ function LmsScene({ active, palette }: SceneProps) {
     );
 }
 
+/* =============================================
+   Imported CC0 glTF models (Poly Haven)
+   Used where the service maps to a real object.
+   The abstract services keep their procedural
+   scenes below — those read better as diagrams
+   than as props.
+   ============================================= */
+type ModelConfig = {
+    url: string;
+    /** largest dimension in world units after normalisation */
+    fit: number;
+    tilt?: [number, number, number];
+    /** idle turn in rad/sec — kept very slow */
+    spin?: number;
+    /** which axis the idle turn uses; 'z' for things that face the camera */
+    spinAxis?: 'y' | 'z';
+    /** named nodes to spin against each other about world Z (meshing gears) */
+    counterRotate?: { names: [string, string]; speed: number };
+    /** recolour those nodes in brand primary / accent metal */
+    tintWheels?: boolean;
+    /** amplitude of a slow vertical drift, in world units */
+    float?: number;
+    /**
+     * How the cursor drives the model. 'rotate' tips it toward the pointer;
+     * 'shift' slides it instead — needed for coplanar parts (meshing gears),
+     * where any tilt makes them pass through one another.
+     */
+    parallax?: 'rotate' | 'shift';
+};
+
+/* Orientation policy: trust the model's authored pose and add NO rotation —
+   these assets already carry the right root transform. Only assets that lie
+   genuinely flat (thin axis Y, so they'd render edge-on) get stood up. Tilts
+   are measured from world-space bounding boxes with node transforms applied.
+   Nothing spins; the only motion is cursor parallax. */
+const MODELS: Record<string, ModelConfig> = {
+    // Gears face the camera (thin axis Z), so they turn about world Z — and
+    // the two meshing wheels turn against each other.
+    'marketing-automation': {
+        url: '/models/gear.glb',
+        fit: 2.0,
+        // three-quarter view so the teeth and rim thickness read as solid
+        // rather than as flat silhouettes. Safe now that both wheels are
+        // coplanar siblings with clearance — a shared tilt cannot make them
+        // intersect, unlike their original mismatched rotations.
+        tilt: [0.42, -0.36, 0],
+        counterRotate: { names: ['Gear', 'GearRust'], speed: 0.055 },
+        tintWheels: true,
+    },
+    // world [0.618, 0.434, 0.418] — upright; slight turn for a 3/4 read
+    'marketing-communications': {
+        url: '/models/radio_transceiver.glb',
+        fit: 1.95,
+        tilt: [0, -0.22, 0],
+        spin: 0.035,
+    },
+    // tipped forward so the open dial face reads from above
+    strategy: { url: '/models/compass.glb', fit: 1.85, tilt: [0.6, -0.25, 0], spin: 0.035 },
+    // low, near-side-on viewing angle with a slight isometric lean
+    'tech-solutions': {
+        url: '/models/circuit_board.glb',
+        fit: 2.1,
+        tilt: [0.3, -0.2, 0],
+        spin: 0.05,
+    },
+    // faces -X, so +90deg Y turns the front to camera. fit pulled in from 2.3
+    // because the frame only shows ~2.15 units vertically and it was clipping.
+    'ai-solutions': {
+        url: '/models/robot.glb',
+        fit: 1.7,
+        tilt: [0, 1.5708, 0],
+        spin: 0.055,
+        float: 0.03,
+    },
+    // body stands upright — the wide flat footprint is the STRAP, not the
+    // camera lying down. Lens points +Z, so zero tilt faces the viewer.
+    'social-media': { url: '/models/camera.glb', fit: 1.95, tilt: [0, 0, 0], spin: 0.04 },
+    // horn mouth is the wide end at -X, so a POSITIVE Y turn opens it up
+    pr: { url: '/models/megaphone.glb', fit: 2.0, tilt: [0, 0.65, 0], spin: 0.03 },
+    // flatter, lower viewing angle than face-on
+    lms: { url: '/models/notebook.glb', fit: 1.9, tilt: [0.6, -0.18, 0], spin: 0.045 },
+};
+
+/* Auto-centres and rescales any model to a consistent on-screen size, so
+   real-world glTF scale and arbitrary origins don't need hand-tuning. */
+const WORLD_Z = new THREE.Vector3(0, 0, 1);
+
+/* Recolour a texture into a brand hue while keeping its detail: every pixel's
+   luminance is preserved as a brightness ramp over the target colour. Beats
+   material.color (which only multiplies, so a near-black source stays black)
+   and beats dropping the map (which loses the cast-metal grain entirely). */
+function tintedTexture(src: THREE.Texture | null, hex: string): THREE.Texture | null {
+    const img = src?.image as HTMLImageElement | ImageBitmap | undefined;
+    if (!img || !('width' in img) || !img.width) return null;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.drawImage(img as CanvasImageSource, 0, 0);
+    const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const px = frame.data;
+    const col = new THREE.Color(hex);
+
+    for (let i = 0; i < px.length; i += 4) {
+        const lum = (px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114) / 255;
+        // lift the dark source so the hue reads, but keep relative variation
+        const k = 0.5 + lum * 1.25;
+        px[i] = Math.min(255, col.r * 255 * k);
+        px[i + 1] = Math.min(255, col.g * 255 * k);
+        px[i + 2] = Math.min(255, col.b * 255 * k);
+    }
+    ctx.putImageData(frame, 0, 0);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    // glTF textures load with flipY false — match it or the map lands upside down
+    tex.flipY = src ? src.flipY : false;
+    if (src) {
+        tex.wrapS = src.wrapS;
+        tex.wrapT = src.wrapT;
+    }
+    tex.needsUpdate = true;
+    return tex;
+}
+
+function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePalette }) {
+    const { scene } = useGLTF(cfg.url);
+
+    const object = useMemo(() => {
+        const root = scene.clone(true);
+
+        /* The gear file's two wheels carry DIFFERENT rotation quaternions, so
+           they are not coplanar and interpenetrate. Rebuild their placement
+           from scratch: strip the inherited tilt, turn each wheel's thin axis
+           to face the camera, centre it on its own pivot, then set them
+           side by side with a small clearance so they can never intersect. */
+        if (cfg.counterRotate) {
+            const found = cfg.counterRotate.names
+                .map((n) => root.getObjectByName(n))
+                .filter((o): o is THREE.Object3D => Boolean(o));
+
+            if (found.length === 2) {
+                const holder = new THREE.Group();
+                const wheels = found.map((w) => {
+                    holder.add(w); // reparent: drops the tilted parent chain
+                    w.position.set(0, 0, 0);
+                    w.quaternion.identity();
+                    w.updateMatrixWorld(true);
+
+                    // face the disc at the camera by putting its thin axis on Z
+                    const s = new THREE.Box3().setFromObject(w).getSize(new THREE.Vector3());
+                    if (s.x <= s.y && s.x <= s.z) w.rotateY(Math.PI / 2);
+                    else if (s.y <= s.x && s.y <= s.z) w.rotateX(Math.PI / 2);
+                    w.updateMatrixWorld(true);
+
+                    // centre on its own hub so it spins in place, not in an orbit
+                    const box2 = new THREE.Box3().setFromObject(w);
+                    w.position.sub(box2.getCenter(new THREE.Vector3()));
+                    const size2 = box2.getSize(new THREE.Vector3());
+                    return { obj: w, radius: Math.max(size2.x, size2.y) / 2 };
+                });
+
+                // 3% clearance — adjacent, never overlapping
+                const span = (wheels[0].radius + wheels[1].radius) * 1.03;
+                wheels[0].obj.position.x -= span / 2;
+                wheels[1].obj.position.x += span / 2;
+                root.add(holder);
+
+                /* The source wheels are near-black and rusty, which reads as a
+                   dead silhouette. Drop the albedo map but keep the normal and
+                   roughness detail, so each wheel becomes brand-coloured metal
+                   that still shows its cast surface. Materials are cloned
+                   because useGLTF caches and shares them. */
+                if (cfg.tintWheels) {
+                    wheels.forEach(({ obj }, i) => {
+                        obj.traverse((o) => {
+                            const mesh = o as THREE.Mesh;
+                            if (!mesh.isMesh) return;
+                            const src = mesh.material as THREE.MeshStandardMaterial;
+                            const m = src.clone();
+                            // real metal so the environment gives it form
+                            m.metalness = 0.85;
+                            m.roughness = 0.3;
+                            m.envMapIntensity = 1.5;
+                            mesh.material = m;
+                            mesh.userData.wheel = i;
+                            // keep the original albedo to re-tint from
+                            mesh.userData.srcMap = src.map ?? null;
+                        });
+                    });
+                }
+            }
+        }
+
+        const box = new THREE.Box3().setFromObject(root);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const largest = Math.max(size.x, size.y, size.z) || 1;
+        const s = cfg.fit / largest;
+        root.scale.setScalar(s);
+        root.position.set(-center.x * s, -center.y * s, -center.z * s);
+
+        const wrapper = new THREE.Group();
+        wrapper.add(root);
+        return wrapper;
+    }, [scene, cfg.fit, cfg.counterRotate, cfg.tintWheels]);
+
+    // Re-applied on theme change: primary on one wheel, accent on the other.
+    // The albedo is recoloured pixel-wise, so the cast grain survives.
+    useEffect(() => {
+        if (!cfg.tintWheels) return;
+        const generated: THREE.Texture[] = [];
+
+        object.traverse((o) => {
+            const mesh = o as THREE.Mesh;
+            if (!mesh.isMesh || mesh.userData.wheel === undefined) return;
+            const m = mesh.material as THREE.MeshStandardMaterial;
+            const hex = mesh.userData.wheel === 0 ? palette.primary : palette.accent;
+            const tex = tintedTexture(mesh.userData.srcMap as THREE.Texture | null, hex);
+            if (tex) {
+                m.map = tex;
+                m.color.set('#ffffff');
+                generated.push(tex);
+            } else {
+                m.map = null;
+                m.color.set(hex);
+            }
+            m.needsUpdate = true;
+        });
+
+        return () => generated.forEach((t) => t.dispose());
+    }, [object, palette, cfg.tintWheels]);
+
+    // Meshing wheels: spin each named node about the world axis facing the
+    // viewer, in opposite directions and at rates that differ like real gears.
+    const wheels = useMemo(() => {
+        if (!cfg.counterRotate) return null;
+        const found = cfg.counterRotate.names
+            .map((n) => object.getObjectByName(n))
+            .filter((o): o is THREE.Object3D => Boolean(o));
+        return found.length ? found : null;
+    }, [object, cfg.counterRotate]);
+
+    // Local, monotonic time. The shared canvas is advanced manually, so the
+    // global clock can hand back uneven deltas — reading it directly made the
+    // float jitter. Accumulating a clamped, non-negative delta keeps it smooth.
+    const t = useRef(0);
+
+    useFrame((_, delta) => {
+        const dt = Math.max(0, Math.min(delta, 0.05));
+        t.current += dt;
+
+        if (wheels && cfg.counterRotate) {
+            const base = cfg.counterRotate.speed;
+            wheels.forEach((w, i) => {
+                w.rotateOnWorldAxis(WORLD_Z, dt * (i === 0 ? base : -base * 1.35));
+            });
+        }
+        if (cfg.float) {
+            // ~18s cycle — a slow drift, not a bob
+            object.position.y = Math.sin(t.current * 0.35) * cfg.float;
+        }
+    });
+
+    return <primitive object={object} />;
+}
+
+/* Studio rig: a key light plus brand-tinted fill and rim, and a small
+   procedural environment so the scanned metal and plastic actually reflect
+   something. No external HDRI needed. */
+function StudioLighting({ palette }: { palette: ScenePalette }) {
+    const isDark = palette.name === 'dark';
+    return (
+        <>
+            <ambientLight intensity={isDark ? 0.85 : 1.6} />
+            {/* key light: high and to the right, angled in toward the viewer */}
+            <directionalLight position={[6, 6.5, 4.5]} intensity={isDark ? 3.6 : 4} />
+            {/* soft top-right bounce so highlights don't collapse to one spot */}
+            <pointLight position={[4.5, 4, 3]} intensity={isDark ? 26 : 18} distance={16} />
+            <pointLight
+                position={[-4, 1.5, 3]}
+                intensity={isDark ? 18 : 12}
+                color={palette.primary}
+                distance={14}
+            />
+            <pointLight
+                position={[2.5, -2.5, -3]}
+                intensity={isDark ? 14 : 9}
+                color={palette.accent}
+                distance={14}
+            />
+            <Environment resolution={256} frames={1}>
+                {/* large soft source upper-right — the dominant reflection */}
+                <Lightformer
+                    form="rect"
+                    intensity={3.4}
+                    position={[3.5, 4, 2.5]}
+                    rotation={[-0.4, 0.5, 0]}
+                    scale={[8, 4, 1]}
+                />
+                <Lightformer
+                    form="rect"
+                    intensity={1.5}
+                    color={palette.primary}
+                    position={[-4.5, 0, 2]}
+                    rotation={[0, Math.PI / 2, 0]}
+                    scale={[5, 5, 1]}
+                />
+                <Lightformer
+                    form="rect"
+                    intensity={1}
+                    color={palette.accent}
+                    position={[4.5, -1, -2]}
+                    rotation={[0, -Math.PI / 2, 0]}
+                    scale={[5, 5, 1]}
+                />
+            </Environment>
+        </>
+    );
+}
+
+function ModelScene({ active, palette, cfg }: SceneProps & { cfg: ModelConfig }) {
+    return (
+        <>
+            <StudioLighting palette={palette} />
+            <SceneRig
+                active={active}
+                idleSpeed={cfg.spin ?? 0}
+                spinAxis={cfg.spinAxis ?? 'y'}
+                parallax={cfg.parallax ?? 'rotate'}
+                baseRotation={cfg.tilt ?? [0, 0, 0]}
+            >
+                <NormalizedModel cfg={cfg} palette={palette} />
+            </SceneRig>
+        </>
+    );
+}
+
 const SCENES: Record<string, (p: SceneProps) => React.ReactElement> = {
     'marketing-automation': AutomationScene,
     'marketing-communications': CommunicationsScene,
@@ -916,12 +1277,44 @@ export function ServiceSceneView({
         return () => observer.disconnect();
     }, []);
 
+    // Defer mounting until the panel is roughly a viewport away, so the
+    // glTF payloads are fetched on approach rather than at first paint.
+    const host = useRef<HTMLDivElement>(null);
+    const [ready, setReady] = useState(false);
+
+    useEffect(() => {
+        const el = host.current;
+        if (!el) return;
+        const io = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setReady(true);
+                    io.disconnect();
+                }
+            },
+            { rootMargin: '100% 100%' }
+        );
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
+    const model = MODELS[id];
     const Scene = SCENES[id] ?? AutomationScene;
 
     return (
-        <View className={className}>
-            <Scene active={active} palette={palette} />
-        </View>
+        <div ref={host} className={className}>
+            <View style={{ width: '100%', height: '100%' }}>
+                {ready ? (
+                    <Suspense fallback={null}>
+                        {model ? (
+                            <ModelScene active={active} palette={palette} cfg={model} />
+                        ) : (
+                            <Scene active={active} palette={palette} />
+                        )}
+                    </Suspense>
+                ) : null}
+            </View>
+        </div>
     );
 }
 

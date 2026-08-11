@@ -6,50 +6,67 @@
 
 .services {
     position: relative;
+    /* sits above the preceding sticky card stack while it releases */
+    z-index: 2;
     height: 100vh;
     overflow: hidden;
     background: transparent;
 }
 
 /* ---- Compact editorial header band ---- */
+/* Two aligned columns: label+title as one editorial group on the left,
+   supporting copy on the right. Bottoms are flush so the title baseline and
+   the last line of copy sit on a shared rule. */
 .header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     z-index: 6;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
-    padding: calc(76px + 1.25rem) clamp(1.5rem, 4vw, 3.5rem) 1.1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: clamp(2rem, 6vw, 5rem);
+    padding: calc(76px + 1.25rem) clamp(1.5rem, 4vw, 3.5rem) 1.15rem;
     border-bottom: 1px solid var(--color-border);
     pointer-events: none;
 }
 
+.headerLead {
+    min-width: 0;
+}
+
 .sectionLabel {
+    display: block;
     font-size: var(--text-xs);
     font-weight: 600;
     color: var(--color-secondary);
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    line-height: 1;
+    margin: 0 0 0.65rem;
 }
 
+/* No text-wrap: balance here — this is a SplitText target, and balancing
+   makes it measure and freeze extra lines. */
 .sectionTitle {
-    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
-    line-height: 1.05;
+    font-size: clamp(1.35rem, 2.2vw, 2.2rem);
+    line-height: 1.02;
     letter-spacing: -0.03em;
     margin: 0;
 }
 
+/* Block sits flush to the right edge, but the text itself reads left-aligned:
+   a ragged LEFT edge against the empty middle is what made this look broken. */
 .sectionDescription {
+    width: min(56ch, 40vw);
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    max-width: 380px;
-    text-align: right;
+    line-height: 1.55;
+    text-align: left;
+    text-wrap: pretty;
     margin: 0;
+    padding-bottom: 0.15rem;
 }
 
 /* ---- Track + panels ---- */
@@ -74,7 +91,9 @@
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     align-items: center;
     gap: clamp(2rem, 5vw, 5rem);
-    padding: 170px clamp(1.5rem, 4vw, 3.5rem) 110px;
+    /* top padding clears the pinned header band, with slack for a title that
+       wraps to two lines on narrower desktops */
+    padding: 190px clamp(1.5rem, 4vw, 3.5rem) 110px;
     transform: scale(0.95);
     opacity: 0.35;
     transition:
@@ -134,27 +153,29 @@
 
 .titleGlyph {
     flex: 0 0 auto;
-    width: clamp(34px, 3.2vw, 44px);
-    height: clamp(34px, 3.2vw, 44px);
-    margin-top: 0.35em;
+    width: clamp(28px, 2.4vw, 36px);
+    height: clamp(28px, 2.4vw, 36px);
+    margin-top: 0.3em;
     color: var(--color-primary);
 }
 
+/* Type is capped by height as well as width: a panel is one viewport tall and
+   has to hold title + copy + five feature rows without overflowing. */
 .panelTitle {
-    font-size: clamp(2rem, 3.6vw, 3.4rem);
+    font-size: clamp(1.5rem, min(2.7vw, 4.4vh), 2.6rem);
     font-weight: 600;
-    line-height: 1.04;
-    letter-spacing: -0.035em;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
     margin-bottom: 0;
     color: var(--color-text-primary);
 }
 
 .panelDescription {
-    font-size: clamp(var(--text-base), 1.4vw, var(--text-xl));
+    font-size: clamp(0.9rem, min(1.1vw, 1.9vh), 1.1rem);
     color: var(--color-text-secondary);
     line-height: 1.55;
-    margin-bottom: clamp(1.25rem, 3vh, 2.5rem);
-    max-width: 56ch;
+    margin-bottom: clamp(0.9rem, 2.4vh, 1.75rem);
+    max-width: 62ch;
 }
 
 .panelFeatures {
@@ -165,10 +186,10 @@
 
 /* Line-by-line reveal when the panel is active */
 .featureLine {
-    font-size: clamp(var(--text-sm), 1.1vw, var(--text-lg));
+    font-size: clamp(0.8rem, min(0.95vw, 1.65vh), 0.95rem);
     color: var(--color-text-secondary);
-    line-height: 1.5;
-    padding: clamp(0.55rem, 1.2vh, 0.85rem) 0;
+    line-height: 1.45;
+    padding: clamp(0.4rem, 1vh, 0.7rem) 0;
     border-top: 1px solid var(--color-border);
     opacity: 0;
     transform: translateY(22px);
@@ -338,6 +359,14 @@
         padding: 0 var(--spacing-md) var(--spacing-sm);
         text-align: center;
         pointer-events: auto;
+    }
+
+    .sectionLabel {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .sectionDescription {
+        text-align: center;
     }
 
     .sectionTitle {

@@ -42,7 +42,7 @@
 
 .navMenu {
     display: flex;
-    gap: var(--spacing-lg);
+    gap: clamp(1.15rem, 2.1vw, 2.5rem);
     align-items: center;
     list-style: none;
     margin: 0;

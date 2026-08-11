@@ -3,9 +3,12 @@
    ============================================ */
 
 .pillars {
-    padding: var(--spacing-3xl) 0;
+    /* generous tail so the sticky stack fully releases before the next
+       (pinned) section starts, otherwise the last card overlaps it */
+    padding: var(--spacing-3xl) 0 clamp(7rem, 22vh, 15rem);
     background: transparent;
     position: relative;
+    z-index: 1;
     overflow: hidden;
 }
 
@@ -36,23 +39,46 @@
     max-width: 620px;
 }
 
-/* ---- Index rows ---- */
+/* ---- Cascading curtain ----
+   Every card sticks at nearly the same offset, so the next one sweeps up and
+   covers the one before it like a curtain, leaving only a few px of each
+   previous card's edge showing. Cards are opaque so the overlap reads, and
+   sized so all of a card's content is visible while it is the active one. */
 .list {
     display: flex;
     flex-direction: column;
+    /* no gap — cards butt together so the sweep is continuous */
+    gap: 0;
+    /* short hold for the final card, well inside the section's tail */
+    padding-bottom: clamp(2rem, 8vh, 5rem);
 }
 
 .pillar {
+    position: sticky;
+    top: calc(94px + var(--i) * 9px);
+    /* tall enough to feel like a full panel, short enough that the whole card
+       fits between the sticky offset and the bottom of the viewport */
+    min-height: min(72vh, 660px);
     display: grid;
     grid-template-columns: clamp(90px, 14vw, 190px) 1fr;
     gap: clamp(1rem, 3vw, 3rem);
+    align-content: center;
     align-items: start;
-    border-top: 1px solid var(--color-border);
-    padding: clamp(2.25rem, 5vh, 3.75rem) 0;
+    padding: clamp(1.75rem, 4.5vh, 3.25rem) clamp(1.5rem, 3vw, 3.25rem);
+    background: var(--surface-card);
+    border-radius: var(--radius-xl);
+    /* hairline plus a lift along the leading edge, so a card reads as sliding
+       over the one beneath it */
+    box-shadow:
+        var(--neu-shadow-raised),
+        0 -28px 60px rgba(0, 0, 0, 0.16);
+    will-change: transform;
 }
 
-.pillar:last-child {
-    border-bottom: 1px solid var(--color-border);
+[data-theme='dark'] .pillar {
+    box-shadow:
+        var(--neu-shadow-raised),
+        0 -28px 60px rgba(0, 0, 0, 0.5);
 }
 
 .index {
@@ -134,7 +160,10 @@
     .pillar {
         grid-template-columns: 1fr;
         gap: var(--spacing-sm);
-        padding: var(--spacing-lg) 0;
+        padding: var(--spacing-lg) var(--spacing-md);
+        top: calc(80px + var(--i) * 7px);
+        /* let content dictate height on narrow screens so nothing clips */
+        min-height: 0;
     }
 
     .index {
