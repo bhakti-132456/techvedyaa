@@ -16,8 +16,8 @@ export default function AboutSection() {
                     <p data-reveal="fade">
                         We believe that long-term business success lies at the intersection of talent,
                         technology, and strategic market positioning. We are a dynamic management
-                        consulting and services firm dedicated to helping organizations—particularly in
-                        the industrial and manufacturing sectors—navigate modern operational and
+                        consulting and services firm dedicated to helping organizations, particularly
+                        in the industrial and manufacturing sectors, navigate modern operational and
                         commercial challenges.
                     </p>
                     <p data-reveal="fade">

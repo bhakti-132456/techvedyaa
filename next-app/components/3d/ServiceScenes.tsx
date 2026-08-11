@@ -913,10 +913,16 @@ type ModelConfig = {
     spin?: number;
     /** which axis the idle turn uses; 'z' for things that face the camera */
     spinAxis?: 'y' | 'z';
-    /** named nodes to spin against each other about world Z (meshing gears) */
-    counterRotate?: { names: [string, string]; speed: number };
-    /** recolour those nodes in brand primary / accent metal */
-    tintWheels?: boolean;
+    /** play the model's own baked animation clips */
+    animated?: boolean;
+    /** playback rate for those clips (1 = authored speed) */
+    animSpeed?: number;
+    /** recolour each part in brand primary, with accent on every third */
+    tintAlternate?: boolean;
+    /** move one hue band of the albedo onto a brand colour */
+    hueShift?: { from: number; tol: number; to: 'primary' | 'accent' };
+    /** extra overhead light, for models whose detail is on an upward face */
+    faceLight?: number;
     /** amplitude of a slow vertical drift, in world units */
     float?: number;
     /**
@@ -933,32 +939,42 @@ type ModelConfig = {
    are measured from world-space bounding boxes with node transforms applied.
    Nothing spins; the only motion is cursor parallax. */
 const MODELS: Record<string, ModelConfig> = {
-    // Gears face the camera (thin axis Z), so they turn about world Z — and
-    // the two meshing wheels turn against each other.
+    // Animated gear train (world [1.83, 1.58, 2.09] — a 3D cluster, not a flat
+    // plate). Its own clip turns eight gears on their own axles, so no manual
+    // rotation is needed; timeScale holds it to a slow churn.
     'marketing-automation': {
-        url: '/models/gear.glb',
-        fit: 2.0,
-        // three-quarter view so the teeth and rim thickness read as solid
-        // rather than as flat silhouettes. Safe now that both wheels are
-        // coplanar siblings with clearance — a shared tilt cannot make them
-        // intersect, unlike their original mismatched rotations.
-        tilt: [0.42, -0.36, 0],
-        counterRotate: { names: ['Gear', 'GearRust'], speed: 0.055 },
-        tintWheels: true,
+        url: '/models/gears.glb',
+        // pulled in so the whole train clears the frame at any panel aspect
+        fit: 2.25,
+        // strong top-down so the train is read from above, with a slight turn
+        // for depth
+        tilt: [1.05, -0.3, 0],
+        animated: true,
+        // 3.33s clip at a third speed -> a full turn about every 10 seconds.
+        // Slow enough to read as a churn, fast enough to be visibly moving.
+        animSpeed: 0.33,
+        tintAlternate: true,
     },
     // world [0.618, 0.434, 0.418] — upright; slight turn for a 3/4 read
     'marketing-communications': {
         url: '/models/radio_transceiver.glb',
-        fit: 1.95,
+        fit: 2.25,
         tilt: [0, -0.22, 0],
         spin: 0.035,
     },
     // tipped forward so the open dial face reads from above
-    strategy: { url: '/models/compass.glb', fit: 1.85, tilt: [0.6, -0.25, 0], spin: 0.035 },
+    // tipped forward so the dial reads; lit from overhead so the face is bright
+    strategy: {
+        url: '/models/compass.glb',
+        fit: 2.25,
+        tilt: [0.6, -0.25, 0],
+        spin: 0.035,
+        faceLight: 30,
+    },
     // low, near-side-on viewing angle with a slight isometric lean
     'tech-solutions': {
         url: '/models/circuit_board.glb',
-        fit: 2.1,
+        fit: 2.25,
         tilt: [0.3, -0.2, 0],
         spin: 0.05,
     },
@@ -966,29 +982,36 @@ const MODELS: Record<string, ModelConfig> = {
     // because the frame only shows ~2.15 units vertically and it was clipping.
     'ai-solutions': {
         url: '/models/robot.glb',
-        fit: 1.7,
+        fit: 2.25,
         tilt: [0, 1.5708, 0],
         spin: 0.055,
         float: 0.03,
     },
     // body stands upright — the wide flat footprint is the STRAP, not the
     // camera lying down. Lens points +Z, so zero tilt faces the viewer.
-    'social-media': { url: '/models/camera.glb', fit: 1.95, tilt: [0, 0, 0], spin: 0.04 },
+    'social-media': { url: '/models/camera.glb', fit: 2.25, tilt: [0, 0, 0], spin: 0.04 },
     // horn mouth is the wide end at -X, so a POSITIVE Y turn opens it up
-    pr: { url: '/models/megaphone.glb', fit: 2.0, tilt: [0, 0.65, 0], spin: 0.03 },
+    // red shell -> brand orange; the grey horn and all detail maps are untouched
+    pr: {
+        url: '/models/megaphone.glb',
+        fit: 2.25,
+        tilt: [0, 0.65, 0],
+        spin: 0.03,
+        hueShift: { from: 0, tol: 30, to: 'accent' },
+    },
     // flatter, lower viewing angle than face-on
-    lms: { url: '/models/notebook.glb', fit: 1.9, tilt: [0.6, -0.18, 0], spin: 0.045 },
+    lms: { url: '/models/notebook.glb', fit: 2.25, tilt: [0.6, -0.18, 0], spin: 0.045 },
 };
 
-/* Auto-centres and rescales any model to a consistent on-screen size, so
-   real-world glTF scale and arbitrary origins don't need hand-tuning. */
-const WORLD_Z = new THREE.Vector3(0, 0, 1);
-
-/* Recolour a texture into a brand hue while keeping its detail: every pixel's
-   luminance is preserved as a brightness ramp over the target colour. Beats
-   material.color (which only multiplies, so a near-black source stays black)
-   and beats dropping the map (which loses the cast-metal grain entirely). */
-function tintedTexture(src: THREE.Texture | null, hex: string): THREE.Texture | null {
+/* Shift one hue band of a texture to a brand colour, leaving every other pixel
+   alone. Used to turn the megaphone's red shell brand-orange without touching
+   its grey horn, its shading, or its normal/roughness maps. */
+function hueShiftedTexture(
+    src: THREE.Texture | null,
+    fromHue: number,
+    tolerance: number,
+    toHex: string
+): THREE.Texture | null {
     const img = src?.image as HTMLImageElement | ImageBitmap | undefined;
     if (!img || !('width' in img) || !img.width) return null;
 
@@ -997,25 +1020,42 @@ function tintedTexture(src: THREE.Texture | null, hex: string): THREE.Texture | 
     canvas.height = img.height;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
-
     ctx.drawImage(img as CanvasImageSource, 0, 0);
+
     const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const px = frame.data;
-    const col = new THREE.Color(hex);
+    const targetHsl = { h: 0, s: 0, l: 0 };
+    new THREE.Color(toHex).getHSL(targetHsl);
+    const probe = new THREE.Color();
+    const hsl = { h: 0, s: 0, l: 0 };
 
     for (let i = 0; i < px.length; i += 4) {
-        const lum = (px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114) / 255;
-        // lift the dark source so the hue reads, but keep relative variation
-        const k = 0.5 + lum * 1.25;
-        px[i] = Math.min(255, col.r * 255 * k);
-        px[i + 1] = Math.min(255, col.g * 255 * k);
-        px[i + 2] = Math.min(255, col.b * 255 * k);
+        probe.setRGB(px[i] / 255, px[i + 1] / 255, px[i + 2] / 255);
+        probe.getHSL(hsl);
+        // hue distance on the colour wheel, in degrees
+        const deg = hsl.h * 360;
+        const delta = Math.min(Math.abs(deg - fromHue), 360 - Math.abs(deg - fromHue));
+        // saturation gate keeps greys, blacks and whites untouched
+        if (delta > tolerance || hsl.s < 0.22) continue;
+
+        // Blend saturation and lightness toward the brand colour too. Keeping
+        // the source lightness alone just turns dark red into dark orange,
+        // which still reads as red; the per-pixel value still contributes, so
+        // shading and highlights survive.
+        probe.setHSL(
+            targetHsl.h,
+            THREE.MathUtils.lerp(hsl.s, targetHsl.s, 0.6),
+            THREE.MathUtils.lerp(hsl.l, targetHsl.l, 0.45)
+        );
+        px[i] = probe.r * 255;
+        px[i + 1] = probe.g * 255;
+        px[i + 2] = probe.b * 255;
     }
     ctx.putImageData(frame, 0, 0);
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
-    // glTF textures load with flipY false — match it or the map lands upside down
+    // glTF textures load with flipY false — match it or the map lands inverted
     tex.flipY = src ? src.flipY : false;
     if (src) {
         tex.wrapS = src.wrapS;
@@ -1025,142 +1065,169 @@ function tintedTexture(src: THREE.Texture | null, hex: string): THREE.Texture | 
     return tex;
 }
 
-function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePalette }) {
-    const { scene } = useGLTF(cfg.url);
+/* Auto-centres and rescales any model to a consistent on-screen size, so
+   real-world glTF scale and arbitrary origins don't need hand-tuning. */
 
-    const object = useMemo(() => {
+function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePalette }) {
+    const { scene, animations } = useGLTF(cfg.url);
+    const size = useThree((s) => s.size);
+    const camera = useThree((s) => s.camera);
+
+    const built = useMemo(() => {
+        /* Always clone. Never reparent the cached scene: React invokes render
+           twice, so moving the shared object into a group happens twice and the
+           committed group is left empty (the model ends up under the discarded
+           one). Cloning is idempotent, and GLTFLoader names animation tracks
+           after node names — which clone() preserves — so clips still bind. */
         const root = scene.clone(true);
 
-        /* The gear file's two wheels carry DIFFERENT rotation quaternions, so
-           they are not coplanar and interpenetrate. Rebuild their placement
-           from scratch: strip the inherited tilt, turn each wheel's thin axis
-           to face the camera, centre it on its own pivot, then set them
-           side by side with a small clearance so they can never intersect. */
-        if (cfg.counterRotate) {
-            const found = cfg.counterRotate.names
-                .map((n) => root.getObjectByName(n))
-                .filter((o): o is THREE.Object3D => Boolean(o));
-
-            if (found.length === 2) {
-                const holder = new THREE.Group();
-                const wheels = found.map((w) => {
-                    holder.add(w); // reparent: drops the tilted parent chain
-                    w.position.set(0, 0, 0);
-                    w.quaternion.identity();
-                    w.updateMatrixWorld(true);
-
-                    // face the disc at the camera by putting its thin axis on Z
-                    const s = new THREE.Box3().setFromObject(w).getSize(new THREE.Vector3());
-                    if (s.x <= s.y && s.x <= s.z) w.rotateY(Math.PI / 2);
-                    else if (s.y <= s.x && s.y <= s.z) w.rotateX(Math.PI / 2);
-                    w.updateMatrixWorld(true);
-
-                    // centre on its own hub so it spins in place, not in an orbit
-                    const box2 = new THREE.Box3().setFromObject(w);
-                    w.position.sub(box2.getCenter(new THREE.Vector3()));
-                    const size2 = box2.getSize(new THREE.Vector3());
-                    return { obj: w, radius: Math.max(size2.x, size2.y) / 2 };
-                });
-
-                // 3% clearance — adjacent, never overlapping
-                const span = (wheels[0].radius + wheels[1].radius) * 1.03;
-                wheels[0].obj.position.x -= span / 2;
-                wheels[1].obj.position.x += span / 2;
-                root.add(holder);
-
-                /* The source wheels are near-black and rusty, which reads as a
-                   dead silhouette. Drop the albedo map but keep the normal and
-                   roughness detail, so each wheel becomes brand-coloured metal
-                   that still shows its cast surface. Materials are cloned
-                   because useGLTF caches and shares them. */
-                if (cfg.tintWheels) {
-                    wheels.forEach(({ obj }, i) => {
-                        obj.traverse((o) => {
-                            const mesh = o as THREE.Mesh;
-                            if (!mesh.isMesh) return;
-                            const src = mesh.material as THREE.MeshStandardMaterial;
-                            const m = src.clone();
-                            // real metal so the environment gives it form
-                            m.metalness = 0.85;
-                            m.roughness = 0.3;
-                            m.envMapIntensity = 1.5;
-                            mesh.material = m;
-                            mesh.userData.wheel = i;
-                            // keep the original albedo to re-tint from
-                            mesh.userData.srcMap = src.map ?? null;
-                        });
-                    });
-                }
-            }
+        /* Brand recolour. This asset is untextured metal, so a flat colour per
+           part is enough — no albedo to preserve. Materials are cloned because
+           useGLTF caches and shares them across instances. */
+        if (cfg.tintAlternate) {
+            let i = 0;
+            root.traverse((o) => {
+                const mesh = o as THREE.Mesh;
+                if (!mesh.isMesh) return;
+                const m = (mesh.material as THREE.MeshStandardMaterial).clone();
+                m.envMapIntensity = 1.5;
+                mesh.material = m;
+                mesh.userData.tintIndex = i++;
+            });
         }
 
+        // Clone materials so the hue shift can't leak into the cached original
+        if (cfg.hueShift) {
+            root.traverse((o) => {
+                const mesh = o as THREE.Mesh;
+                if (!mesh.isMesh) return;
+                const src = mesh.material as THREE.MeshStandardMaterial;
+                mesh.material = src.clone();
+                mesh.userData.srcMap = src.map ?? null;
+            });
+        }
+
+        // Centre at unit scale; the wrapper is scaled separately below so the
+        // fit can react to the panel's aspect without rebuilding the model.
         const box = new THREE.Box3().setFromObject(root);
-        const size = box.getSize(new THREE.Vector3());
+        const extent = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
-        const largest = Math.max(size.x, size.y, size.z) || 1;
-        const s = cfg.fit / largest;
-        root.scale.setScalar(s);
-        root.position.set(-center.x * s, -center.y * s, -center.z * s);
+
+        /* Centre via a pivot rather than by moving the model. The animated
+           model is the loaded scene itself, so writing to its position would
+           persist across remounts and the offset would compound. */
+        const pivot = new THREE.Group();
+        pivot.add(root);
+        pivot.position.set(-center.x, -center.y, -center.z);
 
         const wrapper = new THREE.Group();
-        wrapper.add(root);
-        return wrapper;
-    }, [scene, cfg.fit, cfg.counterRotate, cfg.tintWheels]);
+        wrapper.add(pivot);
+        return {
+            wrapper,
+            largest: Math.max(extent.x, extent.y, extent.z) || 1,
+            // box diagonal == bounding-sphere diameter: the widest the model can
+            // ever project, whatever angle it is turned to
+            diagonal: extent.length() || 1,
+        };
+    }, [scene, cfg.tintAlternate, cfg.hueShift]);
 
-    // Re-applied on theme change: primary on one wheel, accent on the other.
-    // The albedo is recoloured pixel-wise, so the cast grain survives.
+    const object = built.wrapper;
+    const turns = Boolean(cfg.spin || cfg.animated);
+
+    /* Fit to the view's own aspect. The visual column is portrait on narrow
+       screens and landscape on wide ones, so whichever axis is tighter decides
+       the size. Anything that turns is measured by its bounding sphere, so it
+       stays inside the frame at every angle instead of clipping mid-rotation. */
     useEffect(() => {
-        if (!cfg.tintWheels) return;
-        const generated: THREE.Texture[] = [];
+        const cam = camera as THREE.PerspectiveCamera;
+        const dist = Math.abs(cam.position.z) || 2.8;
+        const visibleH = 2 * dist * Math.tan(((cam.fov || 42) * Math.PI) / 360);
+        const visibleW = visibleH * (size.width / Math.max(1, size.height));
+        const room = Math.min(visibleH, visibleW) * 0.92;
+        const reference = turns ? built.diagonal : built.largest;
+        object.scale.setScalar(Math.min(cfg.fit, room) / reference);
+    }, [object, built.largest, built.diagonal, turns, size, cfg.fit, camera]);
+
+    // Brand colours, re-applied when the theme flips. Mostly primary with an
+    // accent every third part, so it reads branded rather than harlequin.
+    useEffect(() => {
+        if (!cfg.tintAlternate) return;
+        object.traverse((o) => {
+            const mesh = o as THREE.Mesh;
+            const idx = mesh.userData?.tintIndex as number | undefined;
+            if (!mesh.isMesh || idx === undefined) return;
+            const m = mesh.material as THREE.MeshStandardMaterial;
+            m.color.set(idx % 3 === 0 ? palette.accent : palette.primary);
+            m.needsUpdate = true;
+        });
+    }, [object, palette, cfg.tintAlternate]);
+
+    // Hue-shift the albedo, re-run on theme change so the brand colour tracks.
+    useEffect(() => {
+        const shift = cfg.hueShift;
+        if (!shift) return;
+        const made: THREE.Texture[] = [];
+        const hex = shift.to === 'accent' ? palette.accent : palette.primary;
 
         object.traverse((o) => {
             const mesh = o as THREE.Mesh;
-            if (!mesh.isMesh || mesh.userData.wheel === undefined) return;
+            if (!mesh.isMesh || !mesh.userData.srcMap) return;
+            const tex = hueShiftedTexture(
+                mesh.userData.srcMap as THREE.Texture,
+                shift.from,
+                shift.tol,
+                hex
+            );
+            if (!tex) return;
             const m = mesh.material as THREE.MeshStandardMaterial;
-            const hex = mesh.userData.wheel === 0 ? palette.primary : palette.accent;
-            const tex = tintedTexture(mesh.userData.srcMap as THREE.Texture | null, hex);
-            if (tex) {
-                m.map = tex;
-                m.color.set('#ffffff');
-                generated.push(tex);
-            } else {
-                m.map = null;
-                m.color.set(hex);
-            }
+            m.map = tex;
             m.needsUpdate = true;
+            made.push(tex);
         });
 
-        return () => generated.forEach((t) => t.dispose());
-    }, [object, palette, cfg.tintWheels]);
+        return () => made.forEach((t) => t.dispose());
+    }, [object, palette, cfg.hueShift]);
 
-    // Meshing wheels: spin each named node about the world axis facing the
-    // viewer, in opposite directions and at rates that differ like real gears.
-    const wheels = useMemo(() => {
-        if (!cfg.counterRotate) return null;
-        const found = cfg.counterRotate.names
-            .map((n) => object.getObjectByName(n))
-            .filter((o): o is THREE.Object3D => Boolean(o));
-        return found.length ? found : null;
-    }, [object, cfg.counterRotate]);
+    /* Baked animation: the file drives each gear on its own axle, which is far
+       more convincing than rotating nodes by hand. The mixer is driven by hand
+       rather than through useAnimations, because this canvas is advanced
+       manually and the raw per-frame delta arrives uneven — feeding that
+       straight into a mixer is what made the motion stutter. */
+    const mixer = useMemo(() => {
+        if (!cfg.animated || !animations.length) return null;
+        const mx = new THREE.AnimationMixer(object);
+        animations.forEach((clip) => mx.clipAction(clip).play());
 
-    // Local, monotonic time. The shared canvas is advanced manually, so the
-    // global clock can hand back uneven deltas — reading it directly made the
-    // float jitter. Accumulating a clamped, non-negative delta keeps it smooth.
-    const t = useRef(0);
+        return mx;
+    }, [cfg.animated, animations, object]);
 
-    useFrame((_, delta) => {
-        const dt = Math.max(0, Math.min(delta, 0.05));
-        t.current += dt;
+    useEffect(
+        () => () => {
+            mixer?.stopAllAction();
+        },
+        [mixer]
+    );
 
-        if (wheels && cfg.counterRotate) {
-            const base = cfg.counterRotate.speed;
-            wheels.forEach((w, i) => {
-                w.rotateOnWorldAxis(WORLD_Z, dt * (i === 0 ? base : -base * 1.35));
-            });
-        }
+    /* Wall-clock timing. This canvas is advanced manually and its frame
+       callbacks can fire more than once per rendered frame, so accumulating the
+       delta handed to useFrame ran everything several times too fast (measured
+       at ~7x). Deriving the step from real elapsed time makes every rate exact
+       no matter how often the callback runs, and keeps it smooth. */
+    const last = useRef<number | null>(null);
+    const elapsed = useRef(0);
+
+    useFrame(() => {
+        const now = performance.now();
+        if (last.current === null) last.current = now;
+        const dt = Math.max(0, Math.min((now - last.current) / 1000, 0.05));
+        last.current = now;
+        elapsed.current += dt;
+
+        if (mixer) mixer.update(dt * (cfg.animSpeed ?? 1));
+
         if (cfg.float) {
             // ~18s cycle — a slow drift, not a bob
-            object.position.y = Math.sin(t.current * 0.35) * cfg.float;
+            object.position.y = Math.sin(elapsed.current * 0.35) * cfg.float;
         }
     });
 
@@ -1170,10 +1237,22 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
 /* Studio rig: a key light plus brand-tinted fill and rim, and a small
    procedural environment so the scanned metal and plastic actually reflect
    something. No external HDRI needed. */
-function StudioLighting({ palette }: { palette: ScenePalette }) {
+function StudioLighting({ palette, faceLight }: { palette: ScenePalette; faceLight?: number }) {
     const isDark = palette.name === 'dark';
     return (
         <>
+            {/* Overhead wash for models read from above (the compass dial), so
+                the face isn't left in the key light's shadow */}
+            {faceLight ? (
+                <>
+                    <pointLight
+                        position={[0.5, 3.4, 2.2]}
+                        intensity={faceLight * (isDark ? 1 : 0.7)}
+                        distance={12}
+                    />
+                    <directionalLight position={[0, 5, 1.5]} intensity={isDark ? 1.8 : 2.1} />
+                </>
+            ) : null}
             <ambientLight intensity={isDark ? 0.85 : 1.6} />
             {/* key light: high and to the right, angled in toward the viewer */}
             <directionalLight position={[6, 6.5, 4.5]} intensity={isDark ? 3.6 : 4} />
@@ -1224,7 +1303,7 @@ function StudioLighting({ palette }: { palette: ScenePalette }) {
 function ModelScene({ active, palette, cfg }: SceneProps & { cfg: ModelConfig }) {
     return (
         <>
-            <StudioLighting palette={palette} />
+            <StudioLighting palette={palette} faceLight={cfg.faceLight} />
             <SceneRig
                 active={active}
                 idleSpeed={cfg.spin ?? 0}
@@ -1392,3 +1471,4 @@ export function SharedServicesCanvas() {
         </div>
     );
 }
+

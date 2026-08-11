@@ -29,7 +29,7 @@ const clashDisplay = localFont({
 export const metadata: Metadata = {
   title: 'TechVedyaa | Strategic Growth & Transformation Partner for Manufacturing',
   description:
-    'TechVedyaa India Pvt Ltd is a strategic growth and transformation partner for modern businesses, with deep domain expertise in manufacturing — specialized manufacturing recruitment, digital transformation, marketing & sales strategy consulting, and digital & product marketing services.',
+    'TechVedyaa India Pvt Ltd is a strategic growth and transformation partner for modern businesses, with deep domain expertise in manufacturing: specialized manufacturing recruitment, digital transformation, marketing & sales strategy consulting, and digital & product marketing services.',
   keywords:
     'manufacturing recruitment, manufacturing digital transformation, smart factory, IIoT advisory, marketing strategy consulting, go-to-market strategy, product marketing, B2B lead generation, marketing automation, TechVedyaa',
 };

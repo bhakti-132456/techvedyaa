@@ -35,6 +35,33 @@ export default function Footer() {
                 <p className={styles.copyright} data-reveal="fade">
                     © {new Date().getFullYear()} TechVedyaa. All rights reserved.
                 </p>
+
+                {/* Attribution required by the Sketchfab Standard licence on two
+                    of the 3D models. Kept deliberately quiet: smallest type on
+                    the page, muted until hovered. */}
+                <p className={styles.credits}>
+                    3D models:{' '}
+                    <a
+                        href="https://sketchfab.com/assetfactory"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                    >
+                        assetfactory
+                    </a>
+                    ,{' '}
+                    <a
+                        href="https://sketchfab.com/LandonWright"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                    >
+                        Landon Wright
+                    </a>{' '}
+                    (Sketchfab) ·{' '}
+                    <a href="https://polyhaven.com" target="_blank" rel="noopener noreferrer nofollow">
+                        Poly Haven
+                    </a>{' '}
+                    (CC0)
+                </p>
             </div>
         </footer>
     );

@@ -11,7 +11,16 @@ import { ICONS } from './icon-paths';
    meaning-matched micro-motion.
    ============================================ */
 
-export default function LineIcon({ name, className }: { name: string; className?: string }) {
+export default function LineIcon({
+    name,
+    className,
+    variant = 'bare',
+}: {
+    name: string;
+    className?: string;
+    /** 'plate' frames the glyph in a hairline tile for standalone card use */
+    variant?: 'bare' | 'plate';
+}) {
     const ref = useRef<HTMLSpanElement>(null);
     const [drawn, setDrawn] = useState(false);
     const [hovered, setHovered] = useState(false);
@@ -55,7 +64,7 @@ export default function LineIcon({ name, className }: { name: string; className?
     return (
         <span
             ref={ref}
-            className={`${styles.root} ${drawn ? styles.drawn : ''} ${hovered ? styles.hovered : ''} ${className ?? ''}`}
+            className={`${styles.root} ${variant === 'plate' ? styles.plate : ''} ${drawn ? styles.drawn : ''} ${hovered ? styles.hovered : ''} ${className ?? ''}`}
             data-icon={name}
         >
             <svg

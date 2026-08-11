@@ -75,7 +75,7 @@ export default function ScopeSection() {
                         return (
                             <div key={index} className={styles.card} data-reveal-item>
                                 <div className={styles.iconWrapper}>
-                                    <LineIcon name={iconType} />
+                                    <LineIcon name={iconType} variant="plate" />
                                 </div>
                             <h3 className={styles.cardTitle}>{scope.title}</h3>
 

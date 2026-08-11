@@ -21,7 +21,7 @@ export default function WhySection() {
                     {whyItems.map((item) => (
                         <div key={item.id} className={styles.card} data-reveal-item>
                             <div className={styles.iconWrapper}>
-                                <LineIcon name={item.id} />
+                                <LineIcon name={item.id} variant="plate" />
                             </div>
                             <h3 className={styles.cardTitle}>{item.title}</h3>
                             <p className={styles.cardDescription}>{item.description}</p>

@@ -15,7 +15,7 @@ export const whyItems: WhyItem[] = [
         id: 'integrated-capabilities',
         title: 'Integrated Capabilities',
         description:
-            'We solve core business growth challenges end-to-end—attracting the right talent, digitizing operations, and marketing products to the right audience.',
+            'We solve core business growth challenges end-to-end: attracting the right talent, digitizing operations, and marketing products to the right audience.',
     },
     {
         id: 'result-oriented-approach',

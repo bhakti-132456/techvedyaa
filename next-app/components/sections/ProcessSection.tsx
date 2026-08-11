@@ -56,6 +56,7 @@ export default function ProcessSection() {
                                     start: 'top 60%',
                                     end: 'bottom 55%',
                                     scrub: true,
+                                    invalidateOnRefresh: true,
                                 },
                             }
                         );
@@ -132,7 +133,8 @@ export default function ProcessSection() {
                             );
                             ScrollTrigger.create({
                                 trigger: step,
-                                start: isDesktop ? 'center 55%' : 'top 55%',
+                                start: isDesktop ? 'center 55%' : 'top 65%',
+                                invalidateOnRefresh: true,
                                 onEnter: () => pop.play(),
                                 onLeaveBack: () => pop.reverse(),
                             });

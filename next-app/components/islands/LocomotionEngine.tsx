@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,6 +17,28 @@ if (typeof window !== 'undefined') {
 const revealed = new WeakSet<Element>();
 
 export default function LocomotionEngine() {
+    /* Recompute trigger positions once late layout settles. Web fonts and the
+       glTF models land after first paint and change element heights, which
+       otherwise leaves every scroll-linked start/end measured against a
+       half-laid-out page — most visible on mobile. */
+    useEffect(() => {
+        const refresh = () => ScrollTrigger.refresh();
+        let raf = 0;
+        const settle = () => {
+            raf = requestAnimationFrame(refresh);
+        };
+
+        document.fonts?.ready.then(settle).catch(() => {});
+        window.addEventListener('load', settle);
+        const late = setTimeout(refresh, 1500);
+
+        return () => {
+            window.removeEventListener('load', settle);
+            clearTimeout(late);
+            cancelAnimationFrame(raf);
+        };
+    }, []);
+
     useGSAP(() => {
         const mm = gsap.matchMedia();
 

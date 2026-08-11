@@ -64,6 +64,7 @@
     grid-template-columns: 1fr 88px 1fr;
     align-items: center;
     min-height: 82vh;
+    min-height: 82svh;
 }
 
 .stepCard {
@@ -237,7 +238,9 @@
     .step {
         display: flex;
         align-items: center;
-        min-height: 56vh;
+        /* svh: mobile address-bar show/hide must not reflow step heights, or
+       scroll-linked positions shift mid-scroll and the rail/checkmarks stall */
+    min-height: 56svh;
         padding-left: 76px;
     }
 

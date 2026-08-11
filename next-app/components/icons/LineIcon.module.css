@@ -20,6 +20,40 @@
     overflow: visible;
 }
 
+/* ---- Plate variant ----
+   A hairline tile with a faint brand wash, so a standalone glyph reads as a
+   deliberate component instead of a floating stroke. Matches the site's
+   outline-not-shadow language; the wash is what ties it to the 3D panels. */
+.plate {
+    padding: 24%;
+    border-radius: 18px;
+    background:
+        radial-gradient(120% 120% at 24% 14%, rgba(255, 255, 255, 0.07), transparent 58%),
+        linear-gradient(158deg, rgba(95, 178, 255, 0.11), rgba(249, 115, 22, 0.05));
+    box-shadow: inset 0 0 0 1px var(--color-border);
+    transition:
+        box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Lifts and picks up a brand edge when its card is hovered */
+.plate.hovered {
+    transform: translateY(-3px);
+    box-shadow:
+        inset 0 0 0 1px var(--color-primary),
+        0 10px 26px rgba(0, 0, 0, 0.14);
+    background:
+        radial-gradient(120% 120% at 24% 14%, rgba(255, 255, 255, 0.1), transparent 58%),
+        linear-gradient(158deg, rgba(95, 178, 255, 0.18), rgba(249, 115, 22, 0.09));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .plate.hovered {
+        transform: none;
+    }
+}
+
 .root svg :global(.accent) {
     stroke: var(--color-secondary);
 }
@@ -40,7 +74,9 @@
 :global(html.anim) .root svg :global(circle),
 :global(html.anim) .root svg :global(rect),
 :global(html.anim) .root svg :global(line),
-:global(html.anim) .root svg :global(polyline) {
+:global(html.anim) .root svg :global(polyline),
+:global(html.anim) .root svg :global(polygon),
+:global(html.anim) .root svg :global(ellipse) {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     transition: stroke-dashoffset 1.4s cubic-bezier(0.65, 0, 0.35, 1);
@@ -75,8 +111,24 @@
 :global(html.anim) .root svg > :global(*:nth-child(8)) { transition-delay: 0.98s; }
 :global(html.anim) .root svg > :global(*:nth-child(9)) { transition-delay: 1.12s; }
 
-/* ---- Hover micro-motions (per meaning) ----
-   Long, eased, and small in amplitude. */
+/* ---- Hover ----
+   The library glyphs are single coherent drawings rather than assemblies, so a
+   whole-icon lift reads better than moving individual strokes. */
+.root svg {
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hovered svg {
+    transform: scale(1.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hovered svg {
+        transform: none;
+    }
+}
+
+/* ---- Per-element hover motions (retained for any bespoke glyph) ---- */
 .root svg :global([data-anim]) {
     transform-box: fill-box;
     transform-origin: center;
