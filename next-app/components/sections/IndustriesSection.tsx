@@ -3,9 +3,11 @@ import styles from './Industries.module.css';
 
 export default function IndustriesSection() {
     const chunkSize = Math.ceil(industries.length / 3);
-    const ind1 = industries.slice(0, chunkSize);
-    const ind2 = industries.slice(chunkSize, chunkSize * 2);
-    const ind3 = industries.slice(chunkSize * 2);
+    const rows = [
+        { items: industries.slice(0, chunkSize), speed: '58', reverse: false },
+        { items: industries.slice(chunkSize, chunkSize * 2), speed: '66', reverse: true },
+        { items: industries.slice(chunkSize * 2), speed: '62', reverse: false },
+    ];
 
     return (
         <section className={styles.industries} data-flow>
@@ -16,48 +18,29 @@ export default function IndustriesSection() {
                 </div>
             </div>
 
-            {/* Desktop Ticker (1 line) */}
-            <div className={`${styles.ticker} ${styles.desktopTicker}`} data-marquee data-marquee-speed="55">
-                <div className={styles.tickerContent} aria-hidden="false">
-                    {industries.map((industry, index) => (
-                        <div key={index} className={styles.industryItem}>{industry}</div>
-                    ))}
-                </div>
-                <div className={styles.tickerContent} aria-hidden="true">
-                    {industries.map((industry, index) => (
-                        <div key={`dup-${index}`} className={styles.industryItem}>{industry}</div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Mobile Tickers (3 lines) */}
-            <div className={styles.mobileTickers}>
-                <div className={styles.ticker} style={{ padding: '0 0 var(--spacing-md) 0' }} data-marquee data-marquee-speed="45">
-                    <div className={styles.tickerContent} style={{ animationDuration: '20s' }} aria-hidden="false">
-                        {ind1.map((industry, index) => <div key={index} className={styles.industryItem}>{industry}</div>)}
+            {/* Three rows at every size, the middle one running against the
+                others so the block reads as a field of type rather than a line */}
+            <div className={styles.rows}>
+                {rows.map((row, i) => (
+                    <div
+                        key={i}
+                        className={styles.ticker}
+                        data-marquee
+                        data-marquee-speed={row.speed}
+                        {...(row.reverse ? { 'data-marquee-reverse': 'true' } : {})}
+                    >
+                        <div className={styles.tickerContent}>
+                            {row.items.map((industry, index) => (
+                                <div key={index} className={styles.industryItem}>{industry}</div>
+                            ))}
+                        </div>
+                        <div className={styles.tickerContent} aria-hidden="true">
+                            {row.items.map((industry, index) => (
+                                <div key={`dup-${index}`} className={styles.industryItem}>{industry}</div>
+                            ))}
+                        </div>
                     </div>
-                    <div className={styles.tickerContent} style={{ animationDuration: '20s' }} aria-hidden="true">
-                        {ind1.map((industry, index) => <div key={`dup1-${index}`} className={styles.industryItem}>{industry}</div>)}
-                    </div>
-                </div>
-                
-                <div className={styles.ticker} style={{ padding: '0 0 var(--spacing-md) 0' }} data-marquee data-marquee-speed="52" data-marquee-reverse="true">
-                    <div className={styles.tickerContent} style={{ animationDuration: '25s', animationDirection: 'reverse' }} aria-hidden="false">
-                        {ind2.map((industry, index) => <div key={index} className={styles.industryItem}>{industry}</div>)}
-                    </div>
-                    <div className={styles.tickerContent} style={{ animationDuration: '25s', animationDirection: 'reverse' }} aria-hidden="true">
-                        {ind2.map((industry, index) => <div key={`dup2-${index}`} className={styles.industryItem}>{industry}</div>)}
-                    </div>
-                </div>
-                
-                <div className={styles.ticker} style={{ padding: '0' }} data-marquee data-marquee-speed="48">
-                    <div className={styles.tickerContent} style={{ animationDuration: '22s' }} aria-hidden="false">
-                        {ind3.map((industry, index) => <div key={index} className={styles.industryItem}>{industry}</div>)}
-                    </div>
-                    <div className={styles.tickerContent} style={{ animationDuration: '22s' }} aria-hidden="true">
-                        {ind3.map((industry, index) => <div key={`dup3-${index}`} className={styles.industryItem}>{industry}</div>)}
-                    </div>
-                </div>
+                ))}
             </div>
         </section>
     );

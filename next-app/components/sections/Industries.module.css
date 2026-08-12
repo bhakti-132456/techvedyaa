@@ -4,11 +4,18 @@
     overflow: hidden;
 }
 
+/* Three stacked rows at every breakpoint */
+.rows {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 1.2vh, 0.9rem);
+}
+
 .ticker {
     display: flex;
     overflow: hidden;
     user-select: none;
-    padding: var(--spacing-xl) 0;
+    padding: 0;
     /* GPU-accelerated layer for buttery smooth scrolling */
     will-change: transform;
 }
@@ -49,9 +56,11 @@
     border-radius: 0;
     white-space: nowrap;
     font-family: var(--font-display), var(--font-montserrat), sans-serif;
-    font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+    /* smaller than the old single row: three stacked rows at 4.5rem would
+       swamp the section */
+    font-size: clamp(1.5rem, 3.4vw, 2.9rem);
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.25;
     letter-spacing: -0.02em;
     text-transform: uppercase;
     color: transparent;
@@ -84,32 +93,18 @@
     animation-play-state: paused;
 }
 
-.mobileTickers {
-    display: none;
-}
-
 @media (max-width: 768px) {
-    .desktopTicker {
-        display: none;
-    }
-    
-    .mobileTickers {
-        display: block;
-        padding: var(--spacing-md) 0;
-    }
-
     .tickerContent {
         /* Keep animation running, just smaller gap/padding */
         gap: var(--spacing-md);
         padding-right: var(--spacing-md);
     }
 
-    .ticker {
-        padding: 0;
+    .industryItem {
+        font-size: var(--text-lg);
     }
 
-    .industryItem {
-        font-size: var(--text-base);
-        padding: var(--spacing-xs) var(--spacing-md);
+    .industryItem::after {
+        margin-left: var(--spacing-md);
     }
 }

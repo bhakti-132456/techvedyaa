@@ -238,9 +238,13 @@
     .step {
         display: flex;
         align-items: center;
-        /* svh: mobile address-bar show/hide must not reflow step heights, or
-       scroll-linked positions shift mid-scroll and the rail/checkmarks stall */
-    min-height: 56svh;
+        /* vh first as the fallback: browsers without svh support drop the svh
+           line entirely, and with no height the steps collapse, the timeline
+           gets short, and every scroll trigger fires at once — which reads as
+           the rail and checkmarks not animating at all. svh then wins where
+           supported, so the address bar can't reflow heights mid-scroll. */
+        min-height: 56vh;
+        min-height: 56svh;
         padding-left: 76px;
     }
 
