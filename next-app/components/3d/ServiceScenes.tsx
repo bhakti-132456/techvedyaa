@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { advance, Canvas, useFrame, useThree, type ThreeElements } from '@react-three/fiber';
 import { Environment, Lightformer, useGLTF, View } from '@react-three/drei';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
+import { clone as cloneSkinned, retargetClip } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import gsap from 'gsap';
 
 /* ============================================
@@ -108,6 +109,54 @@ function useMatcaps(palette: ScenePalette) {
 
 /* Shared pointer for mouse parallax — one listener, all scenes read it. */
 const pointer = { x: 0, y: 0 };
+
+/* Every mounted view registers its host element so the shared canvas can skip
+   rendering entirely when none of them is anywhere near the viewport. */
+const viewHosts = new Set<HTMLElement>();
+
+/* Maps this avatar's Mixamo-style skeleton onto the Rigify skeleton used by
+   Quaternius' CC0 animation library, so its walk cycle can be retargeted.
+   Keys are the Mixamo base names; the avatar suffixes them with an index
+   (Hips_53, LeftUpLeg_3), which is resolved at runtime. Fingers are left
+   unmapped — they simply hold their rest pose, which reads fine at this size. */
+const WALK_BONE_MAP: Record<string, string> = {
+    Hips: 'DEF-hips',
+    Spine: 'DEF-spine001',
+    Spine1: 'DEF-spine002',
+    Spine2: 'DEF-spine003',
+    Neck: 'DEF-neck',
+    Head: 'DEF-head',
+    LeftShoulder: 'DEF-shoulderL',
+    LeftArm: 'DEF-upper_armL',
+    LeftForeArm: 'DEF-forearmL',
+    LeftHand: 'DEF-handL',
+    RightShoulder: 'DEF-shoulderR',
+    RightArm: 'DEF-upper_armR',
+    RightForeArm: 'DEF-forearmR',
+    RightHand: 'DEF-handR',
+    LeftUpLeg: 'DEF-thighL',
+    LeftLeg: 'DEF-shinL',
+    LeftFoot: 'DEF-footL',
+    LeftToeBase: 'DEF-toeL',
+    RightUpLeg: 'DEF-thighR',
+    RightLeg: 'DEF-shinR',
+    RightFoot: 'DEF-footR',
+    RightToeBase: 'DEF-toeR',
+};
+
+/* The avatar is split into many skinned meshes (body, hair, eyes, teeth,
+   shoes...). Some are bound to only a handful of bones, so retargeting against
+   the first one found yields a clip covering almost no joints. Always pick the
+   mesh carrying the fullest skeleton. */
+function richestSkinnedMesh(root: THREE.Object3D): THREE.SkinnedMesh | null {
+    let best: THREE.SkinnedMesh | null = null;
+    root.traverse((o) => {
+        const sm = o as THREE.SkinnedMesh;
+        if (!sm.isSkinnedMesh || !sm.skeleton) return;
+        if (!best || sm.skeleton.bones.length > best.skeleton.bones.length) best = sm;
+    });
+    return best;
+}
 
 type DrawRef = MutableRefObject<number>;
 type SceneProps = { active: boolean; palette: ScenePalette };
@@ -904,6 +953,16 @@ function LmsScene({ active, palette }: SceneProps) {
    scenes below — those read better as diagrams
    than as props.
    ============================================= */
+type CastEntry = {
+    url: string;
+    skinned?: boolean;
+    animSpeed?: number;
+    offset?: [number, number, number];
+    rotation?: [number, number, number];
+    /** relative size once every figure has been normalised to one height */
+    scale?: number;
+};
+
 type ModelConfig = {
     url: string;
     /** largest dimension in world units after normalisation */
@@ -919,10 +978,35 @@ type ModelConfig = {
     animSpeed?: number;
     /** recolour each part in brand primary, with accent on every third */
     tintAlternate?: boolean;
-    /** move one hue band of the albedo onto a brand colour */
-    hueShift?: { from: number; tol: number; to: 'primary' | 'accent' };
+    /** move one hue band of the albedo onto a brand colour; optionally only
+     *  on the named material */
+    hueShift?: { from: number; tol: number; to: 'primary' | 'accent'; material?: string };
     /** extra overhead light, for models whose detail is on an upward face */
     faceLight?: number;
+    /** rigged mesh — must be deep-cloned with the skeleton, not Object3D.clone */
+    skinned?: boolean;
+    /** borrow a clip from another rig and retarget it onto this skeleton */
+    retargetFrom?: string;
+    /** several models staged together in one view, each with its own clip */
+    cast?: CastEntry[];
+    /** run the clip once when the card activates instead of looping */
+    playOnActive?: boolean;
+    /** restyle materials by name: colour, drop the albedo, set metal/rough */
+    materialOverrides?: Record<
+        string,
+        {
+            color?: 'primary' | 'accent' | string;
+            dropMap?: boolean;
+            metalness?: number;
+            roughness?: number;
+        }
+    >;
+    /**
+     * Size the model by the outline it projects once `tilt` is applied, rather
+     * than by its authored extent. Needed for anything tipped steeply out of
+     * plane, which otherwise renders larger than the fit assumed.
+     */
+    fitPose?: boolean;
     /** amplitude of a slow vertical drift, in world units */
     float?: number;
     /**
@@ -939,6 +1023,92 @@ type ModelConfig = {
    are measured from world-space bounding boxes with node transforms applied.
    Nothing spins; the only motion is cursor parallax. */
 const MODELS: Record<string, ModelConfig> = {
+    /* ---- Core Pillars (capabilities cards) ---- */
+
+    // world [1.75, 1.84, 0.37] — upright, depth is the thin axis so he already
+    // faces the camera. Rigged, with an idle clip that loops.
+    'manufacturing-recruitment': {
+        url: '/models/man_suit.glb',
+        fit: 2.35,
+        tilt: [0, 0.08, 0],
+        skinned: true,
+        animated: true,
+        animSpeed: 0.7,
+        /* Three figures staged as a group: the suited man front and centre,
+           the other two set back and angled slightly inward. Each plays the
+           idle it shipped with, at marginally different rates so they don't
+           breathe in lockstep. */
+        cast: [
+            // front and centre, full size
+            {
+                url: '/models/man_suit.glb',
+                skinned: true,
+                animSpeed: 0.7,
+                offset: [0, 0, 0.7],
+                scale: 1,
+            },
+            // set back and angled in, smaller so the depth reads clearly
+            {
+                url: '/models/businessman.glb',
+                skinned: true,
+                animSpeed: 0.62,
+                offset: [-0.78, 0, -0.5],
+                rotation: [0, 0.32, 0],
+                scale: 0.78,
+            },
+            {
+                url: '/models/woman_saree.glb',
+                skinned: true,
+                animSpeed: 0.55,
+                offset: [0.8, 0, -0.5],
+                rotation: [0, -0.32, 0],
+                scale: 0.78,
+            },
+        ],
+        /* Plays the avatar's own idle. A CC0 walk (Quaternius Walk_Formal_Loop)
+           sits at /models/walk_formal.glb and the retarget path below is
+           wired up, but Rigify -> Mixamo retargeting still resolves to the
+           bind pose, so it is left off rather than shipping a T-pose. Set
+           retargetFrom to re-enable once that is solved — or drop in a clip
+           authored on this avatar's own rig, which needs no retargeting. */
+    },
+    // world [0.82, 0.28, 0.30] — sits flat like a deck; look down on it a
+    // little. Its single clip rotates the lid open, so it plays once when the
+    // card arrives rather than looping.
+    'manufacturing-digital-transformation': {
+        url: '/models/computer.glb',
+        fit: 2.25,
+        tilt: [0.5, -0.5, 0],
+        animated: true,
+        animSpeed: 0.6,
+        playOnActive: true,
+    },
+    // Pole becomes blue metal and the cloth plain brand orange: the albedo
+    // (the stars and stripes) is dropped so only the flat colour remains.
+    'marketing-sales-strategy': {
+        url: '/models/flag.glb',
+        fit: 2.25,
+        tilt: [0, -0.45, 0],
+        skinned: true,
+        animated: true,
+        animSpeed: 0.5,
+        materialOverrides: {
+            Flag_Mat: { color: 'accent', dropMap: true, metalness: 0.05, roughness: 0.62 },
+            Flag_Pole_Mat: { color: 'primary', metalness: 0.85, roughness: 0.25 },
+        },
+    },
+    // The label art is cyan (measured: hue 180-195 dominates), shifted onto
+    // brand blue while keeping the print detail and the glass transmission.
+    'digital-product-marketing': {
+        url: '/models/medicine.glb',
+        fit: 2.25,
+        tilt: [0, -0.3, 0],
+        spin: 0.05,
+        hueShift: { from: 187, tol: 42, to: 'primary' },
+    },
+
+    /* ---- Services panels ---- */
+
     // Animated gear train (world [1.83, 1.58, 2.09] — a 3D cluster, not a flat
     // plate). Its own clip turns eight gears on their own axles, so no manual
     // rotation is needed; timeScale holds it to a slow churn.
@@ -949,6 +1119,9 @@ const MODELS: Record<string, ModelConfig> = {
         // strong top-down so the train is read from above, with a slight turn
         // for depth
         tilt: [1.05, -0.3, 0],
+        // that tilt swings the train's silhouette well past its authored
+        // extent, so measure the tipped outline or it overflows the panel
+        fitPose: true,
         animated: true,
         // 3.33s clip at a third speed -> a full turn about every 10 seconds.
         // Slow enough to read as a churn, fast enough to be visibly moving.
@@ -1068,7 +1241,15 @@ function hueShiftedTexture(
 /* Auto-centres and rescales any model to a consistent on-screen size, so
    real-world glTF scale and arbitrary origins don't need hand-tuning. */
 
-function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePalette }) {
+function NormalizedModel({
+    cfg,
+    palette,
+    active,
+}: {
+    cfg: ModelConfig;
+    palette: ScenePalette;
+    active: boolean;
+}) {
     const { scene, animations } = useGLTF(cfg.url);
     const size = useThree((s) => s.size);
     const camera = useThree((s) => s.camera);
@@ -1078,8 +1259,32 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
            twice, so moving the shared object into a group happens twice and the
            committed group is left empty (the model ends up under the discarded
            one). Cloning is idempotent, and GLTFLoader names animation tracks
-           after node names — which clone() preserves — so clips still bind. */
-        const root = scene.clone(true);
+           after node names — which clone() preserves — so clips still bind.
+
+           Rigged meshes need SkeletonUtils: Object3D.clone() copies the bones
+           but leaves every SkinnedMesh bound to the ORIGINAL skeleton, so the
+           copy either never moves or collapses. */
+        const root = cfg.skinned ? cloneSkinned(scene) : scene.clone(true);
+
+        // Restyle named materials (flag cloth and pole, etc.)
+        if (cfg.materialOverrides) {
+            const overrides = cfg.materialOverrides;
+            root.traverse((o) => {
+                const mesh = o as THREE.Mesh;
+                if (!mesh.isMesh) return;
+                const src = mesh.material as THREE.MeshStandardMaterial;
+                const rule = overrides[src.name];
+                if (!rule) return;
+                const m = src.clone();
+                if (rule.dropMap) m.map = null;
+                if (rule.metalness !== undefined) m.metalness = rule.metalness;
+                if (rule.roughness !== undefined) m.roughness = rule.roughness;
+                m.envMapIntensity = 1.4;
+                mesh.material = m;
+                mesh.userData.overrideColor = rule.color;
+                m.needsUpdate = true;
+            });
+        }
 
         /* Brand recolour. This asset is untextured metal, so a flat colour per
            part is enough — no albedo to preserve. Materials are cloned because
@@ -1098,10 +1303,12 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
 
         // Clone materials so the hue shift can't leak into the cached original
         if (cfg.hueShift) {
+            const only = cfg.hueShift.material;
             root.traverse((o) => {
                 const mesh = o as THREE.Mesh;
                 if (!mesh.isMesh) return;
                 const src = mesh.material as THREE.MeshStandardMaterial;
+                if (only && src.name !== only) return;
                 mesh.material = src.clone();
                 mesh.userData.srcMap = src.map ?? null;
             });
@@ -1124,15 +1331,46 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
         wrapper.add(pivot);
         return {
             wrapper,
+            extent,
             largest: Math.max(extent.x, extent.y, extent.z) || 1,
             // box diagonal == bounding-sphere diameter: the widest the model can
             // ever project, whatever angle it is turned to
             diagonal: extent.length() || 1,
         };
-    }, [scene, cfg.tintAlternate, cfg.hueShift]);
+    }, [scene, cfg.tintAlternate, cfg.hueShift, cfg.skinned, cfg.materialOverrides]);
 
     const object = built.wrapper;
-    const turns = Boolean(cfg.spin || cfg.animated);
+    /* Only a turntable spin needs the conservative bounding-sphere fit. Models
+       that merely animate in place (an idle, a waving flag, a lid opening)
+       keep their silhouette, so fitting them by the sphere just shrinks them
+       for no reason. */
+    const turns = Boolean(cfg.spin);
+
+    /* Silhouette under the card's fixed tilt. `largest` measures the model in
+       its authored pose, but a model tipped out of plane projects a taller or
+       wider outline than that — which is why the gear train, tipped 1.05 rad
+       toward the viewer, spilled past every edge of its panel. Rotating the
+       bounding box's corners gives the extent actually seen on screen. Opt-in
+       per model, since the shallow Y-only turns elsewhere barely change the
+       outline and their sizes are already settled. */
+    const posed = useMemo(() => {
+        const [rx, ry, rz] = cfg.tilt ?? [0, 0, 0];
+        if (!cfg.fitPose || (!rx && !ry && !rz)) return built.largest;
+        const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(rx, ry, rz));
+        const h = built.extent.clone().multiplyScalar(0.5);
+        const corner = new THREE.Vector3();
+        let maxX = 0;
+        let maxY = 0;
+        for (let i = 0; i < 8; i += 1) {
+            corner
+                .set(i & 1 ? h.x : -h.x, i & 2 ? h.y : -h.y, i & 4 ? h.z : -h.z)
+                .applyMatrix4(m);
+            maxX = Math.max(maxX, Math.abs(corner.x));
+            maxY = Math.max(maxY, Math.abs(corner.y));
+        }
+        // depth is ignored: it does not widen the outline, only the perspective
+        return Math.max(maxX, maxY) * 2 || built.largest;
+    }, [built.extent, built.largest, cfg.tilt, cfg.fitPose]);
 
     /* Fit to the view's own aspect. The visual column is portrait on narrow
        screens and landscape on wide ones, so whichever axis is tighter decides
@@ -1143,10 +1381,10 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
         const dist = Math.abs(cam.position.z) || 2.8;
         const visibleH = 2 * dist * Math.tan(((cam.fov || 42) * Math.PI) / 360);
         const visibleW = visibleH * (size.width / Math.max(1, size.height));
-        const room = Math.min(visibleH, visibleW) * 0.92;
-        const reference = turns ? built.diagonal : built.largest;
+        const room = Math.min(visibleH, visibleW) * 0.96;
+        const reference = turns ? built.diagonal : posed;
         object.scale.setScalar(Math.min(cfg.fit, room) / reference);
-    }, [object, built.largest, built.diagonal, turns, size, cfg.fit, camera]);
+    }, [object, posed, built.diagonal, turns, size, cfg.fit, camera]);
 
     // Brand colours, re-applied when the theme flips. Mostly primary with an
     // accent every third part, so it reads branded rather than harlequin.
@@ -1161,6 +1399,21 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
             m.needsUpdate = true;
         });
     }, [object, palette, cfg.tintAlternate]);
+
+    // Named-material colours, re-applied when the theme flips
+    useEffect(() => {
+        if (!cfg.materialOverrides) return;
+        object.traverse((o) => {
+            const mesh = o as THREE.Mesh;
+            const want = mesh.userData?.overrideColor as string | undefined;
+            if (!mesh.isMesh || !want) return;
+            const m = mesh.material as THREE.MeshStandardMaterial;
+            m.color.set(
+                want === 'primary' ? palette.primary : want === 'accent' ? palette.accent : want
+            );
+            m.needsUpdate = true;
+        });
+    }, [object, palette, cfg.materialOverrides]);
 
     // Hue-shift the albedo, re-run on theme change so the brand colour tracks.
     useEffect(() => {
@@ -1193,20 +1446,158 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
        rather than through useAnimations, because this canvas is advanced
        manually and the raw per-frame delta arrives uneven — feeding that
        straight into a mixer is what made the motion stutter. */
-    const mixer = useMemo(() => {
-        if (!cfg.animated || !animations.length) return null;
+    /* Retarget a clip from a different skeleton. Loading cfg.url when no
+       retarget is configured is deliberate: the hook must run unconditionally
+       and that model is already cached, so it costs nothing. */
+    const donor = useGLTF(cfg.retargetFrom ?? cfg.url);
+
+    const clips = useMemo(() => {
+        if (!cfg.retargetFrom) return animations;
+        const target = richestSkinnedMesh(object);
+        // clone the donor so sampling can't disturb the cached original
+        const source = richestSkinnedMesh(cloneSkinned(donor.scene));
+        const clip = donor.animations[0];
+        if (!target || !source || !clip) return animations;
+
+        const names: Record<string, string> = {};
+        Object.entries(WALK_BONE_MAP).forEach(([base, defName]) => {
+            let hit: string | null = null;
+            object.traverse((o) => {
+                if (!hit && (o.name === base || o.name.startsWith(`${base}_`))) hit = o.name;
+            });
+            if (hit) names[hit] = defName;
+        });
+
+        try {
+            // Find the actual target hip bone name dynamically
+            let targetHip = 'Hips';
+            Object.keys(names).forEach((k) => {
+                if (names[k] === 'DEF-hips') targetHip = k;
+            });
+
+            // Force both skeletons to bind pose before calculating retargeting
+            target.skeleton.pose();
+            source.skeleton.pose();
+
+            const out = retargetClip(target, source, clip, {
+                names,
+                hip: targetHip,
+                fps: 30,
+            });
+
+            /* retargetClip emits skeleton-relative tracks (".bones[Hips_53]
+               .quaternion"), which only bind against a SkinnedMesh root. Our
+               mixer is rooted on the wrapper group, so rewrite them to plain
+               node paths ("Hips_53.quaternion") — otherwise every track fails
+               to bind and the avatar sits in its bind pose. */
+            out.tracks.forEach((track) => {
+                track.name = track.name.replace(/^\.bones\[(.+?)\]\./, '$1.');
+            });
+            out.name = 'Walk';
+            return [...animations, out];
+        } catch {
+            return animations;
+        }
+    }, [cfg.retargetFrom, donor, object, animations]);
+
+    const anim = useMemo(() => {
+        if (!cfg.animated || !clips.length) return null;
         const mx = new THREE.AnimationMixer(object);
-        animations.forEach((clip) => mx.clipAction(clip).play());
+        const actions = clips.map((clip) => {
+            const action = mx.clipAction(clip);
+            if (cfg.playOnActive) {
+                // one-shot that holds its final pose (the lid stays open)
+                action.setLoop(THREE.LoopOnce, 1);
+                action.clampWhenFinished = true;
+                action.paused = true;
+            }
+            action.play();
+            return action;
+        });
 
-        return mx;
-    }, [cfg.animated, animations, object]);
+        /* Hold and APPLY frame zero for one-shots. Simply pausing leaves the
+           model in its bind pose, which for the laptop is the lid already
+           open — the viewer would never see it shut. Evaluating at t=0 puts
+           it in the closed state before the card arrives. */
+        if (cfg.playOnActive) {
+            actions.forEach((a) => {
+                a.time = 0;
+                a.paused = true;
+            });
+            mx.update(0);
+        }
+        return { mixer: mx, actions };
+    }, [cfg.animated, cfg.playOnActive, cfg.url, clips, object]);
 
-    useEffect(
-        () => () => {
-            mixer?.stopAllAction();
-        },
-        [mixer]
-    );
+    const mixer = anim?.mixer ?? null;
+
+    // Handle animation play states and crossfading
+    useEffect(() => {
+        if (!anim) return;
+
+        if (cfg.playOnActive) {
+            anim.actions.forEach((action) => {
+                if (active) {
+                    action.paused = false;
+                } else {
+                    action.reset();
+                    action.time = 0;
+                    action.paused = true;
+                }
+            });
+            if (!active) anim.mixer.update(0);
+        } else if (anim.actions.length >= 2) {
+            const idle = anim.actions[0];
+            const walk = anim.actions[1];
+            
+            idle.enabled = true;
+            walk.enabled = true;
+            
+            if (active) {
+                idle.setEffectiveTimeScale(1);
+                idle.setEffectiveWeight(1);
+                idle.play();
+                walk.crossFadeTo(idle, 0.5, true);
+            } else {
+                walk.setEffectiveTimeScale(1);
+                walk.setEffectiveWeight(1);
+                walk.play();
+                idle.crossFadeTo(walk, 0.5, true);
+            }
+        }
+    }, [anim, active, cfg.playOnActive]);
+
+    /* Activate on every mount. This must NOT have a stopAllAction cleanup. */
+    useEffect(() => {
+        if (!anim) return;
+        
+        if (anim.actions.length >= 2 && !cfg.playOnActive) {
+            const idle = anim.actions[0];
+            const walk = anim.actions[1];
+            idle.enabled = true;
+            walk.enabled = true;
+            
+            // Start according to active state immediately on mount
+            if (active) {
+                idle.setEffectiveWeight(1).play();
+                walk.setEffectiveWeight(0).play();
+            } else {
+                idle.setEffectiveWeight(0).play();
+                walk.setEffectiveWeight(1).play();
+            }
+        } else {
+            anim.actions.forEach((action) => {
+                action.enabled = true;
+                action.setEffectiveWeight(1);
+                action.play();
+                if (cfg.playOnActive) {
+                    action.time = 0;
+                    action.paused = true;
+                }
+            });
+            if (cfg.playOnActive) anim.mixer.update(0);
+        }
+    }, [anim, cfg.playOnActive, active]);
 
     /* Wall-clock timing. This canvas is advanced manually and its frame
        callbacks can fire more than once per rendered frame, so accumulating the
@@ -1223,7 +1614,9 @@ function NormalizedModel({ cfg, palette }: { cfg: ModelConfig; palette: ScenePal
         last.current = now;
         elapsed.current += dt;
 
-        if (mixer) mixer.update(dt * (cfg.animSpeed ?? 1));
+        if (mixer) {
+            mixer.update(dt * (cfg.animSpeed ?? 1));
+        }
 
         if (cfg.float) {
             // ~18s cycle — a slow drift, not a bob
@@ -1300,6 +1693,112 @@ function StudioLighting({ palette, faceLight }: { palette: ScenePalette; faceLig
     );
 }
 
+/** every staged figure is normalised to this height before being scaled */
+const CAST_HEIGHT = 1.8;
+
+/* One staged character: its own clone, its own mixer, its own idle. */
+function CastMemberModel({ entry }: { entry: CastEntry }) {
+    const { scene, animations } = useGLTF(entry.url);
+
+    /* These avatars are authored at wildly different scales (the saree model is
+       several times the size of the suited figures), so staging them by raw
+       offsets alone makes one tower over the rest. Normalise every figure to
+       the same height and stand them all on y=0 first; the per-entry scale
+       then expresses depth rather than fighting the source units. */
+    const object = useMemo(() => {
+        const root = entry.skinned ? cloneSkinned(scene) : scene.clone(true);
+        const box = new THREE.Box3().setFromObject(root);
+        const extent = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const unit = CAST_HEIGHT / (extent.y || 1);
+
+        root.scale.setScalar(unit);
+        // centred left-to-right and front-to-back, feet on the ground plane
+        root.position.set(-center.x * unit, -box.min.y * unit, -center.z * unit);
+
+        const holder = new THREE.Group();
+        holder.add(root);
+        return holder;
+    }, [scene, entry.skinned]);
+
+    const mixer = useMemo(() => {
+        if (!animations.length) return null;
+        return new THREE.AnimationMixer(object);
+    }, [animations, object]);
+
+    /* Activated here with no destructive cleanup: React runs effects twice, and
+       a stopAllAction teardown would deactivate the clip after the first mount
+       and leave the avatar frozen in its bind pose. */
+    useEffect(() => {
+        if (!mixer) return;
+        animations.forEach((clip) => {
+            const action = mixer.clipAction(clip);
+            action.enabled = true;
+            action.setEffectiveWeight(1);
+            action.play();
+        });
+    }, [mixer, animations]);
+
+    // wall-clock stepping, for the same reason as the single-model path
+    const last = useRef<number | null>(null);
+    useFrame(() => {
+        if (!mixer) return;
+        const now = performance.now();
+        if (last.current === null) last.current = now;
+        const dt = Math.max(0, Math.min((now - last.current) / 1000, 0.05));
+        last.current = now;
+        mixer.update(dt * (entry.animSpeed ?? 1));
+    });
+
+    return (
+        <primitive
+            object={object}
+            position={entry.offset ?? [0, 0, 0]}
+            rotation={entry.rotation ?? [0, 0, 0]}
+            scale={entry.scale ?? 1}
+        />
+    );
+}
+
+/* Stages the whole cast, then fits the GROUP (not each figure) to the view so
+   the arrangement keeps its relative spacing. */
+function CastGroup({ cast, fit }: { cast: CastEntry[]; fit: number }) {
+    const group = useRef<THREE.Group>(null);
+    const size = useThree((s) => s.size);
+    const camera = useThree((s) => s.camera);
+
+    useEffect(() => {
+        const g = group.current;
+        if (!g) return;
+        g.scale.setScalar(1);
+        g.position.set(0, 0, 0);
+        g.updateMatrixWorld(true);
+
+        const box = new THREE.Box3().setFromObject(g);
+        const extent = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+
+        const cam = camera as THREE.PerspectiveCamera;
+        const dist = Math.abs(cam.position.z) || 2.8;
+        const visibleH = 2 * dist * Math.tan(((cam.fov || 42) * Math.PI) / 360);
+        const visibleW = visibleH * (size.width / Math.max(1, size.height));
+        const room = Math.min(visibleH, visibleW) * 0.96;
+
+        const largest = Math.max(extent.x, extent.y, extent.z) || 1;
+        const s = Math.min(fit, room) / largest;
+        g.scale.setScalar(s);
+        g.position.set(-center.x * s, -center.y * s, -center.z * s);
+    }, [size, camera, fit, cast]);
+
+    return (
+        <group ref={group}>
+            {cast.map((entry) => (
+                <CastMemberModel key={entry.url} entry={entry} />
+            ))}
+        </group>
+    );
+}
+
 function ModelScene({ active, palette, cfg }: SceneProps & { cfg: ModelConfig }) {
     return (
         <>
@@ -1311,7 +1810,11 @@ function ModelScene({ active, palette, cfg }: SceneProps & { cfg: ModelConfig })
                 parallax={cfg.parallax ?? 'rotate'}
                 baseRotation={cfg.tilt ?? [0, 0, 0]}
             >
-                <NormalizedModel cfg={cfg} palette={palette} />
+                {cfg.cast ? (
+                    <CastGroup cast={cfg.cast} fit={cfg.fit} />
+                ) : (
+                    <NormalizedModel cfg={cfg} palette={palette} active={active} />
+                )}
             </SceneRig>
         </>
     );
@@ -1328,8 +1831,9 @@ const SCENES: Record<string, (p: SceneProps) => React.ReactElement> = {
     lms: LmsScene,
 };
 
-/* View wrapper placed inside each panel's visual third. */
-export function ServiceSceneView({
+/* View wrapper placed inside a panel's visual area. Looks the model up by id,
+   falling back to the procedural scenes for anything without one. */
+export function ModelView({
     id,
     active,
     className,
@@ -1364,6 +1868,7 @@ export function ServiceSceneView({
     useEffect(() => {
         const el = host.current;
         if (!el) return;
+        viewHosts.add(el);
         const io = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -1374,7 +1879,10 @@ export function ServiceSceneView({
             { rootMargin: '100% 100%' }
         );
         io.observe(el);
-        return () => io.disconnect();
+        return () => {
+            viewHosts.delete(el);
+            io.disconnect();
+        };
     }, []);
 
     const model = MODELS[id];
@@ -1397,11 +1905,12 @@ export function ServiceSceneView({
     );
 }
 
-/* The single shared canvas — one WebGL context for every scene. */
-export function SharedServicesCanvas() {
+/* The single shared canvas — one WebGL context for every scene on the page.
+   Mounted once globally (see ClientIslands) so both the services panels and
+   the capability cards draw into it. */
+export function SharedModelCanvas() {
     const [dpr, setDpr] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
-    const hostRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -1423,12 +1932,20 @@ export function SharedServicesCanvas() {
         // Every render then measures panel rects that are already final —
         // the scenes can never trail the cards vertically. Skips entirely
         // while the services section is out of view.
-        const section = hostRef.current?.closest('section') ?? null;
+        /* Render only when at least one registered view is near the viewport.
+           The canvas is global now (services panels and capability cards both
+           portal into it), so gating on a single section would starve the
+           other one. */
         const tick = (time: number) => {
-            if (section) {
-                const r = section.getBoundingClientRect();
-                if (r.bottom < -300 || r.top > window.innerHeight + 300) return;
+            let near = false;
+            for (const el of viewHosts) {
+                const r = el.getBoundingClientRect();
+                if (r.bottom > -300 && r.top < window.innerHeight + 300) {
+                    near = true;
+                    break;
+                }
             }
+            if (!near) return;
             advance(time * 1000);
         };
         let added = false;
@@ -1450,7 +1967,6 @@ export function SharedServicesCanvas() {
         // while the manual GSAP-ticker render above keeps per-frame panel
         // tracking exact. Together: scenes stay locked to their cards.
         <div
-            ref={hostRef}
             aria-hidden="true"
             style={{
                 position: 'fixed',

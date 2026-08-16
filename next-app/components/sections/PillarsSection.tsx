@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,8 +13,34 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 }
 
+const ModelView = dynamic(
+    () => import('@/components/3d/ServiceScenes').then((m) => ({ default: m.ModelView })),
+    { ssr: false }
+);
+
 export default function PillarsSection() {
     const sectionRef = useRef<HTMLElement>(null);
+    const [activeCard, setActiveCard] = useState(0);
+
+    /* Which card is currently on top of the deck. Drives the per-model
+       "active" state, so the computer's lid opens as its card arrives. */
+    useEffect(() => {
+        const cards = Array.from(
+            sectionRef.current?.querySelectorAll<HTMLElement>('[data-pillar-card]') ?? []
+        );
+        if (!cards.length) return;
+
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) setActiveCard(cards.indexOf(entry.target as HTMLElement));
+                });
+            },
+            { rootMargin: '-30% 0px -45% 0px', threshold: 0 }
+        );
+        cards.forEach((c) => io.observe(c));
+        return () => io.disconnect();
+    }, []);
 
     /* Cascading curtain: cards stick (CSS) while the next sweeps up over them.
        Here the covered card falls back into depth and dims hard, which is what
@@ -77,11 +104,10 @@ export default function PillarsSection() {
                             data-pillar-card
                             style={{ ['--i' as string]: i }}
                         >
-                            <span className={styles.index} aria-hidden="true">
-                                0{i + 1}
-                            </span>
-
                             <div className={styles.content}>
+                                <span className={styles.index} aria-hidden="true">
+                                    0{i + 1}
+                                </span>
                                 <div className={styles.titleRow} data-icon-host>
                                     <LineIcon name={pillar.id} className={styles.glyph} />
                                     <h3 className={styles.pillarTitle}>{pillar.title}</h3>
@@ -93,6 +119,12 @@ export default function PillarsSection() {
                                     ))}
                                 </ul>
                             </div>
+
+                            <ModelView
+                                id={pillar.id}
+                                active={i === activeCard}
+                                className={styles.visual}
+                            />
                         </article>
                     ))}
                 </div>

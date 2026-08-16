@@ -60,8 +60,10 @@
        fits between the sticky offset and the bottom of the viewport */
     min-height: min(72vh, 660px);
     display: grid;
-    grid-template-columns: clamp(90px, 14vw, 190px) 1fr;
-    gap: clamp(1rem, 3vw, 3rem);
+    /* copy two thirds, model one third — the numeral now sits above the title
+       inside the copy column, so no gutter column is needed */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 2.5rem);
     align-content: center;
     align-items: start;
     padding: clamp(1.75rem, 4.5vh, 3.25rem) clamp(1.5rem, 3vw, 3.25rem);
@@ -81,15 +83,33 @@
         0 -28px 60px rgba(0, 0, 0, 0.5);
 }
 
+/* Sits above the title, flush with the copy's left edge */
 .index {
+    display: block;
     font-family: var(--font-display), var(--font-montserrat), sans-serif;
-    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-size: clamp(2rem, 3.2vw, 3rem);
     font-weight: 600;
-    line-height: 0.9;
+    line-height: 1;
     letter-spacing: -0.04em;
     color: transparent;
     -webkit-text-stroke: 1px var(--color-text-muted);
     user-select: none;
+    margin-bottom: clamp(0.5rem, 1.4vh, 0.9rem);
+}
+
+/* Explicit columns: grid auto-placement follows DOM order, which had put the
+   model in the copy's column and squeezed the text. */
+.content {
+    grid-column: 1;
+    min-width: 0;
+}
+
+/* 3D visual — the remaining third, filling most of the card's height */
+.visual {
+    grid-column: 2;
+    align-self: center;
+    width: 100%;
+    height: clamp(260px, 44vh, 460px);
 }
 
 .titleRow {
@@ -155,6 +175,21 @@
 
     .description {
         margin: 0 auto;
+    }
+
+    /* single column on mobile: model first, then the copy */
+    .content,
+    .visual {
+        grid-column: 1;
+    }
+
+    .visual {
+        height: 240px;
+        order: -1;
+    }
+
+    .index {
+        font-size: 2rem;
     }
 
     .pillar {

@@ -144,7 +144,17 @@ export default function LocomotionEngine() {
                     heroTl.fromTo(
                         nav,
                         { y: -18, opacity: 0 },
-                        { y: 0, opacity: 1, duration: DUR.med },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: DUR.med,
+                            /* Drop the transform once it lands. Any transform,
+                               even translate(0,0), makes the navbar a
+                               containing block for its fixed children, which
+                               would trap the full-screen mobile menu inside
+                               the 80px bar. */
+                            clearProps: 'transform',
+                        },
                         1.2
                     );
                 }

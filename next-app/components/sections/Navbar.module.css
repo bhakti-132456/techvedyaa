@@ -1,17 +1,28 @@
+/* The glass lives on a pseudo-element, NOT on .navbar itself. An element with
+   a backdrop-filter becomes a containing block for its fixed-position
+   descendants, which trapped the full-screen mobile menu inside the navbar's
+   own 80px box — so it looked transparent, cramped and clipped. */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
     border-bottom: 1px solid var(--glass-border);
     height: 80px;
     display: flex;
     align-items: center;
-    transition: all var(--transition-base);
+    transition: height var(--transition-base), box-shadow var(--transition-base);
+}
+
+.navbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
 }
 
 .navbarScrolled {
@@ -258,20 +269,30 @@
 
     .navMenu {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
+        /* opaque: the reactive canvas sits behind everything, so a translucent
+           panel would let the whole page read through the menu */
         background: var(--color-bg);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: var(--spacing-2xl);
+        /* was --spacing-2xl (7rem): six items plus five gaps overflowed the
+           screen, which is why the last entries were unreachable */
+        gap: clamp(0.75rem, 2.6vh, 1.6rem);
+        padding: calc(80px + var(--spacing-lg)) var(--spacing-md) var(--spacing-xl);
+        /* if it ever does exceed the viewport, it scrolls rather than clipping */
+        overflow-y: auto;
+        overscroll-behavior: contain;
         transform: translateY(-100%);
-        transition: transform 0.4s ease-in-out;
-        z-index: 1000;
+        transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+        z-index: 1200;
         opacity: 0;
         pointer-events: none;
+    }
+
+    .navMenu li {
+        width: 100%;
+        text-align: center;
     }
 
     .navMenuOpen {
@@ -281,6 +302,21 @@
     }
 
     .navLink {
-        font-size: var(--text-2xl);
+        display: inline-block;
+        padding: 0.35rem 0;
+        font-size: clamp(1.15rem, 5.5vw, 1.6rem);
+    }
+
+    /* keep the CTA a pill rather than letting it stretch edge to edge */
+    .navCta {
+        height: 52px;
+        padding: 0 32px;
+        margin-top: var(--spacing-xs);
+    }
+
+    /* the burger must stay above the panel so it can close it */
+    .mobileMenuBtn {
+        position: relative;
+        z-index: 1300;
     }
 }

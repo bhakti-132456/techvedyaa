@@ -14,11 +14,7 @@ if (typeof window !== 'undefined') {
 }
 
 const ServiceSceneView = dynamic(
-    () => import('@/components/3d/ServiceScenes').then((m) => ({ default: m.ServiceSceneView })),
-    { ssr: false }
-);
-const SharedServicesCanvas = dynamic(
-    () => import('@/components/3d/ServiceScenes').then((m) => ({ default: m.SharedServicesCanvas })),
+    () => import('@/components/3d/ServiceScenes').then((m) => ({ default: m.ModelView })),
     { ssr: false }
 );
 
@@ -114,8 +110,6 @@ export default function ServicesGrid() {
 
     return (
         <section className={styles.services} id="services" ref={sectionRef}>
-            <SharedServicesCanvas />
-
             <div className={styles.header}>
                 <div className={styles.headerLead}>
                     <p className={styles.sectionLabel} data-reveal="fade">What We Do</p>
