@@ -1,0 +1,124 @@
+/* Consent banner — sits above the WebGL canvas and the navbar, and stays out
+   of the way of the scroll cue. Inert until a cookie-setting provider is
+   configured; see components/CookieConsent.tsx. */
+
+.banner {
+    position: fixed;
+    z-index: 200;
+    inset-inline: 0;
+    bottom: 0;
+    padding: clamp(0.75rem, 2vw, 1.25rem);
+    animation: consentIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes consentIn {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .banner {
+        animation: none;
+    }
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
+    max-width: clamp(340px, 90vw, 1100px);
+    margin: 0 auto;
+    padding: clamp(0.875rem, 2vw, 1.25rem) clamp(1rem, 3vw, 1.75rem);
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
+}
+
+.copy {
+    flex: 1 1 22rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+}
+
+.link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.link:hover {
+    color: var(--color-secondary);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+/* Reject and Accept are intentionally the same size and weight — asymmetric
+   prominence between the two does not collect valid consent. */
+.btn {
+    padding: 0.625rem 1.5rem;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: transform var(--transition-fast), background var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btnGhost {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+}
+
+.btnGhost:hover {
+    background: var(--neu-surface);
+}
+
+.btnSolid {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+    border: 1px solid transparent;
+}
+
+.btnSolid:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions {
+        justify-content: stretch;
+    }
+
+    .btn {
+        flex: 1;
+    }
+}

@@ -23,10 +23,10 @@ export default function EngagementSection() {
     return (
         <section className={styles.engagement} id="engagement" data-flow>
             <div className="container">
-                <div style={{ textAlign: 'center' }} data-flow-header>
-                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, marginBottom: '1rem' }} data-reveal="fade">How We Work</p>
-                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }} data-reveal="lines">Flexible <span className="gradient-text">Engagement Models</span></h2>
-                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto 0', fontSize: 'var(--text-lg)' }} data-reveal="fade">
+                <div className="section-head" data-flow-header>
+                    <p className="section-eyebrow" data-reveal="fade">Working Together</p>
+                    <h2 className="section-title" data-reveal="lines">Flexible <span className="gradient-text">Engagement Models</span></h2>
+                    <p className="section-lead" data-reveal="fade">
                         Choose the engagement model that best fits your business needs and objectives.
                     </p>
                 </div>
@@ -36,8 +36,11 @@ export default function EngagementSection() {
                         const iconType = model.title.toLowerCase().replace(/\s+/g, '-');
                         return (
                             <div key={index} className={styles.card} data-reveal-item>
+                                <span className={styles.index} aria-hidden="true">
+                                    {String(index + 1).padStart(2, '0')}
+                                </span>
                                 <div className={styles.iconWrapper}>
-                                    <LineIcon name={iconType} variant="plate" />
+                                    <LineIcon name={iconType} />
                                 </div>
                                 <h3 className={styles.cardTitle}>{model.title}</h3>
                                 <p className={styles.cardDescription}>{model.description}</p>

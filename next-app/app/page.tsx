@@ -3,7 +3,6 @@ import AboutSection from '@/components/sections/AboutSection';
 import PillarsSection from '@/components/sections/PillarsSection';
 import WhySection from '@/components/sections/WhySection';
 import ServicesGrid from '@/components/sections/ServicesGrid';
-import StatsSection from '@/components/sections/StatsSection';
 import MethodologySection from '@/components/sections/MethodologySection';
 import EngagementSection from '@/components/sections/EngagementSection';
 import ScopeSection from '@/components/sections/ScopeSection';
@@ -20,7 +19,9 @@ export default function Home() {
 
       <main style={{ position: 'relative', zIndex: 1 }}>
         <HeroSection />
-        <StatsSection />
+        {/* StatsSection is parked until real outcome metrics exist — the
+            capability counts it fell back on weren't worth the slot directly
+            under the hero. Re-add <StatsSection /> here to restore it. */}
         <PillarsSection />
         <ServicesGrid />
         <AboutSection />

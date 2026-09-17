@@ -47,12 +47,12 @@ export default function Navbar() {
 
                 <ul className={`${styles.navMenu} ${isMobileMenuOpen ? styles.navMenuOpen : ''}`}>
                     {/* Order mirrors the page: pillars -> services -> about -> methodology -> process */}
-                    <li><Link href="#pillars" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Capabilities</Link></li>
-                    <li><Link href="#services" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Services</Link></li>
-                    <li><Link href="#about" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
-                    <li><Link href="#methodology" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Approach</Link></li>
-                    <li><Link href="#process" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Process</Link></li>
-                    <li><Link href="#contact" className={`${styles.navLink} ${styles.navCta}`} onClick={() => setIsMobileMenuOpen(false)}>Get Started</Link></li>
+                    <li><Link href="/#pillars" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Capabilities</Link></li>
+                    <li><Link href="/#services" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Services</Link></li>
+                    <li><Link href="/#about" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
+                    <li><Link href="/#methodology" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Approach</Link></li>
+                    <li><Link href="/#process" className={styles.navLink} onClick={() => setIsMobileMenuOpen(false)}>Process</Link></li>
+                    <li><Link href="/#contact" className={`${styles.navLink} ${styles.navCta}`} onClick={() => setIsMobileMenuOpen(false)}>Get Started</Link></li>
                     {mounted && (
                         <li>
                             <div className={styles.themeSwitchContainer}>

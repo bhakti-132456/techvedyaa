@@ -11,15 +11,20 @@ export default function HeroSection() {
                     <div className={styles.heroText} data-hero-exit>
                         <p className={styles.heroSubtitle} data-hero="eyebrow">
                             <span className={styles.pulseDot} aria-hidden="true" />
-                            Digital Solutions Provider
+                            Digital Solutions &amp; Business Intelligence
                         </p>
+                        {/* Break after "Transform" rather than after "with" — the
+                            old break orphaned "with" onto a line of its own at
+                            desktop widths, leaving a hole in the middle of the
+                            statement. */}
                         <h1 className={styles.heroTitle} data-hero="title">
-                            Transform <span className={`${styles.kw} ${styles.kwOrange}`}>Business</span> with <br />
+                            Transform <br />
+                            <span className={`${styles.kw} ${styles.kwOrange}`}>Business</span> with{' '}
                             <span className={`gradient-text ${styles.kw}`}>Intelligent Solutions</span>
                         </h1>
                         <p className={styles.heroDescription} data-hero="desc">
-                            Comprehensive marketing automation, AI-powered technology, and strategic
-                            consulting designed to elevate your brand and drive growth.
+                            Marketing automation, AI-powered technology, and custom software, with the
+                            analytics layer that shows you what each of them is returning.
                         </p>
                     </div>
 

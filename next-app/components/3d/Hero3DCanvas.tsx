@@ -6,7 +6,7 @@ import { Environment, Lightformer, Float, ContactShadows } from '@react-three/dr
 import { EffectComposer, Bloom, DepthOfField } from '@react-three/postprocessing';
 import { useTheme } from 'next-themes';
 import * as THREE from 'three';
-import { useInView } from 'framer-motion';
+import { useInView } from 'motion/react';
 
 /* ---------------------------------------------------------------
    Shared cursor state (smoothed in useFrame)

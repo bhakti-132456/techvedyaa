@@ -100,10 +100,18 @@ export const ICONS: Record<string, string> = {
         <path d="M10 11l-2 2" pathLength="1"/>
         <path d="M13 14l-2 2" pathLength="1"/>`,
     'automation-first': `
-        <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" pathLength="1"/>`,
+        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" pathLength="1"/>
+        <path d="M10 9v6l5 -3l-5 -3" pathLength="1"/>`,
     'continuous-optimization': `
-        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" pathLength="1"/>
-        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" pathLength="1"/>`,
+        <path d="M4 10a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" pathLength="1"/>
+        <path d="M6 4v4" pathLength="1"/>
+        <path d="M6 12v8" pathLength="1"/>
+        <path d="M10 16a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" pathLength="1"/>
+        <path d="M12 4v10" pathLength="1"/>
+        <path d="M12 18v2" pathLength="1"/>
+        <path d="M16 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" pathLength="1"/>
+        <path d="M18 4v1" pathLength="1"/>
+        <path d="M18 9v11" pathLength="1"/>`,
     'scalable-solutions': `
         <path d="M12 4l-8 4l8 4l8 -4l-8 -4" pathLength="1"/>
         <path d="M4 12l8 4l8 -4" pathLength="1"/>
@@ -113,7 +121,13 @@ export const ICONS: Record<string, string> = {
         <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" pathLength="1"/>
         <path d="M9 14l2 2l4 -4" pathLength="1"/>`,
     'retainer-based': `
-        <path d="M9.828 9.172a4 4 0 1 0 0 5.656a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" pathLength="1"/>`,
+        <path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" pathLength="1"/>
+        <path d="M16 3v4" pathLength="1"/>
+        <path d="M8 3v4" pathLength="1"/>
+        <path d="M4 11h12" pathLength="1"/>
+        <path d="M20 14l2 2h-3" pathLength="1"/>
+        <path d="M20 18l2 -2" pathLength="1"/>
+        <path d="M19 16a3 3 0 1 0 2 5.236" pathLength="1"/>`,
     'hybrid': `
         <path d="M18 4l3 3l-3 3" pathLength="1"/>
         <path d="M18 20l3 -3l-3 -3" pathLength="1"/>
@@ -138,8 +152,19 @@ export const ICONS: Record<string, string> = {
         <path d="M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879" pathLength="1"/>
         <path d="M19 18v.01" pathLength="1"/>`,
     'campaign-management': `
-        <path d="M10 14l11 -11" pathLength="1"/>
-        <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" pathLength="1"/>`,
+        <path d="M18.364 19.364a9 9 0 1 0 -12.728 0" pathLength="1"/>
+        <path d="M15.536 16.536a5 5 0 1 0 -7.072 0" pathLength="1"/>
+        <path d="M11 13a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" pathLength="1"/>`,
     'lead-servicing': `
-        <path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227" pathLength="1"/>`,
+        <path d="M4.387 3h15.226a1 1 0 0 1 .948 1.316l-5.105 15.316a2 2 0 0 1 -1.898 1.368h-3.116a2 2 0 0 1 -1.898 -1.368l-5.104 -15.316a1 1 0 0 1 .947 -1.316" pathLength="1"/>
+        <path d="M5 9h14" pathLength="1"/>
+        <path d="M7 15h10" pathLength="1"/>`,
+    'business-intelligence': `
+        <path d="M3 4h18" pathLength="1"/>
+        <path d="M4 4v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1 -1v-10" pathLength="1"/>
+        <path d="M9 12v-4" pathLength="1"/>
+        <path d="M12 12v-1" pathLength="1"/>
+        <path d="M15 12v-2" pathLength="1"/>
+        <path d="M12 15v3" pathLength="1"/>
+        <path d="M9 21l3 -3l3 3" pathLength="1"/>`,
 };

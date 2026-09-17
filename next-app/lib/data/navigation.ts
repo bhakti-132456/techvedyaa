@@ -2,7 +2,7 @@ import type { NavLink, FooterSection } from '@/lib/types';
 
 export const mainNavLinks: NavLink[] = [
     { label: 'Services', href: '#services' },
-    { label: 'Approach', href: '#approach' },
+    { label: 'Approach', href: '#methodology' },
     { label: 'Industries', href: '#industries' },
     { label: 'Process', href: '#process' },
 ];
@@ -26,8 +26,8 @@ export const footerSections: FooterSection[] = [
     {
         title: 'Company',
         links: [
-            { label: 'About Us', href: '#overview' },
-            { label: 'Our Approach', href: '#approach' },
+            { label: 'About Us', href: '#about' },
+            { label: 'Our Approach', href: '#methodology' },
             { label: 'Industries', href: '#industries' },
             { label: 'Process', href: '#process' },
             { label: 'Contact', href: '#contact' },

@@ -46,6 +46,12 @@ skills/
 # Claude Code machine-local settings (permission grants); launch.json is shared
 .claude/settings.local.json
 
+# Tooling output, not source: before/after screenshot runs from the design
+# audit, and the page dumps / console logs the Playwright CLI leaves behind.
+# Regenerate with next-app/scripts/capture.mjs rather than versioning them.
+.design-audit/
+next-app/.playwright-cli/
+
 # Raw 3D source downloads (~100MB of zips). These are inputs only — the
 # optimised .glb files the site actually loads live in next-app/public/models
 # and ARE tracked. Use Git LFS if these need versioning.

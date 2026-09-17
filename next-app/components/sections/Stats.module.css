@@ -9,10 +9,14 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
     gap: var(--spacing-lg);
     text-align: left;
+    margin: 0;
 }
 
 /* Editorial stat blocks — hairline top rule, huge numerals */
 .statItem {
+    /* the numeral is the <dd> and comes second in the DOM, so flip it up here */
+    display: flex;
+    flex-direction: column;
     padding: var(--spacing-md) 0 0;
     background: transparent;
     border: none;
@@ -28,6 +32,8 @@
 
 .statValue {
     display: block;
+    order: -1;
+    margin-inline-start: 0;
     font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
     font-weight: 600;
     letter-spacing: -0.04em;

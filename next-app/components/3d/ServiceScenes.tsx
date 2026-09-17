@@ -1,6 +1,6 @@
 'use client';
 
-import { MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { advance, Canvas, useFrame, useThree, type ThreeElements } from '@react-three/fiber';
 import { Environment, Lightformer, useGLTF, View } from '@react-three/drei';
@@ -160,6 +160,30 @@ function richestSkinnedMesh(root: THREE.Object3D): THREE.SkinnedMesh | null {
 
 type DrawRef = MutableRefObject<number>;
 type SceneProps = { active: boolean; palette: ScenePalette };
+
+/* Hover is read deep in the tree (each cast figure drives its own mixer), so
+   it travels by context rather than being threaded through CastGroup and every
+   entry as a prop. */
+const HoverContext = createContext(false);
+
+/* Smoothed 0..1 hover factor. The raw boolean would snap the animation rate,
+   which reads as a glitch on a looping idle; easing it means the figures wind
+   up and settle instead. */
+function useHoverFactor() {
+    const hovered = useContext(HoverContext);
+    const f = useRef(0);
+    useFrame((_, delta) => {
+        const dt = Math.min(delta, 0.05);
+        const target = hovered ? 1 : 0;
+        f.current += (target - f.current) * (1 - Math.exp(-dt * (hovered ? 5 : 3.2)));
+    });
+    return f;
+}
+
+/* Idle rate multiplier at full hover. Modest on purpose: these are looping
+   idles, and pushing much past this reads as fast-forward rather than the
+   figures becoming attentive. */
+const HOVER_ANIM_GAIN = 1.75;
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
@@ -1606,6 +1630,7 @@ function NormalizedModel({
        no matter how often the callback runs, and keeps it smooth. */
     const last = useRef<number | null>(null);
     const elapsed = useRef(0);
+    const hoverF = useHoverFactor();
 
     useFrame(() => {
         const now = performance.now();
@@ -1615,7 +1640,7 @@ function NormalizedModel({
         elapsed.current += dt;
 
         if (mixer) {
-            mixer.update(dt * (cfg.animSpeed ?? 1));
+            mixer.update(dt * (cfg.animSpeed ?? 1) * (1 + hoverF.current * (HOVER_ANIM_GAIN - 1)));
         }
 
         if (cfg.float) {
@@ -1741,22 +1766,39 @@ function CastMemberModel({ entry }: { entry: CastEntry }) {
 
     // wall-clock stepping, for the same reason as the single-model path
     const last = useRef<number | null>(null);
+    const hover = useHoverFactor();
+    const group = useRef<THREE.Group>(null);
+    const baseScale = entry.scale ?? 1;
+    const baseRot = entry.rotation ?? [0, 0, 0];
+    const baseOff = entry.offset ?? [0, 0, 0];
+
     useFrame(() => {
-        if (!mixer) return;
-        const now = performance.now();
-        if (last.current === null) last.current = now;
-        const dt = Math.max(0, Math.min((now - last.current) / 1000, 0.05));
-        last.current = now;
-        mixer.update(dt * (entry.animSpeed ?? 1));
+        if (mixer) {
+            const now = performance.now();
+            if (last.current === null) last.current = now;
+            const dt = Math.max(0, Math.min((now - last.current) / 1000, 0.05));
+            last.current = now;
+            const gain = 1 + hover.current * (HOVER_ANIM_GAIN - 1);
+            mixer.update(dt * (entry.animSpeed ?? 1) * gain);
+        }
+
+        /* Staging response: on hover the group squares up to camera and lifts
+           a little. Each figure keeps its own authored angle as the base, so
+           they turn together without collapsing into a flat row. */
+        const g = group.current;
+        if (g) {
+            const h = hover.current;
+            g.rotation.set(baseRot[0], baseRot[1] * (1 - h * 0.55), baseRot[2]);
+            g.position.set(baseOff[0], baseOff[1] + h * 0.045, baseOff[2] + h * 0.09);
+            const sc = baseScale * (1 + h * 0.035);
+            g.scale.setScalar(sc);
+        }
     });
 
     return (
-        <primitive
-            object={object}
-            position={entry.offset ?? [0, 0, 0]}
-            rotation={entry.rotation ?? [0, 0, 0]}
-            scale={entry.scale ?? 1}
-        />
+        <group ref={group} position={baseOff} rotation={baseRot} scale={baseScale}>
+            <primitive object={object} />
+        </group>
     );
 }
 
@@ -1836,10 +1878,14 @@ const SCENES: Record<string, (p: SceneProps) => React.ReactElement> = {
 export function ModelView({
     id,
     active,
+    hovered = false,
     className,
 }: {
     id: string;
     active: boolean;
+    /** Drives the idle rate and the staging response. Optional: panels that
+        don't wire it up simply never enter the hover state. */
+    hovered?: boolean;
     className?: string;
 }) {
     const [palette, setPalette] = useState<ScenePalette>(DARK_PALETTE);
@@ -1864,11 +1910,25 @@ export function ModelView({
     // glTF payloads are fetched on approach rather than at first paint.
     const host = useRef<HTMLDivElement>(null);
     const [ready, setReady] = useState(false);
+    /* Separate from `ready`. `ready` latches on approach and never clears, which
+       is right for mounting and asset loading — but the shared canvas is
+       position:fixed above the whole page, so a view left rendering after its
+       section scrolls away paints over unrelated content. Most visible on
+       mobile, where the services gears bled across the methodology section.
+       This tracks genuine on-screen presence and stops the draw. */
+    const [onScreen, setOnScreen] = useState(false);
 
     useEffect(() => {
         const el = host.current;
         if (!el) return;
         viewHosts.add(el);
+
+        const vis = new IntersectionObserver(
+            ([entry]) => setOnScreen(entry.isIntersecting),
+            { rootMargin: '0px', threshold: 0 }
+        );
+        vis.observe(el);
+
         const io = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -1882,6 +1942,7 @@ export function ModelView({
         return () => {
             viewHosts.delete(el);
             io.disconnect();
+            vis.disconnect();
         };
     }, []);
 
@@ -1891,13 +1952,15 @@ export function ModelView({
     return (
         <div ref={host} className={className}>
             <View style={{ width: '100%', height: '100%' }}>
-                {ready ? (
+                {ready && onScreen ? (
                     <Suspense fallback={null}>
-                        {model ? (
-                            <ModelScene active={active} palette={palette} cfg={model} />
-                        ) : (
-                            <Scene active={active} palette={palette} />
-                        )}
+                        <HoverContext.Provider value={hovered}>
+                            {model ? (
+                                <ModelScene active={active} palette={palette} cfg={model} />
+                            ) : (
+                                <Scene active={active} palette={palette} />
+                            )}
+                        </HoverContext.Provider>
                     </Suspense>
                 ) : null}
             </View>

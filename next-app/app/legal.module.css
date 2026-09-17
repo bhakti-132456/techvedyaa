@@ -1,0 +1,171 @@
+/* Shared styling for the long-form legal pages (/privacy, /terms).
+
+   Deliberately quieter than the marketing sections: a single measure column,
+   no reveal choreography, no 3D. These pages are read, not scrolled past, so
+   legibility beats motion. */
+
+.page {
+    padding-top: clamp(7rem, 14vh, 10rem);
+    padding-bottom: var(--spacing-3xl);
+}
+
+.wrap {
+    max-width: 46rem;
+    margin: 0 auto;
+}
+
+.eyebrow {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.title {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    line-height: 1.05;
+    margin: 0 0 var(--spacing-sm);
+}
+
+.updated {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Review notice — visible while the policies are still drafts. Remove the
+   <ReviewNotice /> usage once counsel has signed off. */
+.notice {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: 0 0 var(--spacing-xl);
+    background: var(--neu-surface-sunken);
+    border-inline-start: 2px solid var(--color-secondary);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+}
+
+.section {
+    margin-bottom: var(--spacing-xl);
+    scroll-margin-top: 7rem;
+}
+
+.section h2 {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.section h3 {
+    font-size: var(--text-lg);
+    margin: var(--spacing-md) 0 var(--spacing-xs);
+    color: var(--color-text-primary);
+}
+
+.section p,
+.section li {
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+}
+
+.section p {
+    margin: 0 0 var(--spacing-sm);
+}
+
+.section ul {
+    margin: 0 0 var(--spacing-sm);
+    padding-inline-start: 1.25rem;
+}
+
+.section li {
+    margin-bottom: 0.5rem;
+}
+
+.section a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.section a:hover {
+    color: var(--color-secondary);
+}
+
+.section strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+/* Processor / rights tables — scroll rather than squeeze on narrow screens. */
+.tableWrap {
+    overflow-x: auto;
+    margin: 0 0 var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+}
+
+.table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+.table th,
+.table td {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--neu-surface);
+    white-space: nowrap;
+}
+
+.table td {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.table tr:last-child th,
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+/* A value the company still has to supply. Renders as a visible blank so an
+   unfinished policy is obvious rather than quietly wrong. */
+.pending {
+    display: inline-block;
+    min-width: 6rem;
+    padding: 0 0.4em;
+    border-bottom: 1px dashed var(--color-text-muted);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-top: 1px solid var(--color-border);
+    width: 100%;
+}
+
+.backLink:hover {
+    color: var(--color-secondary);
+}

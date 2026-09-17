@@ -11,16 +11,22 @@
     margin-top: var(--spacing-2xl);
 }
 
+/* Matches the methodology / engagement / why grids: bordered cell, square
+   corners, border goes brand-orange on hover. */
 .card {
-    padding: var(--spacing-xl);
-    background: var(--surface-card);
-    backdrop-filter: var(--surface-card-blur);
-    -webkit-backdrop-filter: var(--surface-card-blur);
-    border: none;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--neu-shadow-raised);
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
-    text-align: center;
+    position: relative;
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-lg);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: none;
+    transition: border-color var(--transition-base), background var(--transition-base);
+    text-align: left;
+}
+
+.card:hover {
+    border-color: var(--color-secondary);
+    background: var(--neu-surface);
 }
 
 .card:hover {
@@ -35,15 +41,13 @@
 }
 
 .iconWrapper {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto var(--spacing-md);
+    width: 44px;
+    height: 44px;
+    margin: 0 0 var(--spacing-md);
     color: var(--color-primary);
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: transparent;
-    border-radius: 50%;
+    justify-content: flex-start;
 }
 
 [data-theme="dark"] .iconWrapper {

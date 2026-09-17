@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import styles from './Contact.module.css';
 
 export default function ContactSection() {
@@ -9,10 +10,14 @@ export default function ContactSection() {
         phone: '',
         email: '',
         whatsappEnabled: false,
-        requirements: ''
+        consent: false,
+        requirements: '',
+        // Honeypot — hidden from humans, checked server-side.
+        website: ''
     });
-    
+
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
@@ -28,29 +33,43 @@ export default function ContactSection() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('loading');
-
-        // URL configured via environment variables (.env.local)
-        const SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || '';
+        setErrorMessage('');
 
         try {
-            // Use GET with query parameters to avoid CORS preflight issues entirely.
-            // Google Apps Script's doGet receives these via e.parameter.
-            const params = new URLSearchParams();
-            Object.keys(formData).forEach(key => {
-                params.append(key, String(formData[key as keyof typeof formData]));
+            /* Same-origin POST to our own route handler, which forwards to
+               Apps Script server-side. Personal data stays in the body, the
+               upstream endpoint stays private, and — unlike the previous
+               no-cors call — this response is real, so a failure actually
+               surfaces to the visitor instead of showing a false success. */
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
             });
 
-            await fetch(`${SCRIPT_URL}?${params.toString()}`, {
-                method: 'GET',
-                mode: 'no-cors',
-            });
+            const result = await res.json().catch(() => ({ ok: false }));
 
-            // With 'no-cors', response is opaque (status 0), so we assume success if no error is thrown
+            if (!res.ok || !result.ok) {
+                setErrorMessage(
+                    result.error || 'We could not send that just now. Please try again.'
+                );
+                setStatus('error');
+                return;
+            }
+
             setStatus('success');
-            setFormData({ name: '', phone: '', email: '', whatsappEnabled: false, requirements: '' });
-            
+            setFormData({
+                name: '',
+                phone: '',
+                email: '',
+                whatsappEnabled: false,
+                consent: false,
+                requirements: '',
+                website: ''
+            });
         } catch (error) {
             console.error('Submission error:', error);
+            setErrorMessage('We could not reach the server. Please try again.');
             setStatus('error');
         }
     };
@@ -78,7 +97,7 @@ export default function ContactSection() {
                                     id="name"
                                     name="name"
                                     className={styles.formInput}
-                                    placeholder="John Doe"
+                                    placeholder="Priya Sharma"
                                     required
                                     value={formData.name}
                                     onChange={handleChange}
@@ -91,7 +110,7 @@ export default function ContactSection() {
                                     id="email"
                                     name="email"
                                     className={styles.formInput}
-                                    placeholder="john@example.com"
+                                    placeholder="priya@company.com"
                                     required
                                     value={formData.email}
                                     onChange={handleChange}
@@ -106,7 +125,7 @@ export default function ContactSection() {
                                 id="phone"
                                 name="phone"
                                 className={styles.formInput}
-                                placeholder="+1 234 567 8900"
+                                placeholder="+91 98765 43210"
                                 required
                                 value={formData.phone}
                                 onChange={handleChange}
@@ -123,7 +142,7 @@ export default function ContactSection() {
                                 onChange={handleChange}
                             />
                             <label htmlFor="whatsappEnabled" className={styles.checkboxLabel}>
-                                This number is available on WhatsApp
+                                You may contact me on WhatsApp at this number
                             </label>
                         </div>
 
@@ -140,8 +159,47 @@ export default function ContactSection() {
                             />
                         </div>
 
-                        <button 
-                            type="submit" 
+                        {/* Honeypot. Hidden from people, irresistible to bots —
+                            anything that fills it is discarded server-side. */}
+                        <div className={styles.honeypot} aria-hidden="true">
+                            <label htmlFor="website">Website</label>
+                            <input
+                                type="text"
+                                id="website"
+                                name="website"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                value={formData.website}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        {/* Consent. Unticked by default and required — a
+                            pre-ticked box or an "by submitting you agree" line
+                            is not a clear affirmative action, and so is not
+                            valid consent under the DPDP Act. */}
+                        <div className={styles.consentGroup}>
+                            <input
+                                type="checkbox"
+                                id="consent"
+                                name="consent"
+                                className={styles.checkboxInput}
+                                required
+                                checked={formData.consent}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="consent" className={styles.consentLabel}>
+                                I agree to TechVedyaa storing these details to respond to my
+                                enquiry, as described in the{' '}
+                                <Link href="/privacy" className={styles.consentLink}>
+                                    Privacy Policy
+                                </Link>
+                                . I can withdraw this at any time.
+                            </label>
+                        </div>
+
+                        <button
+                            type="submit"
                             className={styles.submitBtn}
                             disabled={status === 'loading'}
                         >
@@ -155,8 +213,8 @@ export default function ContactSection() {
                         )}
                         
                         {status === 'error' && (
-                            <div className={`${styles.statusMessage} ${styles.statusError}`}>
-                                Oops! Something went wrong. Please try again later.
+                            <div className={`${styles.statusMessage} ${styles.statusError}`} role="alert">
+                                {errorMessage || 'Something went wrong. Please try again later.'}
                             </div>
                         )}
                     </form>

@@ -61,7 +61,7 @@
     backdrop-filter: var(--surface-card-blur);
     -webkit-backdrop-filter: var(--surface-card-blur);
     border: none;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-card);
     padding: var(--spacing-xl);
     box-shadow: var(--neu-shadow-lg);
     position: relative;
@@ -96,7 +96,7 @@
     color: var(--color-text-primary);
     background: var(--neu-surface-sunken);
     border: none;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-card);
     box-shadow: var(--neu-shadow-inset);
     transition: all var(--transition-fast);
 }
@@ -184,7 +184,7 @@
 .statusMessage {
     margin-top: var(--spacing-md);
     padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-card);
     text-align: center;
     font-size: var(--text-sm);
     font-weight: 500;
@@ -217,4 +217,51 @@
         gap: var(--spacing-md);
         margin-bottom: var(--spacing-md);
     }
+}
+
+/* ---- Consent ----
+   Aligned to the top rather than centred: the label wraps to two or three
+   lines, and a vertically centred box against multi-line text reads as
+   misaligned. */
+.consentGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.consentGroup .checkboxInput {
+    flex-shrink: 0;
+    margin-top: 0.15em;
+}
+
+.consentLabel {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.consentLink {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.consentLink:hover {
+    color: var(--color-secondary);
+}
+
+/* Honeypot — removed from the visual and accessibility trees alike, so no
+   real visitor can reach it. Not display:none, which some bots detect. */
+.honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

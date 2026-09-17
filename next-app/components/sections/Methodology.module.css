@@ -17,45 +17,61 @@
     }
 }
 
+/* Bordered index cells. A full hairline box at rest that turns brand-orange on
+   hover — the whole square, not just an edge. Corners stay square per the
+   --radius-card token. */
 .card {
-    padding: var(--spacing-xl);
-    background: var(--surface-card);
-    backdrop-filter: var(--surface-card-blur);
-    -webkit-backdrop-filter: var(--surface-card-blur);
-    border: none;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--neu-shadow-raised);
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
-    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-lg);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: none;
+    text-align: left;
+    transition: border-color var(--transition-base), background var(--transition-base);
 }
 
 .card:hover {
-    box-shadow: var(--neu-shadow-float), 0 0 0 1px rgba(0, 94, 184, 0.12);
-    transform: translateY(-6px) scale(1.01);
+    border-color: var(--color-secondary);
+    background: var(--neu-surface);
 }
 
-.card:active {
-    transform: translateY(0) scale(0.985);
-    box-shadow: var(--neu-shadow-inset);
-    transition-duration: 0.12s;
+.index {
+    font-family: var(--font-display), sans-serif;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--spacing-md);
+    transition: color var(--transition-base);
 }
+
+.card:hover .index {
+    color: var(--color-secondary);
+}
+
 
 .iconWrapper {
-    width: 80px;
-    height: 80px;
+    width: 44px;
+    height: 44px;
     color: var(--color-primary);
-    margin: 0 auto var(--spacing-md);
+    margin: 0 0 var(--spacing-md);
 }
 
 .cardTitle {
     font-size: var(--text-xl);
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
+    text-wrap: balance;
 }
 
 .cardDescription {
     color: var(--color-text-secondary);
-    line-height: 1.6;
+    line-height: 1.65;
+    max-width: 32ch;
 }
 
 @media (max-width: 768px) {
@@ -65,10 +81,12 @@
     
     .card {
         padding: var(--spacing-md);
-        text-align: center;
+        text-align: left;
     }
     
     .iconWrapper {
-        margin: 0 auto var(--spacing-md) auto;
+        /* Left, matching the text. Centring only the glyph left it floating
+           over left-aligned copy in the single-column layout. */
+        margin: 0 0 var(--spacing-md);
     }
 }

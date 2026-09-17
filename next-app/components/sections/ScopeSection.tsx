@@ -27,7 +27,7 @@ export default function ScopeSection() {
                 "Multi-Channel Campaign Orchestration",
                 "Automated Workflow Design & Implementation",
                 "Performance Monitoring & Real-Time Analytics",
-                "A/B Testing & Conversion Optimisation"
+                "A/B Testing & Conversion Optimization"
             ]
         },
         {
@@ -38,6 +38,16 @@ export default function ScopeSection() {
                 "Lead Qualification & Scoring Methodology",
                 "Outbound Engagement & Sequence Management",
                 "CRM Administration & Data Hygiene"
+            ]
+        },
+        {
+            title: "Business Intelligence",
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4h18" /><path d="M4 4v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4" /><path d="M9 12V8" /><path d="M12 12v-1" /><path d="M15 12v-2" /><path d="M12 15v3" /><path d="m9 21 3-3 3 3" /></svg>`,
+            details: [
+                "Real-Time Performance Dashboards & Reporting",
+                "Revenue & Pipeline Attribution Modelling",
+                "Predictive Analytics & Forecasting",
+                "Data Warehousing & Source Consolidation"
             ]
         }
     ];
@@ -55,11 +65,11 @@ export default function ScopeSection() {
     return (
         <section className={styles.scope} id="scope" data-flow>
             <div className="container">
-                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl)' }} data-flow-header>
-                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, margin: '0 0 1rem 0' }} data-reveal="fade">Our Solution</p>
-                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }} data-reveal="lines">Scope of <span className="gradient-text">Work</span></h2>
-                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', margin: '1rem auto var(--spacing-md)', fontSize: 'var(--text-lg)' }} data-reveal="fade">
-                        Strategic Planning, Campaign Management, and Lead Servicing - all powered by realtime data and analytics.
+                <div className="section-head" data-flow-header>
+                    <p className="section-eyebrow" data-reveal="fade">What&apos;s Included</p>
+                    <h2 className="section-title" data-reveal="lines">Scope of <span className="gradient-text">Work</span></h2>
+                    <p className="section-lead" data-reveal="fade">
+                        Strategic planning, campaign management, and lead servicing, measured end to end by a reporting layer you actually own.
                     </p>
                     <button 
                         className={styles.globalExpandBtn} 
@@ -75,7 +85,7 @@ export default function ScopeSection() {
                         return (
                             <div key={index} className={styles.card} data-reveal-item>
                                 <div className={styles.iconWrapper}>
-                                    <LineIcon name={iconType} variant="plate" />
+                                    <LineIcon name={iconType} />
                                 </div>
                             <h3 className={styles.cardTitle}>{scope.title}</h3>
 

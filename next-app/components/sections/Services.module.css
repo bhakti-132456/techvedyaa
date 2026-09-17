@@ -413,7 +413,7 @@
         flex-direction: column;
         gap: var(--spacing-sm);
         padding: var(--spacing-md);
-        border-radius: var(--radius-xl);
+        border-radius: var(--radius-card);
         background: var(--surface-card);
         backdrop-filter: var(--surface-card-blur);
         -webkit-backdrop-filter: var(--surface-card-blur);

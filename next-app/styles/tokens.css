@@ -105,6 +105,13 @@
     --radius-xl: 24px;
     --radius-full: 50%;
 
+    /* Card corners — square, matching the editorial/outline language rather
+       than the soft-UI one. Every card surface reads from this single token
+       (section cards, the contact panel, form fields, icon plates), so the
+       whole system is one value to change. Pills and toggles keep their own
+       radii deliberately; they are controls, not surfaces. */
+    --radius-card: 0px;
+
     /* Icon Colors */
     --icon-glow-blue: rgba(0, 94, 184, 0.2);
     --icon-glow-orange: rgba(249, 115, 22, 0.2);

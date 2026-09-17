@@ -18,10 +18,13 @@ export default function WhySection() {
                 </div>
 
                 <div className={styles.grid} data-reveal-group>
-                    {whyItems.map((item) => (
+                    {whyItems.map((item, i) => (
                         <div key={item.id} className={styles.card} data-reveal-item>
+                            <span className={styles.index} aria-hidden="true">
+                                {String(i + 1).padStart(2, '0')}
+                            </span>
                             <div className={styles.iconWrapper}>
-                                <LineIcon name={item.id} variant="plate" />
+                                <LineIcon name={item.id} />
                             </div>
                             <h3 className={styles.cardTitle}>{item.title}</h3>
                             <p className={styles.cardDescription}>{item.description}</p>

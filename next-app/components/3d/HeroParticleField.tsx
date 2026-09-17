@@ -76,9 +76,12 @@ function generateGraph(
             const z = (Math.random() - 0.5) * zSpread;
             positions.push(baseX + jitterX, baseY + jitterY, z);
             seeds.push(Math.random());
-            // ~18% accent, ~25% muted, rest primary
+            /* ~6% accent, ~30% muted, rest primary. The accent tier was at 18%,
+               which scattered enough orange across the field to read as warning
+               state rather than emphasis. Sparse accents let a few junctions
+               feel deliberate. */
             const roll = Math.random();
-            tiers.push(roll < 0.18 ? 1 : roll < 0.43 ? 2 : 0);
+            tiers.push(roll < 0.06 ? 1 : roll < 0.36 ? 2 : 0);
         }
     }
 
@@ -214,15 +217,20 @@ void main() {
     float proximity = exp(-(dist * dist) / (uRadius * uRadius * 1.8));
     vGlow = proximity * uPointerStrength;
 
-    // Slight attraction toward cursor
-    pos.xy -= d * proximity * uPointerStrength * 0.06;
+    /* Cursor draws the network toward itself. This was 0.06 — mathematically
+       present but under a pixel of travel, so the graph looked inert. At 0.42
+       the mesh visibly leans into the pointer and the edges stretch with it,
+       which is the whole point of drawing a network rather than a texture. */
+    pos.xy -= d * proximity * uPointerStrength * 0.42;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 
     // Rounded-rect card size: varied by tier
     // Primary = standard, Accent = slightly larger, Muted = compact
     float tierScale = aTier < 0.5 ? 1.0 : (aTier < 1.5 ? 1.2 : 0.75);
-    gl_PointSize = uDpr * tierScale * (18.0 + aSeed * 12.0);
+    // Junctions under the cursor swell, so the active region reads as live.
+    float nearBoost = 1.0 + proximity * uPointerStrength * 0.85;
+    gl_PointSize = uDpr * tierScale * nearBoost * (18.0 + aSeed * 12.0);
 
     // Breathing
     float breathe = 0.88 + 0.12 * sin(uTime * (0.2 + aSeed * 0.15) + aSeed * 40.0);
@@ -312,7 +320,9 @@ void main() {
     float dist = length(d);
     float proximity = exp(-(dist * dist) / (uRadius * uRadius * 1.8));
     vGlow = proximity * uPointerStrength;
-    pos.xy -= d * proximity * uPointerStrength * 0.06;
+    /* Matches the node displacement exactly — if the edges lagged, the graph
+       would visibly come apart at its joints as the cursor passed. */
+    pos.xy -= d * proximity * uPointerStrength * 0.42;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 
@@ -378,24 +388,28 @@ void main() {
    Theme palettes
    --------------------------------------------------------------- */
 const THEME_COLORS = {
+    /* The edges carry the idea, not the nodes. Earlier values had edges at 0.14
+       in a colour barely above the page background, which drew the graph as
+       disconnected confetti — the connections were rendering, just invisibly.
+       Edges now lead and nodes sit under them as junctions. */
     dark: {
-        primary: '#5FB2FF',
+        primary: '#7CC0FF',
         accent: '#F97316',
-        muted: '#3A5A80',
-        line: '#2A4060',
-        nodeOpacity: 0.55,
-        edgeOpacity: 0.14,
-        pulseOpacity: 0.8,
+        muted: '#43668F',
+        line: '#4E86C4',
+        nodeOpacity: 0.5,
+        edgeOpacity: 0.4,
+        pulseOpacity: 0.95,
         blending: THREE.AdditiveBlending,
     },
     light: {
         primary: '#005EB8',
         accent: '#F97316',
-        muted: '#8EAEC8',
-        line: '#B0C4D8',
-        nodeOpacity: 0.38,
-        edgeOpacity: 0.1,
-        pulseOpacity: 0.55,
+        muted: '#7FA3C0',
+        line: '#6E97BE',
+        nodeOpacity: 0.4,
+        edgeOpacity: 0.32,
+        pulseOpacity: 0.7,
         blending: THREE.NormalBlending,
     },
 };
@@ -781,8 +795,12 @@ export default function HeroParticleField() {
         return () => io.disconnect();
     }, []);
 
-    const nodeCount = isMobile ? 55 : 120;
-    const pulseCount = isMobile ? 12 : 28;
+    /* Fewer, larger nodes. At 120 the graph was dense enough that individual
+       connections stopped being traceable, which is the whole point of drawing
+       a workflow rather than a particle field — you should be able to follow
+       one path with your eye. */
+    const nodeCount = isMobile ? 34 : 64;
+    const pulseCount = isMobile ? 10 : 22;
 
     return (
         <div

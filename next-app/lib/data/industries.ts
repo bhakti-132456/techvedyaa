@@ -1,11 +1,13 @@
+/* Kept at a multiple of three — IndustriesSection splits this list into three
+   marquee rows, so an off-count leaves the last row visibly short. */
 export const industries: string[] = [
-    'Digital Marketing Agencies',
-    'Spiritual & Cultural Organizations',
-    'Sports & Entertainment',
-    'E-commerce & Retail',
+    'Manufacturing & Industrial',
     'Technology & SaaS',
-    'Publishing & Content',
+    'E-commerce & Retail',
+    'Digital Marketing Agencies',
     'Real Estate & Hospitality',
+    'Sports & Entertainment',
+    'Publishing & Content',
+    'Spiritual & Cultural Organizations',
     'Non-Profits',
-    'Small to Medium Businesses',
 ];

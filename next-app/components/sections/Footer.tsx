@@ -3,15 +3,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
+import { company, isPlaceholder } from '@/lib/company';
 import styles from './Footer.module.css';
 
 const LINKS = [
-    { href: '#pillars', label: 'Capabilities' },
-    { href: '#services', label: 'Services' },
-    { href: '#about', label: 'About' },
-    { href: '#methodology', label: 'Approach' },
-    { href: '#process', label: 'Process' },
-    { href: '#contact', label: 'Contact' },
+    { href: '/#pillars', label: 'Capabilities' },
+    { href: '/#services', label: 'Services' },
+    { href: '/#about', label: 'About' },
+    { href: '/#methodology', label: 'Approach' },
+    { href: '/#process', label: 'Process' },
+    { href: '/#contact', label: 'Contact' },
 ];
 
 export default function Footer() {
@@ -66,9 +67,39 @@ export default function Footer() {
                     TechVedyaa
                 </div>
 
+                {/* Statutory identity + legal routes. Kept above the credits row
+                    so the required disclosures aren't buried in the quietest
+                    type on the page. */}
+                <div className={styles.legal}>
+                    <ul className={styles.legalLinks}>
+                        <li>
+                            <Link href="/privacy" className={styles.legalLink}>
+                                Privacy Policy
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/terms" className={styles.legalLink}>
+                                Terms of Use
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/privacy#grievance" className={styles.legalLink}>
+                                Grievance Contact
+                            </Link>
+                        </li>
+                    </ul>
+                    <p className={styles.identity}>
+                        {company.legalName}
+                        {!isPlaceholder(company.cin) && <> · CIN: {company.cin}</>}
+                        {!isPlaceholder(company.registeredAddress) && (
+                            <> · {company.registeredAddress}</>
+                        )}
+                    </p>
+                </div>
+
                 <div className={styles.bottom}>
                     <p className={styles.copyright}>
-                        © {new Date().getFullYear()} TechVedyaa India Pvt Ltd. All rights reserved.
+                        © {new Date().getFullYear()} {company.legalName}. All rights reserved.
                     </p>
 
                     {/* Attribution required by the Sketchfab Standard licence on two

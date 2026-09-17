@@ -173,3 +173,69 @@ p, li {
    text-transform: uppercase;
    margin-bottom: var(--spacing-sm);
 }
+/* ============================================
+   Section headers - one shared treatment.
+
+   Centred, with the type scale in a single place so the jump from eyebrow to
+   title stays consistent across every section.
+   ============================================ */
+
+.section-head {
+   max-width: 62rem;
+   margin-left: auto;
+   margin-right: auto;
+   margin-bottom: var(--spacing-2xl);
+   text-align: center;
+}
+
+.section-eyebrow {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.85rem;
+   font-size: var(--text-sm);
+   font-weight: 600;
+   letter-spacing: 0.18em;
+   text-transform: uppercase;
+   color: var(--color-secondary);
+   margin: 0 0 var(--spacing-md);
+}
+
+/* Rules flank the eyebrow symmetrically. A single trailing rule reads as an
+   alignment error once the header is centred. */
+.section-eyebrow::before,
+.section-eyebrow::after {
+   content: '';
+   flex: 1;
+   max-width: 5rem;
+   height: 1px;
+   background: currentColor;
+   opacity: 0.4;
+}
+
+.section-title {
+   font-size: clamp(2.5rem, 6.5vw, 5rem);
+   line-height: 1.02;
+   letter-spacing: -0.03em;
+   margin: 0;
+   text-wrap: balance;
+}
+
+.section-lead {
+   max-width: 46ch;
+   margin: var(--spacing-md) auto 0;
+   font-size: var(--text-lg);
+   line-height: 1.6;
+   color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+   .section-head {
+      margin-bottom: var(--spacing-xl);
+   }
+
+   .section-eyebrow::before,
+   .section-eyebrow::after {
+      max-width: 2rem;
+   }
+}

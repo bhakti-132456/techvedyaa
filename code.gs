@@ -41,10 +41,18 @@ var TELEGRAM_CHAT_ID = CONFIG.useScriptProperties
 
 
 /**
- * Web App entry point for GET requests
+ * Web App entry point for GET requests.
+ *
+ * Submissions no longer arrive by GET. The site posts to its own
+ * /api/contact route, which forwards here server-side as a POST. Accepting
+ * lead data over GET meant names, emails and phone numbers travelled in the
+ * URL, where they end up in Apps Script access logs, proxy logs and browser
+ * history — so that path is now closed rather than merely unused.
  */
 function doGet(e) {
-  return handleLeadFormSubmit(e);
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: "error", message: "Method not allowed." }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 /**
@@ -67,7 +75,10 @@ function handleLeadFormSubmit(e) {
     
     // Initialize sheet headers if empty
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "WhatsApp Enabled", "Requirements"]);
+      sheet.appendRow([
+        "Timestamp", "Name", "Email", "Phone", "WhatsApp Enabled", "Requirements",
+        "Consent Text", "Consent At"
+      ]);
     }
     
     // Parse form parameters
@@ -77,9 +88,18 @@ function handleLeadFormSubmit(e) {
     var phone = e.parameter.phone || "N/A";
     var whatsappEnabled = (e.parameter.whatsappEnabled === "true" || e.parameter.whatsappEnabled === true) ? "Yes" : "No";
     var requirements = e.parameter.requirements || "N/A";
+
+    // Consent evidence. "They ticked a box" is not a defensible answer if
+    // consent is ever challenged — the wording shown and the moment it was
+    // agreed are what matter, so both are stored alongside the lead.
+    var consentText = e.parameter.consentText || "N/A";
+    var consentAt = e.parameter.consentAt || "N/A";
     
     // Append to Google sheet
-    sheet.appendRow([timestamp, name, email, phone, whatsappEnabled, requirements]);
+    sheet.appendRow([
+      timestamp, name, email, phone, whatsappEnabled, requirements,
+      consentText, consentAt
+    ]);
     
     // Trigger Telegram notification
     sendTelegramAlert(name, email, phone, whatsappEnabled, requirements, timestamp);

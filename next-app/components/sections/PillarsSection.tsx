@@ -21,6 +21,9 @@ const ModelView = dynamic(
 export default function PillarsSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const [activeCard, setActiveCard] = useState(0);
+    /* Index of the card under the pointer, or null. Drives the figures' idle
+       rate and staging; see HoverContext in ServiceScenes. */
+    const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
     /* Which card is currently on top of the deck. Drives the per-model
        "active" state, so the computer's lid opens as its card arrives. */
@@ -101,6 +104,10 @@ export default function PillarsSection() {
                         <article
                             key={pillar.id}
                             className={styles.pillar}
+                            onPointerEnter={() => setHoveredCard(i)}
+                            onPointerLeave={() =>
+                                setHoveredCard((cur) => (cur === i ? null : cur))
+                            }
                             data-pillar-card
                             style={{ ['--i' as string]: i }}
                         >
@@ -123,6 +130,7 @@ export default function PillarsSection() {
                             <ModelView
                                 id={pillar.id}
                                 active={i === activeCard}
+                                hovered={i === hoveredCard}
                                 className={styles.visual}
                             />
                         </article>

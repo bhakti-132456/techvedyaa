@@ -10,11 +10,11 @@ export default function IndustriesSection() {
     ];
 
     return (
-        <section className={styles.industries} data-flow>
+        <section className={styles.industries} id="industries" data-flow>
             <div className="container">
-                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}>
-                    <p style={{ color: 'var(--color-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, marginBottom: '1rem' }} data-reveal="fade">Industry Focus</p>
-                    <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }} data-reveal="lines">Sectors <span className="gradient-text">We Serve</span></h2>
+                <div className="section-head">
+                    <p className="section-eyebrow" data-reveal="fade">Industry Focus</p>
+                    <h2 className="section-title" data-reveal="lines">Sectors <span className="gradient-text">We Serve</span></h2>
                 </div>
             </div>
 

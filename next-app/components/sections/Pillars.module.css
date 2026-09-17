@@ -14,7 +14,10 @@
 
 .header {
     max-width: 950px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: var(--spacing-2xl);
+    text-align: center;
 }
 
 .label {
@@ -68,7 +71,7 @@
     align-items: start;
     padding: clamp(1.75rem, 4.5vh, 3.25rem) clamp(1.5rem, 3vw, 3.25rem);
     background: var(--surface-card);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-card);
     /* hairline plus a lift along the leading edge, so a card reads as sliding
        over the one beneath it */
     box-shadow:

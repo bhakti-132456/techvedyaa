@@ -185,9 +185,13 @@ export default function ProcessSection() {
                             </svg>
                             <span className={styles.nodeCheck} data-step-check>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
+                                {/* decorative: the step's completed state is already
+                                    conveyed by the step copy, so an alt string here
+                                    would just be read out twice */}
                                 <img
                                     src="/assets/favicon.png"
-                                    alt="Checkmark"
+                                    alt=""
+                                    aria-hidden="true"
                                     className={styles.checkmark}
                                 />
                             </span>
